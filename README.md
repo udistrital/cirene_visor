@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Visor de datos geográficos del acueducto
 
 ## Requerimientos:
@@ -47,3 +48,7 @@ junto con el directorio ***arcgis*** que provee el proxy de ArcGIS.
 
 Para entornos de producción puede buscar la aplicación "comprimida" en ***dist***
 y desplegarla de igual manera que con el código fuente.
+=======
+# openlayers-material
+Openlayers con Material Design Lite
+>>>>>>> f90915715bfe078d90372b86e0a8c08d232d3c2d
