@@ -1,0 +1,79 @@
+body {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.logo {
+    width: 200px;
+    height: 169px;
+    position: absolute;
+    top: 0;
+}
+
+.logo.left {
+    left: 0;
+}
+
+.logo.right {
+    right: 0;
+}
+
+.logo img {
+    width: 200px;
+}
+
+#titulo {
+    padding-left: 200px;
+    padding-right: 200px;
+    text-align: center;
+    min-width: 200px;
+}
+
+.titulo2 {
+    position: relative;
+    top: 112px;
+    text-align: center;
+    border: 1px solid;
+}
+
+#resultado {
+    position: relative;
+    top: 115px;
+}
+
+#resultado ul {
+    list-style: none;
+    margin: 20px;
+    float: left;
+    width: 25%;
+    position: relative;
+    border: 1px solid;
+    padding: 0 10px 0 10px;
+}
+
+#mapa {
+    width: 40%;
+    height: auto;
+    margin: 0 auto;
+    top: 107px;
+    position: relative;
+}
+
+#mapa img {
+    width: 100%;
+}
+
+#contenedor {
+    position: relative;
+    margin: 0 auto;
+    width: 80%;
+    height: auto;
+}
+
+#resultado li {
+    margin-bottom: 10px;
+}
+
+#resultado li:nth-child(2n) {
+    background-color: #ececec;
+}

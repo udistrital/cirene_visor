@@ -1,0 +1,247 @@
+{
+    "Id": "Nacional Ambiental Publico",
+    "Services": [{
+        "ServiceId": 1,
+        "serviceType": "MapServer",
+        "name": "Analisis_AlertasTempranasBiodiversidad",
+        "url": "http://200.32.81.75/arcgis/rest/services/Analisis_AlertasTempranasBiodiversidad/MapServer",
+        "Id": "Analisis_AlertasTempranasBiodiversidad",
+        "opacity": 0.8,
+        "type": "dynamic"
+    }, {
+        "ServiceId": 2,
+        "serviceType": "MapServer",
+        "name": "Analisis_VulnerabilidadRiesgo",
+        "url": "http://200.32.81.75/arcgis/rest/services/Analisis_VulnerabilidadRiesgo/MapServer",
+        "Id": "Analisis_VulnerabilidadRiesgo",
+        "opacity": 0.8,
+        "type": "dynamic"
+    }, {
+        "ServiceId": 3,
+        "serviceType": "MapServer",
+        "name": "Referencia",
+        "url": "http://200.32.81.75/arcgis/rest/services/Referencia/MapServer",
+        "Id": "Referencia",
+        "opacity": 0.8,
+        "type": "dynamic"
+    }, {
+        "ServiceId": 4,
+        "serviceType": "MapServer",
+        "name": "Analisis_Marino",
+        "url": "http://200.32.81.75/arcgis/rest/services/Analisis_Marino/MapServer",
+        "Id": "Analisis_Marino",
+        "opacity": 0.8,
+        "type": "dynamic"
+    }, {
+        "ServiceId": 5,
+        "serviceType": "GeometryServer",
+        "name": "Utilities/Geometry",
+        "url": "http://200.32.81.75/arcgis/rest/services/Utilities/Geometry/GeometryServer",
+        "Id": "Geometry",
+        "opacity": -1.0,
+        "type": "geometry"
+    }, {
+        "ServiceId": 6,
+        "serviceType": "ExtensionServer",
+        "name": "CI_AfectacionSOE",
+        "url": "http://200.32.81.75/arcgis/rest/services/Tremarctos2/MapServer/exts/CI_AfectacionSOE/Procesar",
+        "Id": "CI_AfectacionSOE",
+        "opacity": -1.0,
+        "type": "extension"
+    }, {
+        "ServiceId": 7,
+        "serviceType": "ExtensionServer",
+        "name": "AM_AfectacionSOE",
+        "url": "http://200.32.81.75/arcgis/rest/services/Analisis_Marino/MapServer/exts/CI_AfectacionSOE/Procesar",
+        "Id": "AM_AfectacionSOE",
+        "opacity": -1.0,
+        "type": "_extension"
+    }],
+    "Layers": [{
+        "serviceName": "Analisis_AlertasTempranasBiodiversidad",
+        "serviceIndex": 1,
+        "reporte": "reporte_alertas",
+        "tipoReporte": "a"
+    }, {
+        "serviceName": "Analisis_VulnerabilidadRiesgo",
+        "serviceIndex": 2,
+        "reporte": "reporte_riesgo",
+        "tipoReporte": "b"
+    }, {
+        "serviceName": "Analisis_Marino",
+        "serviceIndex": 3,
+        "reporte": "reporte_marino",
+        "tipoReporte": "c"
+    }],
+    "Extent": {
+        "xmin": -13214629.0,
+        "ymin": -1155354.0,
+        "xmax": -3091678.0,
+        "ymax": 1593933.0,
+        "spatialReference": {
+            "wkid": "102100"
+        }
+    },
+    "servicios": [{
+        "serviceId": 1,
+        "serviceName": "Analisis_AlertasTempranasBiodiversidad",
+        "capas": [{
+            "nombre": "Reservas Forestales de Ley 2 del 59",
+            "layerId": "0",
+            "campos": [{
+                "field": "RLEY2_Nombre",
+                "alias": "Nombre"
+            }, {
+                "field": "SHAPE_Area",
+                "alias": "Área m2"
+            }],
+            "nombreServicio": null
+        }, {
+            "nombre": "Límite Parques Nacionales Naturales",
+            "layerId": "1",
+            "campos": [{
+                "field": "PNN_Nombre",
+                "alias": "Nombre"
+            }, {
+                "field": "PNN_Categoria",
+                "alias": "Categoría"
+            }, {
+                "field": "PNN_Reglamentacion",
+                "alias": "Reglamentación"
+            }],
+            "nombreServicio": null
+        }, {
+            "nombre": "Límite Otras Áreas RUNAP",
+            "layerId": "2",
+            "campos": [{
+                "field": "RUNAP_Nombre",
+                "alias": "Nombre"
+            }, {
+                "field": "RUNAP_Categoria",
+                "alias": "Categoría"
+            }, {
+                "field": "RUNAP_Fuente",
+                "alias": "Fuente"
+            }],
+            "nombreServicio": null
+        }, {
+            "nombre": "Límite Reservas Naturales de la Sociedad Civíl",
+            "layerId": "3",
+            "campos": [{
+                "field": "RNSC_Nombre",
+                "alias": "Nombre"
+            }, {
+                "field": "RNSC_Categoria",
+                "alias": "Categoría"
+            }, {
+                "field": "RNSC_Reglamentacion",
+                "alias": "Reglamentación"
+            }, {
+                "field": "RNSC_Fuente",
+                "alias": "Fuente"
+            }],
+            "nombreServicio": null
+        }, {
+            "nombre": "Complejos de Páramo",
+            "layerId": "4",
+            "campos": [{
+                "field": "CP_Complejo",
+                "alias": "Nombre Complejo"
+            }],
+            "nombreServicio": null
+        }, {
+            "nombre": "Áreas Ambientales Sensibles Regional",
+            "layerId": "5",
+            "campos": [{
+                "field": "AS_Nombre",
+                "alias": "Nombre"
+            }],
+            "nombreServicio": null
+        }, {
+            "nombre": "Áreas Ambientales Sensibles Local",
+            "layerId": "6",
+            "campos": [{
+                "field": "AS_Nombre",
+                "alias": "Nombre"
+            }],
+            "nombreServicio": null
+        }, {
+            "nombre": "Parques Arqueológicos",
+            "layerId": "8",
+            "campos": [{
+                "field": "PA_Nombre",
+                "alias": "Nombre"
+            }],
+            "nombreServicio": null
+        }, {
+            "nombre": "Resguardos Indígenas",
+            "layerId": "9",
+            "campos": [{
+                "field": "ResguardoIndigena",
+                "alias": "Nombre Resguardo"
+            }, {
+                "field": "RI_Etnia",
+                "alias": "Nombre Etnia"
+            }],
+            "nombreServicio": null
+        }, {
+            "nombre": "Tierras de las Comunidades Negras",
+            "layerId": "10",
+            "campos": [{
+                "field": "TCN_TierrasComunidadesNegras",
+                "alias": "Nombre"
+            }, {
+                "field": "TCN_Resolucion",
+                "alias": "Resolución"
+            }],
+            "nombreServicio": null
+        }, {
+            "nombre": "Hallazgos Arqueológicos por Municipio",
+            "layerId": "11",
+            "campos": [{
+                "field": "MPIO_Nombre",
+                "alias": "Nombre"
+            }, {
+                "field": "MPIO_NumHallazgosArq",
+                "alias": "Número de Hallazgos"
+            }],
+            "nombreServicio": null
+        }]
+    }, {
+        "serviceId": 3,
+        "serviceName": "Referencia",
+        "capas": [{
+            "nombre": "Zonas de Importancia Biológica",
+            "layerId": "0",
+            "campos": [{
+                "field": "ZIB_AreaImp",
+                "alias": "Tipo de Zona"
+            }],
+            "nombreServicio": null
+        }, {
+            "nombre": "Título Minero Concedido",
+            "layerId": "2",
+            "campos": [{
+                "field": "TM_CodigoExp",
+                "alias": "Código Exp"
+            }, {
+                "field": "TM_EstadoExp",
+                "alias": "Estado"
+            }],
+            "nombreServicio": null
+        }, {
+            "nombre": "Mapa de Tierras ANH",
+            "layerId": "3",
+            "campos": [{
+                "field": "ANH_Operadora",
+                "alias": "Operadora"
+            }, {
+                "field": "ANH_TipoLeyenda",
+                "alias": "Tipo Área"
+            }],
+            "nombreServicio": null
+        }]
+    }],
+    "token": "exP5vqS3osXAppYxDTgrAU2aknQwwf97E7DF0gi9k9ljtuARKrwCPDiSpmP2E8yX",
+    "dummy1": null
+}

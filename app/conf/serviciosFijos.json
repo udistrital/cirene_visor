@@ -1,0 +1,219 @@
+{
+    "METRO.TEne": {
+        "name": "Torre Energía",
+        "groupId": "energia",
+        "maxScale": 10000,
+        "enable": true,
+        "visible": true
+    },
+    "METRO.SEne": {
+        "name": "Subestación de Energía",
+        "groupId": "energia",
+        "maxScale": 500000000,
+        "enable": true,
+        "visible": true
+    },
+    "METRO.Lumi": {
+        "name": "Luminaria",
+        "groupId": "energia",
+        "maxScale": 3000,
+        "enable": true,
+        "visible": true
+    },
+    "METRO.IASC": {
+        "name": "Instalaciones Alcantarillado Sanitario Combinado",
+        "groupId": "asanitarioc",
+        "maxScale": 1250,
+        "enable": true,
+        "visible": true
+    },
+    "METRO.IAPl": {
+        "name": "Instalaciones Alcantarillado Pluvial",
+        "groupId": "apluvial",
+        "maxScale": 1000,
+        "enable": true,
+        "visible": true
+    },
+    "METRO.IAcu": {
+        "name": "Instalaciones Acueducto",
+        "groupId": "acueducto",
+        "maxScale": 1500,
+        "enable": true,
+        "icon": "css/img/instalaciones_acueducto.jpg"
+    },
+    "METRO.EGNa": {
+        "name": "Estación Gas Natural, Estaciones de Bombeo, Reductoras de presión, City Gates.",
+        "groupId": "gas",
+        "maxScale": 20000,
+        "enable": true,
+        "visible": true
+    },
+    "METRO.CDPe": {
+        "name": "Centro de Distribución de Pedestal",
+        "groupId": "energia",
+        "maxScale": 4000,
+        "enable": true,
+        "visible": true
+    },
+    "METRO.Cajas_Inspeccion_TEL": {
+        "name": "Cajas Inspección Telefónica",
+        "groupId": "teleco",
+        "maxScale": 3000,
+        "enable": true,
+        "visible": true
+    },
+    "METRO.Cajas_Inspeccion": {
+        "name": "Cajas Inspección Energía",
+        "groupId": "energia",
+        "maxScale": 1000,
+        "enable": true,
+        "visible": true
+    },
+    "METRO.VGNa": {
+        "name": "Válvula Gas Natural",
+        "groupId": "gas",
+        "maxScale": 10000,
+        "enable": true,
+        "visible": true
+    },
+    "METRO.ARTr": {
+        "name": "Apoyos de la Red de Transmisión",
+        "groupId": "teleco",
+        "maxScale": 800,
+        "enable": true,
+        "visible": true
+    },
+    "METRO.Post": {
+        "name": "Postes",
+        "groupId": "energia",
+        "maxScale": 2500,
+        "enable": true,
+        "visible": true
+    },
+    "METRO.TPub": {
+        "name": "Teléfono Público",
+        "groupId": "teleco",
+        "maxScale": 15000,
+        "enable": true,
+        "visible": true
+    },
+    "METRO.Arma": {
+        "name": "Armarios",
+        "groupId": "teleco",
+        "maxScale": 8000,
+        "enable": true,
+        "visible": true
+    },
+    "METRO.Cama": {
+        "name": "Cámara",
+        "groupId": "energia",
+        "maxScale": 1000,
+        "enable": true,
+        "visible": true
+    },
+    "METRO.Eje_Ajustado": {
+        "name": "Eje Ajustado",
+        "groupId": "metro",
+        "maxScale": 10000,
+        "enable": true,
+        "visible": true
+    },
+    "METRO.Afectacion_": {
+        "name": "Afectación",
+        "groupId": "metro",
+        "maxScale": 10000,
+        "enable": true,
+        "visible": true
+    },
+    "METRO.Malla_Vial": {
+        "name": "Malla Vial",
+        "groupId": "catastro",
+        "maxScale": 1000,
+        "enable": true,
+        "visible": false
+    },
+    "METRO.RTel_1": {
+        "name": "Red de Telecomunicaciones",
+        "groupId": "teleco",
+        "maxScale": 10000,
+        "enable": true,
+        "visible": true
+    },
+    "METRO.RGNa": {
+        "name": "Red Gas Natural",
+        "groupId": "gas",
+        "maxScale": 2000,
+        "enable": true,
+        "visible": true
+    },
+    "METRO.REle": {
+        "name": "Red Eléctrica",
+        "groupId": "energia",
+        "maxScale": 4000,
+        "enable": true,
+        "visible": true
+    },
+    "METRO.LASC": {
+        "name": "Línea Alcantarillado Sanitario Combinado",
+        "groupId": "asanitarioc",
+        "maxScale": 20000,
+        "enable": true,
+        "icon": "css/img/linea_alcantarillado_sanitario_combinado.jpg"
+    },
+    "METRO.LAPl": {
+        "name": "Línea Alcantarillado Pluvial",
+        "groupId": "apluvial",
+        "maxScale": 8000,
+        "enable": true,
+        "icon": "css/img/linea_alcantarillado_pluvial.jpg"
+    },
+    "METRO.LAcu": {
+        "name": "Línea",
+        "groupId": "acueducto",
+        "maxScale": 40000,
+        "enable": true,
+        "icon": "css/img/linea.jpg"
+    },
+    "METRO.Tramos_": {
+        "name": "Tramos",
+        "groupId": "metro",
+        "maxScale": 120000,
+        "enable": true,
+        "visible": true
+    },
+    "METRO.Andenes": {
+        "name": "Andenes",
+        "groupId": "catastro",
+        "maxScale": 1000,
+        "enable": true,
+        "visible": false
+    },
+    "METRO.Calzadas": {
+        "name": "Calzadas",
+        "groupId": "catastro",
+        "maxScale": 1000,
+        "enable": true,
+        "visible": false
+    },
+    "METRO.Estaciones_Ajustadas": {
+        "name": "Estaciones",
+        "groupId": "metro",
+        "maxScale": 1000,
+        "enable": true,
+        "visible": true
+    },
+    "METRO.Manzanas": {
+        "name": "Manzanas",
+        "groupId": "catastro",
+        "maxScale": 1000,
+        "enable": true,
+        "visible": false
+    },
+    "METRO.Separadores": {
+        "name": "Separadores",
+        "groupId": "catastro",
+        "maxScale": 1000,
+        "enable": true,
+        "visible": false
+    }
+}

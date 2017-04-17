@@ -1,0 +1,305 @@
+body {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+html, body, #map {
+    height: 100%;
+    font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+html, body, #map {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#sidebar {
+    z-index: 40;
+}
+
+.sidebar-content, .sidebar-pane {
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+}
+
+.sidebar-tabs, .ol-control button {
+    background-color: rgba(38, 166, 154, 0.5);
+}
+
+.sidebar-tabs>ul>li>a:hover, .ol-control button:hover, .sidebar-tabs>ul>li.active {
+    background-color: rgb(38, 166, 154);
+}
+
+.sidebar-tabs, .sidebar-tabs>ul {
+    width: 36px;
+}
+
+.sidebar-header {
+    margin-bottom: 20px;
+}
+
+.btnEye {
+    width: 25px;
+}
+
+.btnEyeGroup {
+    float: right !important;
+    margin-right: 0 !important;
+}
+
+.btnEyeGroup:hover {
+    color: #26a69a;
+}
+
+#btnP1 {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+}
+
+#btnP2 {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+}
+
+#btnP3 {
+    position: absolute;
+    top: 110px;
+    right: 20px;
+}
+
+#btnP4 {
+    position: absolute;
+    top: 160px;
+    right: 20px;
+}
+
+#btnP5 {
+    position: absolute;
+    top: 210px;
+    right: 20px;
+}
+
+#btnP6 {
+    position: absolute;
+    top: 260px;
+    right: 20px;
+}
+
+#btnP7 {
+    position: absolute;
+    top: 310px;
+    right: 20px;
+}
+
+#btnZoomIn {
+    position: absolute;
+    top: 60px;
+    left: 20px;
+}
+
+#btnZoomOut {
+    position: absolute;
+    top: 80px;
+    left: 20px;
+}
+
+#btnDrawPoint {}
+
+#btnDrawLine {}
+
+#btnDrawPoly {}
+
+.ol-popup {
+    display: inline-block;
+    white-space: nowrap;
+    position: absolute;
+    background-color: white;
+    -webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+    filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+    padding: 15px;
+    /* border-radius: 10px; */
+    border: 1px solid #cccccc;
+    bottom: 12px;
+    left: -50px;
+}
+
+.ol-popup:after, .ol-popup:before {
+    top: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.ol-popup:after {
+    border-top-color: white;
+    border-width: 10px;
+    left: 48px;
+    margin-left: -10px;
+}
+
+.ol-popup:before {
+    border-top-color: #cccccc;
+    border-width: 11px;
+    left: 48px;
+    margin-left: -11px;
+}
+
+.ol-popup-closer {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    cursor: pointer;
+}
+
+.ol-popup-closer:hover {
+    color: rgb(255, 56, 168);
+}
+
+#map_zoom_slider {
+    left: 66px;
+}
+
+.esriSignInDialog {
+    background-color: #fafafa;
+    border-radius: 2px;
+    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.3);
+}
+
+.esriSignInDialog>.dijitDialogPaneContentArea {
+    /*background-color: white;*/
+}
+
+.esriSignInDialog>*>form {
+    /*background-color: black;*/
+    margin: 20px;
+}
+
+.esriSignInDialog .dijitValidationContainer {
+    display: none;
+}
+
+.esriSignInDialog .dijitDialogTitleBar {
+    display: none;
+}
+
+.esriSignInDialog .dijitToggleButtonIconChar {
+    display: none;
+}
+
+.esriSignInDialog .dijitOffScreen {
+    display: none;
+}
+
+.esriSignInDialog .dijitButtonContents {
+    /*background-color: #ccc;*/
+    border-radius: 10px;
+    padding: 10px 18px 10px 18px;
+    margin-left: 0px;
+    text-transform: uppercase;
+}
+
+.esriSignInDialog .dijitButtonContents:hover {
+    transition: .3s ease-out;
+    will-change: opacity, transform;
+    background-color: rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+#legendDiv .esriLegendLayerLabel {
+    display: none;
+}
+
+#legendDiv td {
+    padding: 0;
+}
+
+.esriScalebar {
+    left: 60px !important;
+    bottom: 50px !important;
+}
+
+.esriScalebar {
+    width: auto;
+    height: auto;
+    padding: 5px;
+    padding-right: 40px;
+    background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.3);
+}
+
+#toc-div ul.collection>li {
+    min-height: 60px;
+}
+
+#toc-div ul.collection>li p {
+    padding: 0;
+}
+
+.esriPopup .sizer {
+    /*width: 250px !important;*/
+}
+
+#navpane {
+    width: 300px;
+    height: -webkit-calc(100% - 36px);
+    height: -moz-calc(100% - 36px);
+    height: calc(100% - 36px);
+    position: absolute;
+    right: 100px;
+    top: 0;
+}
+
+#extentpane {
+    width: auto;
+    position: absolute;
+    left: 60px;
+    bottom: 18px;
+    background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.3);
+    height: 25px;
+    text-align: center;
+    font-weight: bold;
+    padding: 4px;
+}
+
+.dijitArrowButtonChar {
+    display: inline !important;
+    font-size: 50%;
+}
+
+.esriMeasurementButtonContainer: hover {}
+
+.esriMeasurementButtonContainer>.esriToggleButton {
+    border: 1px solid #b1b1b1;
+    width: 100%;
+    text-align: center;
+}
+
+.esriMeasurementButtonContainer>.esriToggleButton>.dijitButtonNode {
+    width: auto !important;
+}
+
+.dijitPopup.dijitMenuPopup {
+    /*background-color: #f00;*/
+}
+
+.dijitPopup.dijitMenuPopup>table>tbody>tr {
+    height: 24px;
+}
+
+.dijitPopup.dijitMenuPopup>table>tbody>tr {
+    border: 0.5px solid #333333;
+}
+
+.dijitMenuItemLabel {
+    left: 5px;
+}

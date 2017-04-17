@@ -1,0 +1,13 @@
+#npm install will install both "dependencies" and "devDependencies"
+#npm install --production will only install "dependencies"
+#npm install --dev will only install "devDependencies"
+
+
+npm init
+sudo npm install --global gulp-cli
+npm install --save-dev gulp
+npm install --save-dev gulp-webserver
+sudo npm install --global bower
+bower init
+bower install openlayers3.5 --save
+

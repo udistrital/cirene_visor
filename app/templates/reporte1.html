@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <link rel="stylesheet" href="{{baseUrl}}/css/reportes.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Reporte 1 Primera Línea del Metro de Bogotá</title>
+    <link href="css/img/favicon.png" rel="icon" type="image/png">
+</head>
+
+<body>
+
+    <div id="contenedor">
+        <div class="logo left">
+            <img src="{{baseUrl}}/css/img/logo_EAAB.jpg" />
+        </div>
+        <div id="titulo">
+            <h1>Reporte 1 - Primera Línea del Metro de Bogotá</h1>
+        </div>
+        <div class="logo right">
+            <img src="{{baseUrl}}/css/img/logo_EAAB.jpg" />
+        </div>
+
+        {{#imageexist}}
+        <div id="mapa">
+            <img src="{{imageUrl}}" />
+        </div>
+        {{/imageexist}}
+
+        <div class="titulo2">
+            <h2>RESUMEN DE REDES AFECTADAS</h2>
+        </div>
+
+        <div id="resultado">
+          {{#resultado}}
+          <ul>
+              <li>
+                  <h3>Capa: {{capa}}</h3>
+              </li>
+              {{#entidades}}
+                <li>
+                  {{#campos}}
+                    {{texto}}<br>
+                  {{/campos}}
+                </li>
+              {{/entidades}}
+          </ul>
+          {{/resultado}}
+        </div>
+
+    </div>
+
+</body>
+
+</html>

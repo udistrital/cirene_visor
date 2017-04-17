@@ -1,0 +1,19 @@
+{
+  "name": "acueducto",
+  "version": "0.0.1",
+  "descripcion": "Aplicación Visor de Acueducto",
+  "authors": [
+    "Jorge Ulises Useche Cuellar"
+  ],
+  "license": "MIT",
+  "homepage": "http://incige.maps.arcgis.com/",
+  "dependencies": {
+    "jquery": "^3.1.0",
+    "sidebar-v2": "^0.3.0",
+    "bootstrap": "^3.3.7",
+    "font-awesome": "^4.6.3",
+    "jquery-Mustache": "^0.2.7",
+    "materialize": "^0.97.8",
+    "material-design-icons": "^3.0.1"
+  }
+}

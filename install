@@ -1,0 +1,21 @@
+#!/bin/bash
+
+SUDO='sudo'
+function printc {
+  RED='\033[0;31m'
+  NC='\033[0m' # No Color
+  echo -e '>>> '${RED}"$1"${NC}
+}
+
+printc "$SUDO npm install --global bower"
+$SUDO npm install --global bower
+
+printc "$SUDO npm install --global gulp-cli"
+$SUDO npm install --global gulp-cli
+
+printc "npm install --save"
+npm install --save
+
+printc 'bower install --save'
+bower install --save
+
