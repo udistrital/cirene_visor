@@ -1,4 +1,14 @@
 [{
+    "serviceId": 8,
+    "serviceType": "WMSServer",
+    "name": "IRSP V1",
+    "id": "IRSP_V1",
+    "url": "http://serviciosgis.catastrobogota.gov.co/arcgis/services/Mapa_Referencia/Mapa_Referencia/MapServer/WMSServer",
+    "layers": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24",
+    "opacity": 0.8,
+    "type": "ArcGISTiledMapServiceLayer",
+    "enable": true
+}, {
     "serviceId": 1,
     "serviceType": "WFS",
     "name": "IRSP V1",
@@ -7,7 +17,7 @@
     "opacity": 0.8,
     "type": "ArcGISTiledMapServiceLayer",
     "enable": true
-},{
+}, {
     "serviceId": 7,
     "serviceType": "WFS",
     "name": "IRSP V1",
@@ -58,15 +68,6 @@
     "name": "IRSP V1",
     "id": "IRSP_V1",
     "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typename=SIGUD:ud&outputFormat=application%2Fjson",
-    "opacity": 0.8,
-    "type": "ArcGISTiledMapServiceLayer",
-    "enable": true
-}, {
-    "serviceId": 8,
-    "serviceType": "WMSServer",
-    "name": "IRSP V1",
-    "id": "IRSP_V1",
-    "url": "http://serviciosgis.catastrobogota.gov.co/arcgis/services/Mapa_Referencia/Mapa_Referencia/MapServer/WMSServer",
     "opacity": 0.8,
     "type": "ArcGISTiledMapServiceLayer",
     "enable": true

@@ -96,36 +96,7 @@ function createMap() {
         // https://developers.arcgis.com/javascript/3/jssamples/fl_ondemand.html
         //map.infoWindow.resize(400, 200)
 
-        // var fl = new FeatureLayer('https://services7.arcgis.com/lUZlLTBKH3INlBpk/arcgis/rest/services/Geodatabase_Redes_CAN/FeatureServer/0', {
-        //     mode: FeatureLayer.MODE_ONDEMAND,
-        //     // tileWidth: 200,
-        //     // tileHeight: 200
-        // })
-        // window.fl = fl
-        // map.addLayer(fl)
-        // for (var i = 0; i <= 21; i++) {
-        //   map.addLayer(new FeatureLayer('https://services7.arcgis.com/lUZlLTBKH3INlBpk/arcgis/rest/services/IRSP_V1/FeatureServer/'+i, {
-        //     mode: FeatureLayer.MODE_ONDEMAND,
-        //   }))
-        // }
-
-        // for (var i = 10; i <= 15; i++) {
-        //   map.addLayer(new FeatureLayer('https://services7.arcgis.com/lUZlLTBKH3INlBpk/ArcGIS/rest/services/IRSP_V1/FeatureServer/'+i, {
-        //     mode: FeatureLayer.MODE_ONDEMAND,
-        //   }))
-        // }
-
-        // map.addLayer(new ArcGISTiledMapServiceLayer('https://services7.arcgis.com/lUZlLTBKH3INlBpk/arcgis/rest/services/IRSP_V1/MapServer'))
-
-        // https://developers.arcgis.com/javascript/3/jshelp/best_practices_feature_layers.html
-        // window.mapFeatureLayers = new Array()
-        // map.on('onZoomEnd', function() {
-        //     window.mapMaxOffset = calcOffset()
-        //     for (var i = 0; i < featureLayers.length; i++) {
-        //         featureLayers[i].setMaxAllowableOffset(window.maxOffset)
-        //     }
-        // })
-
+        // Base map
         var osmLayer = new ol.layer.Tile({
             source: new ol.source.OSM()
         })
@@ -207,18 +178,19 @@ function createMap() {
 
                 } else if (servicio.serviceType === 'WMSServer') {
                   var wmsSource = new ol.source.TileWMS({
-                      url: "http://serviciosgis.catastrobogota.gov.co/arcgis/services/Mapa_Referencia/Mapa_Referencia/MapServer/WMSServer",
+                      url: servicio.url,
                       params:{
-                          LAYERS:"0,1,2",
+                          LAYERS: servicio.layers,
                           FORMAT:"image/png",
-                      }
+                      },
+                      crossOrigin: ''
                    });
                   wmsSource.indice = i;
 
                   var wmsLayer = new ol.layer.Tile({
                       source: wmsSource
                   })
-                  window.caapa = wmsLayer;
+                  window.wmsLayer = wmsLayer;
                   map.addLayer(wmsLayer);
 
                 } else if (servicio.serviceType === 'FeatureServer') {

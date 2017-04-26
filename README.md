@@ -4,7 +4,6 @@ Openlayers con Material Design Lite
 # Visor de datos geográficos Cirene
 
 ## Requerimientos:
------------------
 
 - Openlayers v4.0: Biblioteca de Javascript para Mapas en la Web
 - Gulp: Systema de Construcción y Automatización de Flujo de Trabajo
