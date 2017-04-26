@@ -64,12 +64,19 @@ function createMap() {
           }
       }))
 
+      var projection = new ol.proj.Projection({
+          code: 'EPSG:4326',
+          units: 'degrees',
+          axisOrientation: 'neu'
+      });
+
         var map = new ol.Map({
             //layers: [osmLayer, wmsLayer, grupoislaLayer, islaLayer],
             overlays: [overlay],
             target: document.getElementById('map'),
             view: new ol.View({
-                center: [-8244952.014276695, 515728.84084898204],
+                projection: projection,
+                center: [-74.06567902549436, 4.6281822385875655],
                 maxZoom: 26,
                 zoom: 18
             })
@@ -143,42 +150,77 @@ function createMap() {
         // })
         // showScale()
 
-        var servicios = window.servicios
+        var servicios = window.servicios;
         for (var i = 0; i < servicios.length; i++) {
-            var servicio = servicios[i]
+            var servicio = servicios[i];
             if (servicio.enable) {
                 if (servicio.serviceType === 'WFS') {
-                    var source = new ol.source.Vector({
+                    var wfsSource = new ol.source.Vector({
                         loader: function(extent, resolution, projection) {
-                            var url = servicio.url + //'/geoserver/parqueaderos/ows?service=WFS&' +
+                            var indice = this.indice;
+                            var url = servicios[indice].url + //'/geoserver/parqueaderos/ows?service=WFS&' +
                                 //'version=1.0.0&request=GetFeature&typename=parqueaderos:isla&' +
                                 //'outputFormat=application%2Fjson' +
-                                '&srsname=EPSG:3857&bbox=' + extent.join(',') + ',EPSG:3857'
+                                '&srsname=EPSG:4326&bbox=' + extent.join(',') + ',EPSG:4326';
                             // use jsonp: false to prevent jQuery from adding the "callback"
                             // parameter to the URL
-                            console.log('url', url);
                             $.ajax({
                                 url: url,
                                 dataType: 'json',
                                 jsonp: false
                             }).done(function(response) {
-                                source.addFeatures(geojsonFormat.readFeatures(response))
+                                wfsSource.addFeatures(geojsonFormat.readFeatures(response))
                             })
                         },
                         strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
                             maxZoom: 19
                         }))
-                    })
-                    var layer = new ol.layer.Vector({
-                        source: source,
+                    });
+                    wfsSource.indice = i;
+                    var wfsLayer = new ol.layer.Vector({
+                        source: wfsSource,
                         style: new ol.style.Style({
                             stroke: new ol.style.Stroke({
                                 color: 'rgba(0, 0, 255, 1.0)',
                                 width: 2
                             })
                         })
-                    })
-                    map.addLayer(layer)
+                    });
+                    map.addLayer(wfsLayer)
+                } else if (servicio.serviceType === 'WMS') {
+                  var wmsSource = new ol.source.TileWMS({
+                      url: '/geoserver/wms',
+                      params: {
+                          'LAYERS': 'parqueaderos:sotano1_50ppp_georeferenced',
+                          'FORMAT': 'image/png',
+                          'TILED': true
+                      },
+                      serverType: 'geoserver',
+                      crossOrigin: 'anonymous'
+                  });
+                  wmsSource.indice = i;
+
+                  var wmsLayer = new ol.layer.Tile({
+                      source: wmsSource
+                  })
+                  map.addLayer(wmsLayer);
+
+                } else if (servicio.serviceType === 'WMSServer') {
+                  var wmsSource = new ol.source.TileWMS({
+                      url: "http://serviciosgis.catastrobogota.gov.co/arcgis/services/Mapa_Referencia/Mapa_Referencia/MapServer/WMSServer",
+                      params:{
+                          LAYERS:"0,1,2",
+                          FORMAT:"image/png",
+                      }
+                   });
+                  wmsSource.indice = i;
+
+                  var wmsLayer = new ol.layer.Tile({
+                      source: wmsSource
+                  })
+                  window.caapa = wmsLayer;
+                  map.addLayer(wmsLayer);
+
                 } else if (servicio.serviceType === 'FeatureServer') {
                     for (var j = 0; j < servicio.layers.length; j++) {
                         var layer = servicio.layers[j]

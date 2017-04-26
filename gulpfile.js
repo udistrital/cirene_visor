@@ -18,13 +18,13 @@ gulp.task('webserver', function() {
             directoryListing: false,
             open: true,
             proxies: [{
-                source: '/arcgis',
-                target: 'http://acueducto.incige.com/arcgis',
-                options: {
-                    headers: {
-                        'DEVELOPER': 'juusechec'
-                    }
+              source: '/geoserver',
+              target: 'http://sig.udistrital.edu.co:8080/geoserver',
+              options: {
+                headers: {
+                  'DEVELOPER': 'juusechec'
                 }
+              }
             }]
         }))
 })

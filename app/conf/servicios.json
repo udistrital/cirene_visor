@@ -3,17 +3,80 @@
     "serviceType": "WFS",
     "name": "IRSP V1",
     "id": "IRSP_V1",
-    "url": "/geoserver/parqueaderos/ows?service=WFS&version=1.0.0&request=GetFeature&typename=parqueaderos:isla&outputFormat=application%2Fjson",
+    "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typename=SIGUD:Localidades&outputFormat=application%2Fjson",
+    "opacity": 0.8,
+    "type": "ArcGISTiledMapServiceLayer",
+    "enable": true
+},{
+    "serviceId": 7,
+    "serviceType": "WFS",
+    "name": "IRSP V1",
+    "id": "IRSP_V1",
+    "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typename=SIGUD:lote&outputFormat=application%2Fjson",
+    "opacity": 0.8,
+    "type": "ArcGISTiledMapServiceLayer",
+    "enable": true
+},{
+    "serviceId": 2,
+    "serviceType": "WFS",
+    "name": "IRSP V1",
+    "id": "IRSP_V1",
+    "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typename=SIGUD:Lote&outputFormat=application%2Fjson",
     "opacity": 0.8,
     "type": "ArcGISTiledMapServiceLayer",
     "enable": true
 }, {
-    "serviceId": 2,
+    "serviceId": 3,
+    "serviceType": "WFS",
+    "name": "IRSP V1",
+    "id": "IRSP_V1",
+    "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typename=SIGUD:construccion&outputFormat=application%2Fjson",
+    "opacity": 0.8,
+    "type": "ArcGISTiledMapServiceLayer",
+    "enable": true
+}, {
+    "serviceId": 4,
+    "serviceType": "WFS",
+    "name": "IRSP V1",
+    "id": "IRSP_V1",
+    "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typename=SIGUD:nivel&outputFormat=application%2Fjson",
+    "opacity": 0.8,
+    "type": "ArcGISTiledMapServiceLayer",
+    "enable": true
+}, {
+    "serviceId": 5,
+    "serviceType": "WFS",
+    "name": "IRSP V1",
+    "id": "IRSP_V1",
+    "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typename=SIGUD:sede_pto&outputFormat=application%2Fjson",
+    "opacity": 0.8,
+    "type": "ArcGISTiledMapServiceLayer",
+    "enable": true
+}, {
+    "serviceId": 6,
+    "serviceType": "WFS",
+    "name": "IRSP V1",
+    "id": "IRSP_V1",
+    "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typename=SIGUD:ud&outputFormat=application%2Fjson",
+    "opacity": 0.8,
+    "type": "ArcGISTiledMapServiceLayer",
+    "enable": true
+}, {
+    "serviceId": 8,
+    "serviceType": "WMSServer",
+    "name": "IRSP V1",
+    "id": "IRSP_V1",
+    "url": "http://serviciosgis.catastrobogota.gov.co/arcgis/services/Mapa_Referencia/Mapa_Referencia/MapServer/WMSServer",
+    "opacity": 0.8,
+    "type": "ArcGISTiledMapServiceLayer",
+    "enable": true
+}, {
+    "serviceId": 20,
     "serviceType": "MapServer",
     "name": "OrtoFoto Bogotá",
     "id": "Ortho2014",
     "url": "http://serviciosgis.eastus.cloudapp.azure.com/arcgis/rest/services/Imagenes/Ortho2014/MapServer",
     "opacity": 0.8,
     "type": "ArcGISTiledMapServiceLayer",
-    "enable": true
+    "enable": false
 }]
