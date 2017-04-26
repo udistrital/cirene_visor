@@ -1,523 +1,527 @@
-var map
-var toolbar
-var esriConfig
-var servicios
-var grupoServicios
-var navToolbar
-var geometriaAnalisis
+var map;
+var toolbar;
+var esriConfig;
+var servicios;
+var grupoServicios;
+var navToolbar;
+var geometriaAnalisis;
 
 require([
-    'dojo/request/xhr',
-    'dojo/promise/all',
-    'dojo/Deferred'
+  'dojo/request/xhr',
+  'dojo/promise/all',
+  'dojo/Deferred'
 ], function(
-    xhr,
-    all,
-    Deferred
+  xhr,
+  all,
+  Deferred
 ) {
 
-    var promise1 = xhr('conf/servicios.json', {
-        handleAs: 'json'
-    })
+  var promise1 = xhr('conf/servicios.json', {
+    handleAs: 'json'
+  });
 
-    var promise2 = xhr('conf/grupos.json', {
-        handleAs: 'json'
-    })
+  var promise2 = xhr('conf/grupos.json', {
+    handleAs: 'json'
+  });
 
-    all([promise1, promise2]).then(function(results) {
-        console.log('results', results)
-        window.servicios = results[0]
-        window.grupoServicios = results[1]
-        createMap()
-        // results will be an Array
-    }, function(err) {
-        // Handle the error condition
-        console.log('err', err)
-    }, function(evt) {
-        // Handle a progress event from the request if the
-        // browser supports XHR2
-        console.log('Browser supports XHR2', 'evt', evt)
-    })
-})
+  all([promise1, promise2]).then(function(results) {
+    console.log('results', results);
+    window.servicios = results[0];
+    window.grupoServicios = results[1];
+    createMap();
+    // results will be an Array
+  }, function(err) {
+    // Handle the error condition
+    console.log('err', err);
+  }, function(evt) {
+    // Handle a progress event from the request if the
+    // browser supports XHR2
+    console.log('Browser supports XHR2', 'evt', evt);
+  });
+});
 
 function createMap() {
-    require([
-        'dojo/domReady!'
-    ], function(
-    ) {
+  require([
+    'dojo/domReady!'
+  ], function() {
 
-      /**
-       * Elements that make up the popup.
-       */
-      var container = document.getElementById('popup')
-      var content = document.getElementById('popup-content')
-      var closer = document.getElementById('popup-closer')
+    /**
+     * Elements that make up the popup.
+     */
+    var container = document.getElementById('popup');
+    var content = document.getElementById('popup-content');
+    var closer = document.getElementById('popup-closer');
 
-      /**
-       * Create an overlay to anchor the popup to the map.
-       */
-      var overlay = new ol.Overlay( /** @type {olx.OverlayOptions} */ ({
-          element: container,
-          autoPan: true,
-          autoPanAnimation: {
-              duration: 250
-          }
-      }))
+    /**
+     * Create an overlay to anchor the popup to the map.
+     */
+    var overlay = new ol.Overlay( /** @type {olx.OverlayOptions} */ ({
+      element: container,
+      autoPan: true,
+      autoPanAnimation: {
+        duration: 250
+      }
+    }));
 
-      var projection = new ol.proj.Projection({
-          code: 'EPSG:4326',
-          units: 'degrees',
-          axisOrientation: 'neu'
+    var projection = new ol.proj.Projection({
+      code: 'EPSG:4326',
+      units: 'degrees',
+      axisOrientation: 'neu'
+    });
+
+    var map = new ol.Map({
+      //layers: [osmLayer, wmsLayer, grupoislaLayer, islaLayer],
+      overlays: [overlay],
+      target: document.getElementById('map'),
+      view: new ol.View({
+        projection: projection,
+        center: [-74.06567902549436, 4.6281822385875655],
+        maxZoom: 26,
+        zoom: 18
+      })
+    });
+    window.map = map;
+
+    // The URL referenced in the constructor may point to a style url JSON (as in this sample)
+    // or directly to a vector tile service
+    // NOT SUPPORT IN CHROME
+    // var vtlayer = new VectorTileLayer('https://www.arcgis.com/sharing/rest/content/items/bf79e422e9454565ae0cbe9553cf6471/resources/styles/root.json')
+    // map.addLayer(vtlayer)
+
+    //configBufferTool()
+
+    //map.on('load', createDrawToolbar)
+
+    // https://developers.arcgis.com/javascript/3/jssamples/fl_ondemand.html
+    //map.infoWindow.resize(400, 200)
+
+    // Base map
+    var osmLayer = new ol.layer.Tile({
+      source: new ol.source.OSM()
+    });
+
+    map.addLayer(osmLayer);
+
+    // format used to parse WFS GetFeature responses
+    var geojsonFormat = new ol.format.GeoJSON();
+
+    // var scalebar = new Scalebar({
+    //     map: map,
+    //     // "dual" displays both miles and kilometers
+    //     // "english" is the default, which displays miles
+    //     // use "metric" for kilometers
+    //     scalebarUnit: 'dual'
+    // })
+
+    window.mapFeatureLayerObjects = [];
+    // map.on('zoom-end', function() {
+    //     checkVisibilityAtScale()
+    //     showScale()
+    // })
+    // showScale()
+
+    var wfsLoader = function(extent, resolution, projection) {
+      var indice = this.indice;
+      var url = servicios[indice].url + //'/geoserver/parqueaderos/ows?service=WFS&' +
+        //'version=1.0.0&request=GetFeature&typename=parqueaderos:isla&' +
+        //'outputFormat=application%2Fjson' +
+        '&srsname=EPSG:4326&bbox=' + extent.join(',') + ',EPSG:4326';
+      // use jsonp: false to prevent jQuery from adding the "callback"
+      // parameter to the URL
+      $.ajax({
+        url: url,
+        dataType: 'json',
+        jsonp: false
+      }).done(function(response) {
+        this.addFeatures(geojsonFormat.readFeatures(response));
       });
+    };
 
-        var map = new ol.Map({
-            //layers: [osmLayer, wmsLayer, grupoislaLayer, islaLayer],
-            overlays: [overlay],
-            target: document.getElementById('map'),
-            view: new ol.View({
-                projection: projection,
-                center: [-74.06567902549436, 4.6281822385875655],
-                maxZoom: 26,
-                zoom: 18
+    var servicios = window.servicios;
+    for (var i = 0; i < servicios.length; i++) {
+      var servicio = servicios[i];
+      if (servicio.enable) {
+        if (servicio.serviceType === 'WFS') {
+          var wfsSource = new ol.source.Vector({
+            loader: listenerLoader,
+            strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+              maxZoom: 19
+            }))
+          });
+          wfsSource.indice = i;
+          var wfsLayer = new ol.layer.Vector({
+            source: wfsSource,
+            style: new ol.style.Style({
+              stroke: new ol.style.Stroke({
+                color: 'rgba(0, 0, 255, 1.0)',
+                width: 2
+              })
             })
-        })
-        window.map = map
+          });
+          map.addLayer(wfsLayer);
+        } else if (servicio.serviceType === 'WMS') {
+          var wmsSource = new ol.source.TileWMS({
+            url: '/geoserver/wms',
+            params: {
+              'LAYERS': 'parqueaderos:sotano1_50ppp_georeferenced',
+              'FORMAT': 'image/png',
+              'TILED': true
+            },
+            serverType: 'geoserver',
+            crossOrigin: 'anonymous'
+          });
+          wmsSource.indice = i;
 
-        // The URL referenced in the constructor may point to a style url JSON (as in this sample)
-        // or directly to a vector tile service
-        // NOT SUPPORT IN CHROME
-        // var vtlayer = new VectorTileLayer('https://www.arcgis.com/sharing/rest/content/items/bf79e422e9454565ae0cbe9553cf6471/resources/styles/root.json')
-        // map.addLayer(vtlayer)
+          var wmsLayer = new ol.layer.Tile({
+            source: wmsSource
+          });
+          map.addLayer(wmsLayer);
 
-        //configBufferTool()
+        } else if (servicio.serviceType === 'WMSServer') {
+          var wmsServerSource = new ol.source.TileWMS({
+            url: servicio.url,
+            params: {
+              LAYERS: servicio.layers,
+              FORMAT: "image/png",
+            },
+            crossOrigin: ''
+          });
+          wmsServerSource.indice = i;
 
-        //map.on('load', createDrawToolbar)
+          var wmsServerLayer = new ol.layer.Tile({
+            source: wmsServerSource
+          });
+          window.wmsServerLayer = wmsServerLayer;
+          map.addLayer(wmsServerLayer);
 
-        // https://developers.arcgis.com/javascript/3/jssamples/fl_ondemand.html
-        //map.infoWindow.resize(400, 200)
+        } else if (servicio.serviceType === 'FeatureServer') {
+          for (var j = 0; j < servicio.layers.length; j++) {
+            var layer = servicio.layers[j];
+            if (layer.enable) {
+              var url = servicio.url + '/' + layer.layerId;
 
-        // Base map
-        var osmLayer = new ol.layer.Tile({
-            source: new ol.source.OSM()
-        })
+              var infoTemplate = new InfoTemplate();
+              infoTemplate.setTitle(layer.name);
+              var templateContent = generateTemplateContent(layer, i, j);
+              infoTemplate.setContent(templateContent);
 
-        map.addLayer(osmLayer);
+              var featureLayer = new FeatureLayer(url, {
+                id: layer.id,
+                mode: FeatureLayer[servicio.mode],
+                outFields: ['*'],
+                infoTemplate: infoTemplate,
+                visible: layer.visible
+                // maxAllowableOffset: calcOffset()
+              });
 
-        // format used to parse WFS GetFeature responses
-        var geojsonFormat = new ol.format.GeoJSON()
-
-        // var scalebar = new Scalebar({
-        //     map: map,
-        //     // "dual" displays both miles and kilometers
-        //     // "english" is the default, which displays miles
-        //     // use "metric" for kilometers
-        //     scalebarUnit: 'dual'
-        // })
-
-        window.mapFeatureLayerObjects = new Array()
-        // map.on('zoom-end', function() {
-        //     checkVisibilityAtScale()
-        //     showScale()
-        // })
-        // showScale()
-
-        var servicios = window.servicios;
-        for (var i = 0; i < servicios.length; i++) {
-            var servicio = servicios[i];
-            if (servicio.enable) {
-                if (servicio.serviceType === 'WFS') {
-                    var wfsSource = new ol.source.Vector({
-                        loader: function(extent, resolution, projection) {
-                            var indice = this.indice;
-                            var url = servicios[indice].url + //'/geoserver/parqueaderos/ows?service=WFS&' +
-                                //'version=1.0.0&request=GetFeature&typename=parqueaderos:isla&' +
-                                //'outputFormat=application%2Fjson' +
-                                '&srsname=EPSG:4326&bbox=' + extent.join(',') + ',EPSG:4326';
-                            // use jsonp: false to prevent jQuery from adding the "callback"
-                            // parameter to the URL
-                            $.ajax({
-                                url: url,
-                                dataType: 'json',
-                                jsonp: false
-                            }).done(function(response) {
-                                wfsSource.addFeatures(geojsonFormat.readFeatures(response))
-                            })
-                        },
-                        strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-                            maxZoom: 19
-                        }))
-                    });
-                    wfsSource.indice = i;
-                    var wfsLayer = new ol.layer.Vector({
-                        source: wfsSource,
-                        style: new ol.style.Style({
-                            stroke: new ol.style.Stroke({
-                                color: 'rgba(0, 0, 255, 1.0)',
-                                width: 2
-                            })
-                        })
-                    });
-                    map.addLayer(wfsLayer)
-                } else if (servicio.serviceType === 'WMS') {
-                  var wmsSource = new ol.source.TileWMS({
-                      url: '/geoserver/wms',
-                      params: {
-                          'LAYERS': 'parqueaderos:sotano1_50ppp_georeferenced',
-                          'FORMAT': 'image/png',
-                          'TILED': true
-                      },
-                      serverType: 'geoserver',
-                      crossOrigin: 'anonymous'
-                  });
-                  wmsSource.indice = i;
-
-                  var wmsLayer = new ol.layer.Tile({
-                      source: wmsSource
-                  })
-                  map.addLayer(wmsLayer);
-
-                } else if (servicio.serviceType === 'WMSServer') {
-                  var wmsSource = new ol.source.TileWMS({
-                      url: servicio.url,
-                      params:{
-                          LAYERS: servicio.layers,
-                          FORMAT:"image/png",
-                      },
-                      crossOrigin: ''
-                   });
-                  wmsSource.indice = i;
-
-                  var wmsLayer = new ol.layer.Tile({
-                      source: wmsSource
-                  })
-                  window.wmsLayer = wmsLayer;
-                  map.addLayer(wmsLayer);
-
-                } else if (servicio.serviceType === 'FeatureServer') {
-                    for (var j = 0; j < servicio.layers.length; j++) {
-                        var layer = servicio.layers[j]
-                        if (layer.enable) {
-                            var url = servicio.url + '/' + layer.layerId
-
-                            var infoTemplate = new InfoTemplate()
-                            infoTemplate.setTitle(layer.name)
-                            var content = generateTemplateContent(layer, i, j)
-                            infoTemplate.setContent(content)
-
-                            var featureLayer = new FeatureLayer(url, {
-                                id: layer.id,
-                                mode: FeatureLayer[servicio.mode],
-                                outFields: ['*'],
-                                infoTemplate: infoTemplate,
-                                visible: layer.visible
-                                // maxAllowableOffset: calcOffset()
-                            })
-                            window.mapFeatureLayerObjects.push(layer)
-                            // featureLayer.setMaxScale(layer.maxScale)
-                            // featureLayer.setMinScale(layer.minScale)
-                            map.addLayer(featureLayer)
-                        }
-                    }
-                }
+              window.mapFeatureLayerObjects.push(layer);
+              // featureLayer.setMaxScale(layer.maxScale)
+              // featureLayer.setMinScale(layer.minScale)
+              map.addLayer(featureLayer);
             }
+          }
         }
-        //checkVisibilityAtScale()
-        //add the legend
-        //createLeyend()
-        //createTOC()
-        //createMeasurement()
-    })
+      }
+    }
+    //checkVisibilityAtScale()
+    //add the legend
+    //createLeyend()
+    //createTOC()
+    //createMeasurement()
+  });
 }
 
 function showScale() {
-    $('#extentpane>span').html('1:' + String(window.map.getScale()))
+  $('#extentpane>span').html('1:' + String(window.map.getScale()));
 }
 
 //https://geonet.esri.com/docs/DOC-8721-coded-domains-in-infotemplate
 //https://developers.arcgis.com/javascript/3/jshelp/intro_formatinfowindow.html
 function getSubtypeDomain(fieldVal, fieldName, feature, injectObject) {
-    if (fieldVal === null) {
-        return fieldVal
-    }
+  if (fieldVal === null) {
+    return fieldVal;
+  }
 
-    var codedValues = servicios[injectObject.SERVICE_NUM].layers[injectObject.LAYER_NUM].fields[injectObject.FIELD_NUM].domain.codedValues
-    //console.log('codedValues', codedValues)
-    for (var i in codedValues) {
-        //console.log('codedValues[i], fieldVal', codedValues[i], fieldVal)
-        if (codedValues[i].code === fieldVal) {
-            return codedValues[i].name
-        }
+  var codedValues = servicios[injectObject.SERVICE_NUM].layers[injectObject.LAYER_NUM].fields[injectObject.FIELD_NUM].domain.codedValues;
+  //console.log('codedValues', codedValues)
+  for (var i in codedValues) {
+    //console.log('codedValues[i], fieldVal', codedValues[i], fieldVal)
+    if (codedValues[i].code === fieldVal) {
+      return codedValues[i].name;
     }
-    //console.log('fieldVal, fieldName', fieldVal, fieldName, feature, injectObject)
-    return 'Error.'
+  }
+  //console.log('fieldVal, fieldName', fieldVal, fieldName, feature, injectObject)
+  return 'Error.';
 }
 
 function generateTemplateContent(layer, SERVICE_NUM, LAYER_NUM) {
-    var content = ''
-    //console.log('layer', layer)
-    //console.log(typeof(layer.fields), layer.fields.length)
-    if (typeof(layer.fields) === 'undefined' || layer.fields.length === 0) {
-        // var capa = map.getLayer(layer.id)
-        // var fields = capa.fields
-        // for (var i = 0; i < fields.length; i++) {
-        //     var field = fields[i]
-        //     //if(typeof(noFields) === "undefined" || noFields.indexof(field.alias) < 0 ){
-        //       content += '<b>' + field.alias + ':<b> ${' + field.alias + '}'
-        //     //}
-        // }
-    } else {
-        for (var i = 0; i < layer.fields.length; i++) {
-            var field = layer.fields[i]
-            if (field.domain === undefined) {
-                content += '<b>' + field.alias + ':</b> ${' + field.name + '} <br/>'
-            } else {
-                var codedValues = field.domain.codedValues
-                //var codedValue = codedValues[ Number(field.name) - 1 ]
-                //console.log(codedValues, field.name, Number(field.name), Number(field.name) - 1, '<b>' + field.alias + ':</b> ${' + codedValue + ':getSubtypeDomain} <br/>')
-                content += '<b>' + field.alias + ':</b> ${' + field.name + ':getSubtypeDomain(SERVICE_NUM: "' + SERVICE_NUM + '", LAYER_NUM: "' + LAYER_NUM + '" , FIELD_NUM: "' + i + '")} <br/>'
-            }
-        }
-        //console.log('content', content)
+  var content = '';
+  //console.log('layer', layer)
+  //console.log(typeof(layer.fields), layer.fields.length)
+  if (typeof(layer.fields) === 'undefined' || layer.fields.length === 0) {
+    // var capa = map.getLayer(layer.id)
+    // var fields = capa.fields
+    // for (var i = 0; i < fields.length; i++) {
+    //     var field = fields[i]
+    //     //if(typeof(noFields) === "undefined" || noFields.indexof(field.alias) < 0 ){
+    //       content += '<b>' + field.alias + ':<b> ${' + field.alias + '}'
+    //     //}
+    // }
+  } else {
+    for (var i = 0; i < layer.fields.length; i++) {
+      var field = layer.fields[i];
+      if (field.domain === undefined) {
+        content += '<b>' + field.alias + ':</b> ${' + field.name + '} <br/>';
+      } else {
+        var codedValues = field.domain.codedValues;
+        //var codedValue = codedValues[ Number(field.name) - 1 ]
+        //console.log(codedValues, field.name, Number(field.name), Number(field.name) - 1, '<b>' + field.alias + ':</b> ${' + codedValue + ':getSubtypeDomain} <br/>')
+        content += '<b>' + field.alias + ':</b> ${' + field.name + ':getSubtypeDomain(SERVICE_NUM: "' + SERVICE_NUM + '", LAYER_NUM: "' + LAYER_NUM + '" , FIELD_NUM: "' + i + '")} <br/>';
+      }
     }
-    return content
+    //console.log('content', content)
+  }
+  return content;
 }
 
 function configBufferTool() {
-    require([
-        'esri/config',
-        'esri/tasks/GeometryService'
-    ], function(
-        esriConfig,
-        GeometryService
-    ) {
-        window.esriConfig = esriConfig
-        esriConfig.defaults.geometryService = new GeometryService('https://utility.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer')
-        esriConfig.defaults.io.proxyUrl = '/arcgis/proxy.php'
-        esriConfig.defaults.io.alwaysUseProxy = false
-    })
+  require([
+    'esri/config',
+    'esri/tasks/GeometryService'
+  ], function(
+    esriConfig,
+    GeometryService
+  ) {
+    window.esriConfig = esriConfig;
+    esriConfig.defaults.geometryService = new GeometryService('https://utility.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer');
+    esriConfig.defaults.io.proxyUrl = '/arcgis/proxy.php';
+    esriConfig.defaults.io.alwaysUseProxy = false;
+  });
 }
 
 function createLeyend() {
-    require([
-        'dojo/_base/array',
-        'esri/dijit/Legend'
-    ], function(
-        arrayUtils,
-        Legend
-    ) {
-        var layerInfo = arrayUtils.map(window.mapFeatureLayerObjects, function(layer, index) {
-            return {
-                layer: map.getLayer(layer.id),
-                title: layer.name
-            }
-        })
-        console.log('layerInfo', layerInfo)
-        if (layerInfo.length > 0) {
-            var legendDijit = new Legend({
-                map: map,
-                layerInfos: layerInfo
-            }, 'legendDiv')
-            legendDijit.startup()
-        }
-    })
+  require([
+    'dojo/_base/array',
+    'esri/dijit/Legend'
+  ], function(
+    arrayUtils,
+    Legend
+  ) {
+    var layerInfo = arrayUtils.map(window.mapFeatureLayerObjects, function(layer, index) {
+      return {
+        layer: map.getLayer(layer.id),
+        title: layer.name
+      };
+    });
+    console.log('layerInfo', layerInfo);
+    if (layerInfo.length > 0) {
+      var legendDijit = new Legend({
+        map: map,
+        layerInfos: layerInfo
+      }, 'legendDiv');
+      legendDijit.startup();
+    }
+  });
 }
 
 function createMeasurement() {
-    require([
-        'dojo/dom',
-        'esri/SnappingManager',
-        'esri/dijit/Measurement',
-        'esri/sniff',
-        'dojo/keys',
-        'dojo/parser'
-    ], function(
-        dom,
-        SnappingManager,
-        Measurement,
-        has,
-        keys
-        //parser
-    ) {
-        //parser.parse()
-        //dojo.keys.copyKey maps to CTRL on windows and Cmd on Mac., but has wrong code for Chrome on Mac
-        var snapManager = map.enableSnapping({
-            snapKey: has("mac") ? keys.META : keys.CTRL
-        });
+  require([
+    'dojo/dom',
+    'esri/SnappingManager',
+    'esri/dijit/Measurement',
+    'esri/sniff',
+    'dojo/keys',
+    'dojo/parser'
+  ], function(
+    dom,
+    SnappingManager,
+    Measurement,
+    has,
+    keys
+    //parser
+  ) {
+    //parser.parse()
+    //dojo.keys.copyKey maps to CTRL on windows and Cmd on Mac., but has wrong code for Chrome on Mac
+    var snapManager = map.enableSnapping({
+      snapKey: has("mac") ? keys.META : keys.CTRL
+    });
 
-        var measurement = new Measurement({
-            map: map
-        }, dom.byId("measurementDiv"))
-        measurement.startup()
-    })
+    var measurement = new Measurement({
+      map: map
+    }, dom.byId("measurementDiv"));
+    measurement.startup();
+  });
 }
 
 function createTOC() {
-    require([
-        'dojo/dom',
-        'dojo/query'
-    ], function(
-        dom,
-        query
-    ) {
-        var toc = dom.byId('toc-div')
-        var collapsible = '<ul class="collapsible" data-collapsible="accordion">'
-        for (var i = 0; i < window.grupoServicios.length; i++) {
-            var grupo = window.grupoServicios[i]
-            var li = '\
-            <li>\
-                <div class="collapsible-header">\
-                    <i class="material-icons">layers</i>\
-                    ' + grupo.name + '\
-                    <a href="#!" onclick="changeVisibilityGroup(event, \'' + grupo.id + '\', false)">\
-                        <i class="material-icons btnEyeGroup">visibility_off</i>\
-                    </a>\
-                    <a href="#!" onclick="changeVisibilityGroup(event, \'' + grupo.id + '\', true)">\
-                        <i class="material-icons btnEyeGroup">visibility</i>\
-                    </a>\
-                    </div>\
-                <div class="collapsible-body"><ul class="collection" data-group="' + grupo.id + '"></ul></div>\
-            </li>\
-            '
-            collapsible += li
-        }
-        collapsible += '</ul>'
-        toc.innerHTML = collapsible
+  require([
+    'dojo/dom',
+    'dojo/query'
+  ], function(
+    dom,
+    query
+  ) {
+    var toc = dom.byId('toc-div');
+    var collapsible = '<ul class="collapsible" data-collapsible="accordion">';
+    var i, li;
+    for (i = 0; i < window.grupoServicios.length; i++) {
+      var grupo = window.grupoServicios[i];
+      li =
+        '<li> ' +
+        '     <div class="collapsible-header">\n' +
+        '        <i class="material-icons">layers</i>\n' +
+        '        ' + grupo.name + '\n' +
+        '        <a href="#!" onclick="changeVisibilityGroup(event, \'' + grupo.id + '\', false)">\n' +
+        '            <i class="material-icons btnEyeGroup">visibility_off</i>\n' +
+        '        </a>\n' +
+        '        <a href="#!" onclick="changeVisibilityGroup(event, \'' + grupo.id + '\', true)">\n' +
+        '            <i class="material-icons btnEyeGroup">visibility</i>\n' +
+        '        </a>\n' +
+        '        </div>\n' +
+        '    <div class="collapsible-body"><ul class="collection" data-group="' + grupo.id + '"></ul></div>\n' +
+        '</li>\n';
+      collapsible += li;
+    }
+    collapsible += '</ul>';
+    toc.innerHTML = collapsible;
 
-        for (var i = 0; i < window.mapFeatureLayerObjects.length; i++) {
-            var layer = window.mapFeatureLayerObjects[i]
-            var classVisible = 'visibility'
-            if (layer.visible === 'false') {
-                classVisible = 'visibility_off'
-            }
-            var imageUrl = (typeof(layer.icon) === 'undefined' || layer.icon === '') ? 'css/img/acueducto.png' : layer.icon
-            var li = '\
-            <li class="collection-item avatar">\
-                <img src="' + imageUrl + '" alt="" class="circle">\
-                <span class="title" style="padding-right: 22px; display: block;">' + layer.name + '</span>\
-                <p>Desde escala 1:' + layer.maxScale + '</p>\
-                <a href="#!" onclick="changeVisibilityLayer(\'' + layer.id + '\')" class="secondary-content">\
-                    <i class="material-icons btnEye" data-layer-icon="' + layer.id + '">' + classVisible + '</i>\
-                </a>\
-            </li>'
-            var group = query('[data-group="' + layer.groupId + '"]')[0]
-            group.innerHTML += li
-        }
+    for (i = 0; i < window.mapFeatureLayerObjects.length; i++) {
+      var layer = window.mapFeatureLayerObjects[i];
+      var classVisible = 'visibility';
+      if (layer.visible === 'false') {
+        classVisible = 'visibility_off';
+      }
+      var imageUrl = (typeof(layer.icon) === 'undefined' || layer.icon === '') ? 'css/img/acueducto.png' : layer.icon;
+      li =
+        '<li class="collection-item avatar">\n' +
+        '    <img src="' + imageUrl + '" alt="" class="circle">\n' +
+        '    <span class="title" style="padding-right: 22px; display: block;">' + layer.name + '</span>\n' +
+        '    <p>Desde escala 1:' + layer.maxScale + '</p>\n' +
+        '    <a href="#!" onclick="changeVisibilityLayer(\'' + layer.id + '\')" class="secondary-content">\n' +
+        '        <i class="material-icons btnEye" data-layer-icon="' + layer.id + '">' + classVisible + '</i>\n' +
+        '    </a>\n' +
+        '</li>';
+      var group = query('[data-group="' + layer.groupId + '"]')[0];
+      group.innerHTML += li;
+    }
 
-        // Se cargan las cosas necesarias
-        $('.collapsible').collapsible()
-        checkVisibilityAtScale()
-    })
+    // Se cargan las cosas necesarias
+    $('.collapsible').collapsible();
+    checkVisibilityAtScale();
+  });
 }
 
 function changeVisibilityLayer(layerId) {
-    require([
-        'dojo/query',
-        'dojo/dom'
-    ], function(
-        query,
-        dom
-    ) {
-        var layer = map.getLayer(layerId)
-        var icon = query('[data-layer-icon="' + layer.id + '"]')[0]
-        window.layer = layer
-        if (layer.visible) {
-            layer.setVisibility(false)
-            icon.innerHTML = 'visibility_off'
-        } else {
-            layer.setVisibility(true)
-            icon.innerHTML = 'visibility'
-        }
-    })
+  require([
+    'dojo/query',
+    'dojo/dom'
+  ], function(
+    query,
+    dom
+  ) {
+    var layer = map.getLayer(layerId);
+    var icon = query('[data-layer-icon="' + layer.id + '"]')[0];
+    window.layer = layer;
+    if (layer.visible) {
+      layer.setVisibility(false);
+      icon.innerHTML = 'visibility_off';
+    } else {
+      layer.setVisibility(true);
+      icon.innerHTML = 'visibility';
+    }
+  });
 }
 
 function changeVisibilityGroup(evt, groupId, visibility) {
-    //evt.preventDefault()
-    require([
-        'dojo/query',
-        'dojo/dom'
-    ], function(
-        query,
-        dom
-    ) {
-        evt.stopPropagation()
-        for (var i = 0; i < window.mapFeatureLayerObjects.length; i++) {
-            var layer = window.mapFeatureLayerObjects[i]
-            if (layer.groupId === groupId) {
-                var layer = map.getLayer(layer.id)
-                var icon = query('[data-layer-icon="' + layer.id + '"]')[0]
-                if (visibility) {
-                    layer.setVisibility(true)
-                    icon.innerHTML = 'visibility'
-                } else {
-                    layer.setVisibility(false)
-                    icon.innerHTML = 'visibility_off'
-                }
-            }
+  //evt.preventDefault()
+  require([
+    'dojo/query',
+    'dojo/dom'
+  ], function(
+    query,
+    dom
+  ) {
+    evt.stopPropagation();
+    for (var i = 0; i < window.mapFeatureLayerObjects.length; i++) {
+      var layer = window.mapFeatureLayerObjects[i];
+      if (layer.groupId === groupId) {
+        layer = map.getLayer(layer.id);
+        var icon = query('[data-layer-icon="' + layer.id + '"]')[0];
+        if (visibility) {
+          layer.setVisibility(true);
+          icon.innerHTML = 'visibility';
+        } else {
+          layer.setVisibility(false);
+          icon.innerHTML = 'visibility_off';
         }
-    })
+      }
+    }
+  });
 }
 
 function createDrawToolbar(themap) {
-    require([
-        'esri/toolbars/draw',
-        'dojo/dom',
-        'dojo/on'
-    ], function(
-        Draw,
-        dom,
-        on
-    ) {
-        window.toolbar = new Draw(map)
-        toolbar.on('draw-end', addToMap)
+  require([
+    'esri/toolbars/draw',
+    'dojo/dom',
+    'dojo/on'
+  ], function(
+    Draw,
+    dom,
+    on
+  ) {
+    window.toolbar = new Draw(map);
+    toolbar.on('draw-end', addToMap);
 
-        var boton = dom.byId('btnDrawPoint')
-        var signal = on(boton, 'click', function() {
-            onClickButtonToolbar(signal, Draw, 'POINT')
-        })
-        var boton = dom.byId('btnDrawLine')
-        var signal = on(boton, 'click', function() {
-            onClickButtonToolbar(signal, Draw, 'POLYLINE')
-        })
-        var boton = dom.byId('btnDrawPoly')
-        var signal = on(boton, 'click', function() {
-            onClickButtonToolbar(signal, Draw, 'POLYGON')
-        })
-    })
+    var boton, signal;
+
+    boton = dom.byId('btnDrawPoint');
+    signal = on(boton, 'click', function() {
+      onClickButtonToolbar(signal, Draw, 'POINT');
+    });
+    boton = dom.byId('btnDrawLine');
+    signal = on(boton, 'click', function() {
+      onClickButtonToolbar(signal, Draw, 'POLYLINE');
+    });
+    boton = dom.byId('btnDrawPoly');
+    signal = on(boton, 'click', function() {
+      onClickButtonToolbar(signal, Draw, 'POLYGON');
+    });
+  });
 }
 
 function addToMap(evt) {
-    require([
-        'esri/graphic',
-        'esri/symbols/SimpleMarkerSymbol',
-        'esri/symbols/SimpleLineSymbol',
-        'esri/symbols/SimpleFillSymbol'
-    ], function(
-        Graphic,
-        SimpleMarkerSymbol,
-        SimpleLineSymbol,
-        SimpleFillSymbol
-    ) {
-        var symbol
-        toolbar.deactivate()
-        map.showZoomSlider()
-        var geometry = evt.geometry
-        switch (geometry.type) {
-            case 'point':
-            case 'multipoint':
-                symbol = new SimpleMarkerSymbol()
-                break
-            case 'polyline':
-                symbol = new SimpleLineSymbol()
-                break
-            default:
-                symbol = new SimpleFillSymbol()
-                break
-        }
-        var graphic = new Graphic(geometry, symbol)
-        map.graphics.add(graphic)
-        window.currentGeometry = geometry
-        zoomToGeometry(window.currentGeometry)
-    })
+  require([
+    'esri/graphic',
+    'esri/symbols/SimpleMarkerSymbol',
+    'esri/symbols/SimpleLineSymbol',
+    'esri/symbols/SimpleFillSymbol'
+  ], function(
+    Graphic,
+    SimpleMarkerSymbol,
+    SimpleLineSymbol,
+    SimpleFillSymbol
+  ) {
+    var symbol;
+    toolbar.deactivate();
+    map.showZoomSlider();
+    var geometry = evt.geometry;
+    switch (geometry.type) {
+      case 'point':
+      case 'multipoint':
+        symbol = new SimpleMarkerSymbol();
+        break;
+      case 'polyline':
+        symbol = new SimpleLineSymbol();
+        break;
+      default:
+        symbol = new SimpleFillSymbol();
+        break;
+    }
+    var graphic = new Graphic(geometry, symbol);
+    map.graphics.add(graphic);
+    window.currentGeometry = geometry;
+    zoomToGeometry(window.currentGeometry);
+  });
 }
 
 
@@ -530,207 +534,208 @@ function addToMap(evt) {
 
 // https://developers.arcgis.com/javascript/3/jssamples/fl_performance.html
 function checkVisibilityAtScale() {
-    for (var i = 0; i < window.mapFeatureLayerObjects.length; i++) {
-        var scale = map.getScale()
-        var layer = window.mapFeatureLayerObjects[i]
-        if (scale >= layer.minScale && scale <= layer.maxScale) {
-            map.getLayer(layer.id).setVisibility(true)
-            var icon = document.querySelector('[data-layer-icon="' + layer.id + '"]')
-            if (icon !== null) {
-                icon.innerHTML = 'visibility'
-            }
+  for (var i = 0; i < window.mapFeatureLayerObjects.length; i++) {
+    var scale = map.getScale();
+    var layer = window.mapFeatureLayerObjects[i];
+    var icon;
+    if (scale >= layer.minScale && scale <= layer.maxScale) {
+      map.getLayer(layer.id).setVisibility(true);
+      icon = document.querySelector('[data-layer-icon="' + layer.id + '"]');
+      if (icon !== null) {
+        icon.innerHTML = 'visibility';
+      }
 
-        } else {
-            map.getLayer(layer.id).setVisibility(false)
-            var icon = document.querySelector('[data-layer-icon="' + layer.id + '"]')
-            if (icon !== null) {
-                icon.innerHTML = 'visibility_off'
-            }
-        }
+    } else {
+      map.getLayer(layer.id).setVisibility(false);
+      icon = document.querySelector('[data-layer-icon="' + layer.id + '"]');
+      if (icon !== null) {
+        icon.innerHTML = 'visibility_off';
+      }
     }
+  }
 }
 
 function onClickButtonToolbar(signal, Draw, type) {
-    map.infoWindow.unsetMap()
-    navToolbar.deactivate()
-    map.graphics.clear()
+  map.infoWindow.unsetMap();
+  navToolbar.deactivate();
+  map.graphics.clear();
 
-    toolbar.activate(Draw[type])
-    map.hideZoomSlider()
-    // remove listener after first event
-    //signal.remove()
-    // do something else...
+  toolbar.activate(Draw[type]);
+  map.hideZoomSlider();
+  // remove listener after first event
+  //signal.remove()
+  // do something else...
 }
 
 function doBuffer(evtObj) {
-    require([
-        'esri/tasks/GeometryService',
-        'esri/graphic',
-        'esri/symbols/SimpleMarkerSymbol',
-        'esri/symbols/SimpleLineSymbol',
-        'esri/symbols/SimpleFillSymbol',
-        'esri/Color',
-        'esri/tasks/BufferParameters',
-        'esri/geometry/normalizeUtils',
-        'dojo/dom'
-    ], function(
-        GeometryService,
-        Graphic,
-        SimpleMarkerSymbol,
-        SimpleLineSymbol,
-        SimpleFillSymbol,
-        Color,
-        BufferParameters,
-        normalizeUtils,
-        dom
-    ) {
-        //toolbar.deactivate()
-        // valida parámetros
-        var distance = dom.byId('buffer_distance').value
-        var unit = dom.byId('buffer_unit').value
-        if (distance === '') {
-            displayMessage('Especifique una distancia de buffer.')
-            return
-        }
-        if (unit === '') {
-            displayMessage('Especifique una unidad de buffer.')
-            return
-        }
+  require([
+    'esri/tasks/GeometryService',
+    'esri/graphic',
+    'esri/symbols/SimpleMarkerSymbol',
+    'esri/symbols/SimpleLineSymbol',
+    'esri/symbols/SimpleFillSymbol',
+    'esri/Color',
+    'esri/tasks/BufferParameters',
+    'esri/geometry/normalizeUtils',
+    'dojo/dom'
+  ], function(
+    GeometryService,
+    Graphic,
+    SimpleMarkerSymbol,
+    SimpleLineSymbol,
+    SimpleFillSymbol,
+    Color,
+    BufferParameters,
+    normalizeUtils,
+    dom
+  ) {
+    //toolbar.deactivate()
+    // valida parámetros
+    var distance = dom.byId('buffer_distance').value;
+    var unit = dom.byId('buffer_unit').value;
+    if (distance === '') {
+      displayMessage('Especifique una distancia de buffer.');
+      return;
+    }
+    if (unit === '') {
+      displayMessage('Especifique una unidad de buffer.');
+      return;
+    }
 
-        var geometry = evtObj.geometry
-        var symbol
-        switch (geometry.type) {
-            case 'point':
-                symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_SQUARE, 10, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([255, 0, 0]), 1), new Color([0, 255, 0, 0.25]))
-                break
-            case 'polyline':
-                symbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_DASH, new Color([255, 0, 0]), 1)
-                break
-            case 'polygon':
-                symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_NONE, new SimpleLineSymbol(SimpleLineSymbol.STYLE_DASHDOT, new Color([255, 0, 0]), 2), new Color([255, 255, 0, 0.25]))
-                break
-        }
+    var geometry = evtObj.geometry;
+    var symbol;
+    switch (geometry.type) {
+      case 'point':
+        symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_SQUARE, 10, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([255, 0, 0]), 1), new Color([0, 255, 0, 0.25]));
+        break;
+      case 'polyline':
+        symbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_DASH, new Color([255, 0, 0]), 1);
+        break;
+      case 'polygon':
+        symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_NONE, new SimpleLineSymbol(SimpleLineSymbol.STYLE_DASHDOT, new Color([255, 0, 0]), 2), new Color([255, 255, 0, 0.25]));
+        break;
+    }
 
-        var graphic = new Graphic(geometry, symbol)
-        map.graphics.add(graphic)
+    var graphic = new Graphic(geometry, symbol);
+    map.graphics.add(graphic);
 
-        //setup the buffer parameters
-        var params = new BufferParameters()
-        params.distances = [distance]
-        params.outSpatialReference = map.spatialReference
-        params.unit = GeometryService[unit]
-        //normalize the geometry
+    //setup the buffer parameters
+    var params = new BufferParameters();
+    params.distances = [distance];
+    params.outSpatialReference = map.spatialReference;
+    params.unit = GeometryService[unit];
+    //normalize the geometry
 
-        normalizeUtils.normalizeCentralMeridian([geometry]).then(function(normalizedGeometries) {
-            var normalizedGeometry = normalizedGeometries[0]
-            if (normalizedGeometry.type === 'polygon') {
-                //if geometry is a polygon then simplify polygon.  This will make the user drawn polygon topologically correct.
-                esriConfig.defaults.geometryService.simplify([normalizedGeometry], function(geometries) {
-                    params.geometries = geometries
-                    esriConfig.defaults.geometryService.buffer(params, showBuffer)
-                })
-            } else {
-                params.geometries = [normalizedGeometry]
-                esriConfig.defaults.geometryService.buffer(params, showBuffer)
-            }
-        })
-    })
+    normalizeUtils.normalizeCentralMeridian([geometry]).then(function(normalizedGeometries) {
+      var normalizedGeometry = normalizedGeometries[0];
+      if (normalizedGeometry.type === 'polygon') {
+        //if geometry is a polygon then simplify polygon.  This will make the user drawn polygon topologically correct.
+        esriConfig.defaults.geometryService.simplify([normalizedGeometry], function(geometries) {
+          params.geometries = geometries;
+          esriConfig.defaults.geometryService.buffer(params, showBuffer);
+        });
+      } else {
+        params.geometries = [normalizedGeometry];
+        esriConfig.defaults.geometryService.buffer(params, showBuffer);
+      }
+    });
+  });
 }
 
 function showBuffer(bufferedGeometries) {
-    require([
-        'esri/graphic',
-        'esri/symbols/SimpleFillSymbol',
-        'esri/symbols/SimpleLineSymbol',
-        'esri/Color',
-        'dojo/_base/array'
-    ], function(
-        Graphic,
-        SimpleFillSymbol,
-        SimpleLineSymbol,
-        Color,
-        array
-    ) {
-        var symbol = new SimpleFillSymbol(
-            SimpleFillSymbol.STYLE_SOLID,
-            new SimpleLineSymbol(
-                SimpleLineSymbol.STYLE_SOLID,
-                new Color([255, 0, 0, 0.65]), 2
-            ),
-            new Color([255, 0, 0, 0.35])
-        )
-        array.forEach(bufferedGeometries, function(geometry) {
-            var graphic = new Graphic(geometry, symbol)
-            map.graphics.add(graphic)
-        })
-        //OJO: solo se selecciona el primero porque es punto, linea o polígono unido
-        window.currentGeometry = bufferedGeometries[0]
-        zoomToGeometry(window.currentGeometry)
-    })
+  require([
+    'esri/graphic',
+    'esri/symbols/SimpleFillSymbol',
+    'esri/symbols/SimpleLineSymbol',
+    'esri/Color',
+    'dojo/_base/array'
+  ], function(
+    Graphic,
+    SimpleFillSymbol,
+    SimpleLineSymbol,
+    Color,
+    array
+  ) {
+    var symbol = new SimpleFillSymbol(
+      SimpleFillSymbol.STYLE_SOLID,
+      new SimpleLineSymbol(
+        SimpleLineSymbol.STYLE_SOLID,
+        new Color([255, 0, 0, 0.65]), 2
+      ),
+      new Color([255, 0, 0, 0.35])
+    );
+    array.forEach(bufferedGeometries, function(geometry) {
+      var graphic = new Graphic(geometry, symbol);
+      map.graphics.add(graphic);
+    });
+    //OJO: solo se selecciona el primero porque es punto, linea o polígono unido
+    window.currentGeometry = bufferedGeometries[0];
+    zoomToGeometry(window.currentGeometry);
+  });
 }
 
 function applyBuffer(evt) {
-    if (!window.currentGeometry) {
-        displayMessage('Por favor dibujer primero una geometría.')
-    } else {
-        doBuffer({
-            geometry: window.currentGeometry
-        })
-    }
+  if (!window.currentGeometry) {
+    displayMessage('Por favor dibujer primero una geometría.');
+  } else {
+    doBuffer({
+      geometry: window.currentGeometry
+    });
+  }
 }
 
 function zoomToGeometry(geometry) {
-    if (geometry.type == "point") {
-        map.centerAt(geometry)
-    }
-    if (geometry.getExtent() != null) {
-        map.setExtent(geometry.getExtent().expand(3))
-    }
+  if (geometry.type == "point") {
+    map.centerAt(geometry);
+  }
+  if (geometry.getExtent() !== null) {
+    map.setExtent(geometry.getExtent().expand(3));
+  }
 }
 
 function displayMessage(msj) {
-    $('#message-modal1').html(msj)
-    $('#modal1').modal('open')
+  $('#message-modal1').html(msj);
+  $('#modal1').modal('open');
 }
 
 function changeNavpane(button, opt) {
-    map.infoWindow.unsetMap()
+  map.infoWindow.unsetMap();
 
-    var btnFloatings = $('.btn-nav-pane')
-    btnFloatings.each(function(index) {
-        $(this).removeClass('red')
-        $(this).addClass('teal')
-    })
+  var btnFloatings = $('.btn-nav-pane');
+  btnFloatings.each(function(index) {
+    $(this).removeClass('red');
+    $(this).addClass('teal');
+  });
 
-    var button = $(button)
-    button.removeClass('teal')
-    button.addClass('red')
+  button = $(button);
+  button.removeClass('teal');
+  button.addClass('red');
 
-    // console.log('button', button)
-    // if (button.hasClass('teal')) {
-    //     button.removeClass('teal')
-    //     button.addClass('red')
-    // } else {
-    //     button.removeClass('red')
-    //     button.addClass('teal')
-    // }
+  // console.log('button', button)
+  // if (button.hasClass('teal')) {
+  //     button.removeClass('teal')
+  //     button.addClass('red')
+  // } else {
+  //     button.removeClass('red')
+  //     button.addClass('teal')
+  // }
 
-    var navpane = $('#navpane')
-    if (navpane.css('display') === 'none') {
-        navpane.css('display', 'block')
-    } else {
-        navpane.css('display', 'none')
-        button.removeClass('red')
-        button.addClass('teal')
-        return
-    }
+  var navpane = $('#navpane');
+  if (navpane.css('display') === 'none') {
+    navpane.css('display', 'block');
+  } else {
+    navpane.css('display', 'none');
+    button.removeClass('red');
+    button.addClass('teal');
+    return;
+  }
 
-    var divs = $('#navpane > div')
-    divs.each(function(index) {
-        $(this).css('display', 'none')
-    })
-    var ele = $('#' + opt)
-    if (opt === 'pane-medicion') {
-        ele.css('display', 'block')
-    }
+  var divs = $('#navpane > div');
+  divs.each(function(index) {
+    $(this).css('display', 'none');
+  });
+  var ele = $('#' + opt);
+  if (opt === 'pane-medicion') {
+    ele.css('display', 'block');
+  }
 }
