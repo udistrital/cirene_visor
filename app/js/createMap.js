@@ -122,6 +122,7 @@ function createMap() {
 
     var wfsLoader = function(extent, resolution, projection) {
       var indice = this.indice;
+      var wfsSource = this;
       var url = servicios[indice].url + //'/geoserver/parqueaderos/ows?service=WFS&' +
         //'version=1.0.0&request=GetFeature&typename=parqueaderos:isla&' +
         //'outputFormat=application%2Fjson' +
@@ -133,7 +134,7 @@ function createMap() {
         dataType: 'json',
         jsonp: false
       }).done(function(response) {
-        this.addFeatures(geojsonFormat.readFeatures(response));
+        wfsSource.addFeatures(geojsonFormat.readFeatures(response));
       });
     };
 
@@ -143,7 +144,7 @@ function createMap() {
       if (servicio.enable) {
         if (servicio.serviceType === 'WFS') {
           var wfsSource = new ol.source.Vector({
-            loader: listenerLoader,
+            loader: wfsLoader,
             strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
               maxZoom: 19
             }))
