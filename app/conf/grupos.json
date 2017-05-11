@@ -1,27 +1,10 @@
-[
-  {
-    "id": "acueducto",
-    "name": "Acueducto"
-  },{
-    "id": "metro",
-    "name": "Metro"
-  },{
-    "id": "energia",
-    "name": "Energía"
-  },{
-    "id": "apluvial",
-    "name": "Alcantarillado Pluvial"
-  },{
-    "id": "asanitarioc",
-    "name": "Alcantarillado Sanitario Combinado"
-  },{
-    "id": "gas",
-    "name": "Gas Natural"
-  },{
-    "id": "teleco",
-    "name": "Telecomunicaciones"
-  },{
-    "id": "catastro",
-    "name": "Catastro"
-  }
-]
+[{
+  "id": "urbano",
+  "name": "Capas Escala Urbana"
+}, {
+  "id": "sedes",
+  "name": "Capas Escala Sedes"
+}, {
+  "id": "arquitectonica",
+  "name": "Capas Escala Arquitectónica"
+}]

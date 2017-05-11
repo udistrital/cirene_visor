@@ -78,7 +78,10 @@ function createMap() {
         center: [-74.06567902549436, 4.6281822385875655],
         maxZoom: 26,
         zoom: 18
-      })
+      }),
+      controls: ol.control.defaults().extend([
+        new ol.control.ScaleLine()
+      ])
     });
     window.map = map;
 
@@ -120,6 +123,8 @@ function createMap() {
     // })
     // showScale()
 
+    var servicios = window.servicios;
+
     var wfsLoader = function(extent, resolution, projection) {
       var indice = this.indice;
       var wfsSource = this;
@@ -138,11 +143,11 @@ function createMap() {
       });
     };
 
-    var servicios = window.servicios;
     for (var i = 0; i < servicios.length; i++) {
       var servicio = servicios[i];
       if (servicio.enable) {
         if (servicio.serviceType === 'WFS') {
+          window.mapFeatureLayerObjects.push(servicio);
           var wfsSource = new ol.source.Vector({
             loader: wfsLoader,
             strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
@@ -156,11 +161,14 @@ function createMap() {
               stroke: new ol.style.Stroke({
                 color: 'rgba(0, 0, 255, 1.0)',
                 width: 2
-              })
+              }),
+              opacity: servicio.opacity
             })
           });
+
           map.addLayer(wfsLayer);
         } else if (servicio.serviceType === 'WMS') {
+          window.mapFeatureLayerObjects.push(servicio);
           var wmsSource = new ol.source.TileWMS({
             url: '/geoserver/wms',
             params: {
@@ -174,11 +182,13 @@ function createMap() {
           wmsSource.indice = i;
 
           var wmsLayer = new ol.layer.Tile({
-            source: wmsSource
+            source: wmsSource,
+            opacity: servicio.opacity
           });
           map.addLayer(wmsLayer);
 
         } else if (servicio.serviceType === 'WMSServer') {
+          window.mapFeatureLayerObjects.push(servicio);
           var wmsServerSource = new ol.source.TileWMS({
             url: servicio.url,
             params: {
@@ -190,9 +200,10 @@ function createMap() {
           wmsServerSource.indice = i;
 
           var wmsServerLayer = new ol.layer.Tile({
-            source: wmsServerSource
+            source: wmsServerSource,
+            opacity: servicio.opacity
           });
-          window.wmsServerLayer = wmsServerLayer;
+          window.milayer = wmsServerLayer;
           map.addLayer(wmsServerLayer);
 
         } else if (servicio.serviceType === 'FeatureServer') {
@@ -227,7 +238,7 @@ function createMap() {
     //checkVisibilityAtScale()
     //add the legend
     //createLeyend()
-    //createTOC()
+    createTOC();
     //createMeasurement()
   });
 }
