@@ -326,11 +326,15 @@ function createLegend() {
   for (var i = 0; i < layers.length; i++) {
     var layer = layers[i];
     var source = layer.getSource();
-    if (typeof(source.config) !== 'undefined' &&
-      (source.config.serviceType === 'WMSServer' || source.config.serviceType === 'WMS')) {
-      $.get(source.config.url + '?service=wms&version=1.1.1&request=GetCapabilities', function(response) {
-        generateHTMLLegendWMS(response);
-      });
+    if (typeof(source.config) !== 'undefined') {
+      var type = source.config.serviceType;
+      if (type === 'WMSServer' || type === 'WMS') {
+        $.get(source.config.url + '?service=wms&version=1.1.1&request=GetCapabilities', function(response) {
+          generateHTMLLegendWMS(response);
+        });
+      } else if (type === 'WFS'){
+        generateHTMLLegendWFS(source.config);
+      }
     }
   }
 }
@@ -360,28 +364,6 @@ function generateHTMLLegendWMS(response) {
       legendDiv.append(item);
     }
   });
-  // for (var i = 0; i < layers.length; i++) {
-  //   var title = layers[i].Title;
-  //   var item =
-  //     '<h5>' + title + '</h5>\n';
-  //   var leyendContainer = $("[data-legend-id='" + serviceId + '-' + i + "']");
-  //   leyendContainer.append(item);
-  // }
-  // var layerList = source.config.layers.split(',');
-  // for (var i = 0; i < layerList.length; i++) {
-  //   var layerId = layerList[i];
-  //   var url = source.config.url +
-  //     '?request=GetLegendGraphic&version=1.3.0&layer=' +
-  //     layerId + '&format=image/png';
-  //   if (url) {
-  //     var item =
-  //       '<li> ' +
-  //       '     <p data-legend-id="' + source.config.id + '-' + layerId + '"></p>\n' +
-  //       '     <img src="' + url + '">\n' +
-  //       '</li>\n';
-  //     legendDiv.append(item);
-  //   }
-  // }
 }
 
 function searchLayerRecursive(layers, listenFunction) {
@@ -396,6 +378,21 @@ function searchLayerRecursive(layers, listenFunction) {
       listenFunction(layers[i]);
     }
   }
+}
+
+function generateHTMLLegendWFS(config) {
+  var legendDiv = $('#legendDiv');
+  var layer = config;
+  var style = 'width: 10px;' +
+    'height:10px;' +
+    'background-color:' + layer.color;
+
+  var item =
+    '<li class="collection-header">\n' +
+    '     <h5>' + layer.name + '</h5>\n' +
+    '     <div style="' + style + '">\n' +
+    '</li>\n';
+  legendDiv.append(item);
 }
 
 function createMeasurement() {
