@@ -334,7 +334,7 @@ function createLegend() {
         $.get(source.config.url + '?service=wms&version=1.1.1&request=GetCapabilities', function(response) {
           generateHTMLLegendWMS(response);
         });
-      } else if (type === 'WFS'){
+      } else if (type === 'WFS') {
         generateHTMLLegendWFS(source.config);
       }
     }
@@ -812,14 +812,45 @@ function changeNavpane(button, opt) {
   }
 }
 
-function _getLayerById (id){
+function _getLayerById(id) {
   var layers = map.getLayers().getArray();
   for (var i = 0; i < layers.length; i++) {
     var layer = layers[i];
     var source = layer.getSource();
     //console.log(source);
-    if (typeof(source.config) !== 'undefined' && source.config.id === id ){
+    if (typeof(source.config) !== 'undefined' && source.config.id === id) {
       return layer;
     }
   }
+}
+
+var listOfNavigationsInteractions = new Array();
+
+function cleanNavigationsInteractions(){
+  for (var i = 0; i < listOfNavigationsInteractions.length; i++) {
+    map.removeInteraction(listOfNavigationsInteractions[i]);
+  }
+  listOfNavigationsInteractions = new Array();
+}
+
+function zoomInBox(){
+  window.cleanNavigationsInteractions();
+  //http://openlayers.org/en/latest/apidoc/ol.events.condition.html
+  var dragZoom = new ol.interaction.DragZoom({
+   condition: ol.events.condition.mouseOnly,
+   out: false
+  });
+  map.addInteraction(dragZoom);
+  listOfNavigationsInteractions.push(dragZoom);
+}
+
+function zoomOutBox(){
+  window.cleanNavigationsInteractions();
+  //http://openlayers.org/en/latest/apidoc/ol.events.condition.html
+  var dragZoom = new ol.interaction.DragZoom({
+   condition: ol.events.condition.mouseOnly,
+   out: true
+  });
+  map.addInteraction(dragZoom);
+  listOfNavigationsInteractions.push(dragZoom);
 }

@@ -244,10 +244,10 @@
         <div id="btnP2" title="Identificar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="map.infoWindow.setMap(map);">
             <i class="material-icons">search</i>
         </div>
-        <div id="btnP3" title="Acercar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="map.infoWindow.unsetMap();navToolbar.activate(esri.toolbars.Navigation.ZOOM_IN);">
+        <div id="btnP3" title="Acercar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="zoomInBox();">
             <i class="material-icons">zoom_in</i>
         </div>
-        <div id="btnP4" title="Alejar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="map.infoWindow.unsetMap();navToolbar.activate(esri.toolbars.Navigation.ZOOM_OUT);">
+        <div id="btnP4" title="Alejar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="zoomOutBox();">
             <i class="material-icons">zoom_out</i>
         </div>
         <div id="btnP5" title="Panear" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="map.infoWindow.unsetMap();navToolbar.activate(esri.toolbars.Navigation.PAN);">
