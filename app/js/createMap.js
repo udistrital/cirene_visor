@@ -88,6 +88,8 @@ function createMap() {
     var zoomslider = new ol.control.ZoomSlider();
     map.addControl(zoomslider);
 
+    map.getLayer = window._getLayerById;
+
     // The URL referenced in the constructor may point to a style url JSON (as in this sample)
     // or directly to a vector tile service
     // NOT SUPPORT IN CHROME
@@ -374,7 +376,7 @@ function searchLayerRecursive(layers, listenFunction) {
       //console.log('layers[i].Layer', layer);
       searchLayerRecursive(layer, listenFunction);
     } else {
-      console.log('layer, layers[i]', layers[i]);
+      //console.log('layer, layers[i]', layers[i]);
       listenFunction(layers[i]);
     }
   }
@@ -492,13 +494,13 @@ function changeVisibilityLayer(layerId) {
     dom
   ) {
     var layer = map.getLayer(layerId);
-    var icon = query('[data-layer-icon="' + layer.id + '"]')[0];
-    window.layer = layer;
-    if (layer.visible) {
-      layer.setVisibility(false);
+    var icon = query('[data-layer-icon="' + layerId + '"]')[0];
+    //window.layer = layer;
+    if (layer.getVisible()) {
+      layer.setVisible(false);
       icon.innerHTML = 'visibility_off';
     } else {
-      layer.setVisibility(true);
+      layer.setVisible(true);
       icon.innerHTML = 'visibility';
     }
   });
@@ -809,5 +811,17 @@ function changeNavpane(button, opt) {
   var ele = $('#' + opt);
   if (opt === 'pane-medicion') {
     ele.css('display', 'block');
+  }
+}
+
+function _getLayerById (id){
+  var layers = map.getLayers().getArray();
+  for (var i = 0; i < layers.length; i++) {
+    var layer = layers[i];
+    var source = layer.getSource();
+    //console.log(source);
+    if (typeof(source.config) !== 'undefined' && source.config.id === id ){
+      return layer;
+    }
   }
 }

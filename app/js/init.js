@@ -1,5 +1,6 @@
 $(document).ready(function() {
-  var sidebar = $('#sidebar').sidebar().on('click', function() {
+  var sidebar = $('#sidebar').sidebar();
+  $('.sidebar-tabs').on('click', function() {
     $zoomslider = $('.ol-zoomslider');
     $zoomslider.css('opacity', '0.0');
     if (!$zoomslider.hasClass('desplegado')) {
