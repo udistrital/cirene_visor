@@ -282,6 +282,10 @@ html, body, #map {
   top: 2.75em;
 }
 
+#map .sidebar-pane.active .ol-zoomslider.desplegado {
+  display: none;
+}
+
 #map .ol-zoomslider.desplegado {
   margin-left: 470px;
 }

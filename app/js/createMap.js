@@ -158,14 +158,16 @@ function createMap() {
             }))
           });
           wfsSource.indice = i;
+          wfsSource.config = servicio;
+
           var wfsLayer = new ol.layer.Vector({
             source: wfsSource,
             style: new ol.style.Style({
               stroke: new ol.style.Stroke({
-                color: (typeof(servicio.color)===undefined)?'rgba(255, 255, 255, 1.0)':servicio.color,
+                color: (typeof(servicio.color) === undefined) ? 'rgba(255, 255, 255, 1.0)' : servicio.color,
                 width: 2
               }),
-              opacity: (typeof(servicio.opacity)===undefined)?1:servicio.opacity
+              opacity: (typeof(servicio.opacity) === undefined) ? 1 : servicio.opacity
             })
           });
 
@@ -183,6 +185,7 @@ function createMap() {
             crossOrigin: 'anonymous'
           });
           wmsSource.indice = i;
+          wmsSource.config = servicio;
 
           var wmsLayer = new ol.layer.Tile({
             source: wmsSource,
@@ -201,6 +204,7 @@ function createMap() {
             crossOrigin: ''
           });
           wmsServerSource.indice = i;
+          wmsServerSource.config = servicio;
 
           var wmsServerLayer = new ol.layer.Tile({
             source: wmsServerSource,
@@ -240,7 +244,7 @@ function createMap() {
     }
     //checkVisibilityAtScale()
     //add the legend
-    //createLeyend()
+    createLegend();
     createTOC();
     //createMeasurement()
   });
@@ -314,29 +318,84 @@ function configBufferTool() {
   });
 }
 
-function createLeyend() {
-  require([
-    'dojo/_base/array',
-    'esri/dijit/Legend'
-  ], function(
-    arrayUtils,
-    Legend
-  ) {
-    var layerInfo = arrayUtils.map(window.mapFeatureLayerObjects, function(layer, index) {
-      return {
-        layer: map.getLayer(layer.id),
-        title: layer.name
-      };
-    });
-    console.log('layerInfo', layerInfo);
-    if (layerInfo.length > 0) {
-      var legendDijit = new Legend({
-        map: map,
-        layerInfos: layerInfo
-      }, 'legendDiv');
-      legendDijit.startup();
+function createLegend() {
+  // link: http://docs.geoserver.org/stable/en/user/services/wms/reference.html
+  // link: https://openlayers.org/en/latest/examples/wms-capabilities.html
+  var legendDiv = $('#legendDiv');
+  var layers = map.getLayers().getArray();
+  for (var i = 0; i < layers.length; i++) {
+    var layer = layers[i];
+    var source = layer.getSource();
+    if (typeof(source.config) !== 'undefined' &&
+      (source.config.serviceType === 'WMSServer' || source.config.serviceType === 'WMS')) {
+      $.get(source.config.url + '?service=wms&version=1.1.1&request=GetCapabilities', function(response) {
+        generateHTMLLegendWMS(response);
+      });
+    }
+  }
+}
+
+function generateHTMLLegendWMS(response) {
+  var legendDiv = $('#legendDiv');
+  var parser = new ol.format.WMSCapabilities();
+  var result = parser.read(response);
+  window.result = result;
+  var layer = result.Capability.Layer;
+  var layers = layer.Layer;
+  var item =
+    '<li class="collection-header">\n' +
+    '     <h5>' + layer.Title + '</h5>\n' +
+    '</li>\n';
+  legendDiv.append(item);
+
+  searchLayerRecursive(layers, function(layer) {
+    var url = layer.Style[0].LegendURL[0].OnlineResource;
+    var title = layer.Title;
+    if (url) {
+      var item =
+        '<li class="collection-item">\n' +
+        '     <h5>' + title + '</h5>\n' +
+        '     <img src="' + url + '">\n' +
+        '</li>\n';
+      legendDiv.append(item);
     }
   });
+  // for (var i = 0; i < layers.length; i++) {
+  //   var title = layers[i].Title;
+  //   var item =
+  //     '<h5>' + title + '</h5>\n';
+  //   var leyendContainer = $("[data-legend-id='" + serviceId + '-' + i + "']");
+  //   leyendContainer.append(item);
+  // }
+  // var layerList = source.config.layers.split(',');
+  // for (var i = 0; i < layerList.length; i++) {
+  //   var layerId = layerList[i];
+  //   var url = source.config.url +
+  //     '?request=GetLegendGraphic&version=1.3.0&layer=' +
+  //     layerId + '&format=image/png';
+  //   if (url) {
+  //     var item =
+  //       '<li> ' +
+  //       '     <p data-legend-id="' + source.config.id + '-' + layerId + '"></p>\n' +
+  //       '     <img src="' + url + '">\n' +
+  //       '</li>\n';
+  //     legendDiv.append(item);
+  //   }
+  // }
+}
+
+function searchLayerRecursive(layers, listenFunction) {
+  for (var i = 0; i < layers.length; i++) {
+    //console.log('layers[i]', layers[i]);
+    var layer = layers[i].Layer;
+    if (typeof(layer) !== 'undefined') {
+      //console.log('layers[i].Layer', layer);
+      searchLayerRecursive(layer, listenFunction);
+    } else {
+      console.log('layer, layers[i]', layers[i]);
+      listenFunction(layers[i]);
+    }
+  }
 }
 
 function createMeasurement() {
