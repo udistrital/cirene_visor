@@ -519,13 +519,13 @@ function changeVisibilityGroup(evt, groupId, visibility) {
     for (var i = 0; i < window.mapFeatureLayerObjects.length; i++) {
       var layer = window.mapFeatureLayerObjects[i];
       if (layer.groupId === groupId) {
-        layer = map.getLayer(layer.id);
+        var olLayer = map.getLayer(layer.id);
         var icon = query('[data-layer-icon="' + layer.id + '"]')[0];
         if (visibility) {
-          layer.setVisibility(true);
+          olLayer.setVisible(true);
           icon.innerHTML = 'visibility';
         } else {
-          layer.setVisibility(false);
+          olLayer.setVisible(false);
           icon.innerHTML = 'visibility_off';
         }
       }
