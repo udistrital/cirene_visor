@@ -1,112 +1,112 @@
 body {
-    padding: 0;
-    margin: 0;
-    overflow: hidden;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
 }
 
 html, body, #map {
-    height: 100%;
-    font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
+  height: 100%;
+  font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
 }
 
 html, body, #map {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 #sidebar {
-    z-index: 40;
+  z-index: 40;
 }
 
 .sidebar-content, .sidebar-pane {
-    padding: 0;
-    margin: 0;
-    background-color: transparent;
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
 }
 
 .sidebar-tabs, .ol-control button {
-    background-color: rgba(38, 166, 154, 0.5);
+  background-color: rgba(38, 166, 154, 0.5);
 }
 
 .sidebar-tabs>ul>li>a:hover, .ol-control button:hover, .sidebar-tabs>ul>li.active {
-    background-color: rgb(38, 166, 154);
+  background-color: rgb(38, 166, 154);
 }
 
 .sidebar-tabs, .sidebar-tabs>ul {
-    width: 36px;
+  width: 36px;
 }
 
 .sidebar-header {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .btnEye {
-    width: 25px;
+  width: 25px;
 }
 
 .btnEyeGroup {
-    float: right !important;
-    margin-right: 0 !important;
+  float: right !important;
+  margin-right: 0 !important;
 }
 
 .btnEyeGroup:hover {
-    color: #26a69a;
+  color: #26a69a;
 }
 
 #btnP1 {
-    position: absolute;
-    top: 10px;
-    right: 20px;
+  position: absolute;
+  top: 10px;
+  right: 20px;
 }
 
 #btnP2 {
-    position: absolute;
-    top: 60px;
-    right: 20px;
+  position: absolute;
+  top: 60px;
+  right: 20px;
 }
 
 #btnP3 {
-    position: absolute;
-    top: 110px;
-    right: 20px;
+  position: absolute;
+  top: 110px;
+  right: 20px;
 }
 
 #btnP4 {
-    position: absolute;
-    top: 160px;
-    right: 20px;
+  position: absolute;
+  top: 160px;
+  right: 20px;
 }
 
 #btnP5 {
-    position: absolute;
-    top: 210px;
-    right: 20px;
+  position: absolute;
+  top: 210px;
+  right: 20px;
 }
 
 #btnP6 {
-    position: absolute;
-    top: 260px;
-    right: 20px;
+  position: absolute;
+  top: 260px;
+  right: 20px;
 }
 
 #btnP7 {
-    position: absolute;
-    top: 310px;
-    right: 20px;
+  position: absolute;
+  top: 310px;
+  right: 20px;
 }
 
 #btnZoomIn {
-    position: absolute;
-    top: 60px;
-    left: 20px;
+  position: absolute;
+  top: 60px;
+  left: 20px;
 }
 
 #btnZoomOut {
-    position: absolute;
-    top: 80px;
-    left: 20px;
+  position: absolute;
+  top: 80px;
+  left: 20px;
 }
 
 #btnDrawPoint {}
@@ -116,56 +116,56 @@ html, body, #map {
 #btnDrawPoly {}
 
 .ol-popup {
-    display: inline-block;
-    white-space: nowrap;
-    position: absolute;
-    background-color: white;
-    -webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
-    filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
-    padding: 15px;
-    /* border-radius: 10px; */
-    border: 1px solid #cccccc;
-    bottom: 12px;
-    left: -50px;
+  display: inline-block;
+  white-space: nowrap;
+  position: absolute;
+  background-color: white;
+  -webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+  padding: 15px;
+  /* border-radius: 10px; */
+  border: 1px solid #cccccc;
+  bottom: 12px;
+  left: -50px;
 }
 
 .ol-popup:after, .ol-popup:before {
-    top: 100%;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
+  top: 100%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
 }
 
 .ol-popup:after {
-    border-top-color: white;
-    border-width: 10px;
-    left: 48px;
-    margin-left: -10px;
+  border-top-color: white;
+  border-width: 10px;
+  left: 48px;
+  margin-left: -10px;
 }
 
 .ol-popup:before {
-    border-top-color: #cccccc;
-    border-width: 11px;
-    left: 48px;
-    margin-left: -11px;
+  border-top-color: #cccccc;
+  border-width: 11px;
+  left: 48px;
+  margin-left: -11px;
 }
 
 .ol-popup-closer {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    cursor: pointer;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  cursor: pointer;
 }
 
 .ol-popup-closer:hover {
-    color: rgb(255, 56, 168);
+  color: rgb(255, 56, 168);
 }
 
 #map_zoom_slider {
-    left: 66px;
+  left: 66px;
 }
 
 .ol-scale-line {
@@ -173,103 +173,126 @@ html, body, #map {
 }
 
 #legendDiv .esriLegendLayerLabel {
-    display: none;
+  display: none;
 }
 
 #legendDiv td {
-    padding: 0;
+  padding: 0;
 }
 
 .esriScalebar {
-    left: 60px !important;
-    bottom: 50px !important;
+  left: 60px !important;
+  bottom: 50px !important;
 }
 
 .esriScalebar {
-    width: auto;
-    height: auto;
-    padding: 5px;
-    padding-right: 40px;
-    background-color: rgba(255, 255, 255, 0.5);
-    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.3);
+  width: auto;
+  height: auto;
+  padding: 5px;
+  padding-right: 40px;
+  background-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.3);
 }
 
 #toc-div ul.collection>li {
-    min-height: 60px;
+  min-height: 60px;
 }
 
 #toc-div ul.collection>li p {
-    padding: 0;
+  padding: 0;
+}
+
+#leyenda ul.collection>li {
+  min-height: 60px;
+}
+
+#leyenda ul.collection>li.collection-header {
+  background-color: rgba(200, 200, 200, 0.1);
+  padding: 10px;
+}
+
+.leyenda-icon {
+  border-style: solid;
+  border-width: 5px;
+  display: block;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  right: -300px;
+  top: -25px;
 }
 
 .esriPopup .sizer {
-    /*width: 250px !important;*/
+  /*width: 250px !important;*/
 }
 
 #navpane {
-    width: 300px;
-    height: -webkit-calc(100% - 36px);
-    height: -moz-calc(100% - 36px);
-    height: calc(100% - 36px);
-    position: absolute;
-    right: 100px;
-    top: 0;
+  width: 300px;
+  height: -webkit-calc(100% - 36px);
+  height: -moz-calc(100% - 36px);
+  height: calc(100% - 36px);
+  position: absolute;
+  right: 100px;
+  top: 0;
 }
 
 #extentpane {
-    width: auto;
-    position: absolute;
-    left: 60px;
-    bottom: 37px;
-    background-color: rgba(255, 255, 255, 0.5);
-    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.3);
-    height: 25px;
-    text-align: center;
-    font-weight: bold;
-    padding: 4px;
+  width: auto;
+  position: absolute;
+  left: 60px;
+  bottom: 37px;
+  background-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.3);
+  height: 25px;
+  text-align: center;
+  font-weight: bold;
+  padding: 4px;
 }
 
 .dijitArrowButtonChar {
-    display: inline !important;
-    font-size: 50%;
+  display: inline !important;
+  font-size: 50%;
 }
 
 .esriMeasurementButtonContainer: hover {}
 
 .esriMeasurementButtonContainer>.esriToggleButton {
-    border: 1px solid #b1b1b1;
-    width: 100%;
-    text-align: center;
+  border: 1px solid #b1b1b1;
+  width: 100%;
+  text-align: center;
 }
 
 .esriMeasurementButtonContainer>.esriToggleButton>.dijitButtonNode {
-    width: auto !important;
+  width: auto !important;
 }
 
 .dijitPopup.dijitMenuPopup {
-    /*background-color: #f00;*/
+  /*background-color: #f00;*/
 }
 
 .dijitPopup.dijitMenuPopup>table>tbody>tr {
-    height: 24px;
+  height: 24px;
 }
 
 .dijitPopup.dijitMenuPopup>table>tbody>tr {
-    border: 0.5px solid #333333;
+  border: 0.5px solid #333333;
 }
 
 .dijitMenuItemLabel {
-    left: 5px;
+  left: 5px;
 }
+
 
 /**
  * The zoomslider in the second map shall be placed between the zoom-in and
  * zoom-out buttons.
  * link: https://openlayers.org/en/latest/examples/zoomslider.html
  */
+
 #map .ol-zoom .ol-zoom-out {
   margin-top: 204px;
 }
+
 #map .ol-zoomslider {
   background-color: transparent;
   top: 2.3em;
@@ -278,6 +301,7 @@ html, body, #map {
 #map .ol-touch .ol-zoom .ol-zoom-out {
   margin-top: 212px;
 }
+
 #map .ol-touch .ol-zoomslider {
   top: 2.75em;
 }
@@ -294,12 +318,10 @@ html, body, #map {
   margin-left: 53px;
 }
 
-#map .ol-zoom-in.ol-has-tooltip:hover [role=tooltip],
-#map .ol-zoom-in.ol-has-tooltip:focus [role=tooltip] {
+#map .ol-zoom-in.ol-has-tooltip:hover [role=tooltip], #map .ol-zoom-in.ol-has-tooltip:focus [role=tooltip] {
   top: 3px;
 }
 
-#map .ol-zoom-out.ol-has-tooltip:hover [role=tooltip],
-#map .ol-zoom-out.ol-has-tooltip:focus [role=tooltip] {
+#map .ol-zoom-out.ol-has-tooltip:hover [role=tooltip], #map .ol-zoom-out.ol-has-tooltip:focus [role=tooltip] {
   top: 232px;
 }

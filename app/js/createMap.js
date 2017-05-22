@@ -385,14 +385,12 @@ function searchLayerRecursive(layers, listenFunction) {
 function generateHTMLLegendWFS(config) {
   var legendDiv = $('#legendDiv');
   var layer = config;
-  var style = 'width: 10px;' +
-    'height:10px;' +
-    'background-color:' + layer.color;
+  var style = 'border-color:' + layer.color;
 
   var item =
-    '<li class="collection-header">\n' +
+    '<li class="collection-header collection-item">\n' +
     '     <h5>' + layer.name + '</h5>\n' +
-    '     <div style="' + style + '">\n' +
+    '     <span class="leyenda-icon" style="' + style + '"></span>\n' +
     '</li>\n';
   legendDiv.append(item);
 }
