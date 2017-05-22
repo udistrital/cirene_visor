@@ -85,6 +85,9 @@ function createMap() {
     });
     window.map = map;
 
+    var zoomslider = new ol.control.ZoomSlider();
+    map.addControl(zoomslider);
+
     // The URL referenced in the constructor may point to a style url JSON (as in this sample)
     // or directly to a vector tile service
     // NOT SUPPORT IN CHROME
@@ -404,11 +407,12 @@ function createTOC() {
         classVisible = 'visibility_off';
       }
       var imageUrl = (typeof(layer.icon) === 'undefined' || layer.icon === '') ? 'css/img/oas.jpg' : layer.icon;
+      var layerMaxScale = (typeof(layer.maxScale) === 'undefined') ? 'Inf' : layer.maxScale;
       li =
         '<li class="collection-item avatar">\n' +
         '    <img src="' + imageUrl + '" alt="" class="circle">\n' +
         '    <span class="title" style="padding-right: 22px; display: block;">' + layer.name + '</span>\n' +
-        '    <p>Desde escala 1:' + layer.maxScale + '</p>\n' +
+        //'    <p>Desde escala 1:' + layerMaxScale + '</p>\n' +
         '    <a href="#!" onclick="changeVisibilityLayer(\'' + layer.id + '\')" class="secondary-content">\n' +
         '        <i class="material-icons btnEye" data-layer-icon="' + layer.id + '">' + classVisible + '</i>\n' +
         '    </a>\n' +
