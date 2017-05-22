@@ -250,10 +250,10 @@
         <div id="btnP4" title="Alejar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="zoomOutBox();">
             <i class="material-icons">zoom_out</i>
         </div>
-        <div id="btnP5" title="Panear" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="map.infoWindow.unsetMap();navToolbar.activate(esri.toolbars.Navigation.PAN);">
+        <div id="btnP5" title="Panear" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="panMap();">
             <i class="material-icons">pan_tool</i>
         </div>
-        <div id="btnP6" title="Detener" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="map.infoWindow.unsetMap();navToolbar.deactivate();">
+        <div id="btnP6" title="Detener" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="cleanNavigationsInteractions();">
             <i class="material-icons">clear</i>
         </div>
         <div id="btnP7" title="Limpiar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="window.currentGeometry=undefined;map.graphics.clear();">

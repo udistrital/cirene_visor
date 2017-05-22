@@ -854,3 +854,13 @@ function zoomOutBox(){
   map.addInteraction(dragZoom);
   listOfNavigationsInteractions.push(dragZoom);
 }
+
+function panMap(){
+  window.cleanNavigationsInteractions();
+  // var dragPan = new ol.interaction.DragPan({
+  //  condition: ol.events.condition.mouseOnly,
+  //  out: true
+  // });
+  // map.addInteraction(dragPan);
+  // listOfNavigationsInteractions.push(dragPan);
+}
