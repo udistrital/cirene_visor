@@ -209,6 +209,7 @@ html, body, #map {
 #leyenda ul.collection>li.collection-header {
   background-color: rgba(200, 200, 200, 0.1);
   padding: 10px;
+  height: 66px;
 }
 
 .leyenda-icon {
@@ -219,7 +220,7 @@ html, body, #map {
   height: 20px;
   position: relative;
   right: -300px;
-  top: -25px;
+  top: -33px;
 }
 
 .esriPopup .sizer {
