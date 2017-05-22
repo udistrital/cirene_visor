@@ -159,10 +159,10 @@ function createMap() {
             source: wfsSource,
             style: new ol.style.Style({
               stroke: new ol.style.Stroke({
-                color: 'rgba(0, 0, 255, 1.0)',
+                color: (typeof(servicio.color)===undefined)?'rgba(255, 255, 255, 1.0)':servicio.color,
                 width: 2
               }),
-              opacity: servicio.opacity
+              opacity: (typeof(servicio.opacity)===undefined)?1:servicio.opacity
             })
           });
 
@@ -403,7 +403,7 @@ function createTOC() {
       if (layer.visible === 'false') {
         classVisible = 'visibility_off';
       }
-      var imageUrl = (typeof(layer.icon) === 'undefined' || layer.icon === '') ? 'css/img/acueducto.png' : layer.icon;
+      var imageUrl = (typeof(layer.icon) === 'undefined' || layer.icon === '') ? 'css/img/oas.jpg' : layer.icon;
       li =
         '<li class="collection-item avatar">\n' +
         '    <img src="' + imageUrl + '" alt="" class="circle">\n' +
@@ -419,7 +419,7 @@ function createTOC() {
 
     // Se cargan las cosas necesarias
     $('.collapsible').collapsible();
-    checkVisibilityAtScale();
+    //checkVisibilityAtScale();
   });
 }
 
