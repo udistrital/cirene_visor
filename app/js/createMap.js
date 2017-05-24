@@ -45,24 +45,6 @@ function createMap() {
     'dojo/domReady!'
   ], function() {
 
-    /**
-     * Elements that make up the popup.
-     */
-    var container = document.getElementById('popup');
-    var content = document.getElementById('popup-content');
-    var closer = document.getElementById('popup-closer');
-
-    /**
-     * Create an overlay to anchor the popup to the map.
-     */
-    var overlay = new ol.Overlay( /** @type {olx.OverlayOptions} */ ({
-      element: container,
-      autoPan: true,
-      autoPanAnimation: {
-        duration: 250
-      }
-    }));
-
     var projection = new ol.proj.Projection({
       code: 'EPSG:4326',
       units: 'degrees',
@@ -71,7 +53,7 @@ function createMap() {
 
     var map = new ol.Map({
       //layers: [osmLayer, wmsLayer, grupoislaLayer, islaLayer],
-      overlays: [overlay],
+      //overlays: [overlay],
       target: document.getElementById('map'),
       view: new ol.View({
         projection: projection,
@@ -249,6 +231,7 @@ function createMap() {
     createLegend();
     createTOC();
     //createMeasurement()
+    createIdentify();
   });
 }
 
@@ -826,41 +809,102 @@ function _getLayerById(id) {
 
 var listOfNavigationsInteractions = new Array();
 
-function cleanNavigationsInteractions(){
+function cleanNavigationsInteractions() {
   for (var i = 0; i < listOfNavigationsInteractions.length; i++) {
     map.removeInteraction(listOfNavigationsInteractions[i]);
   }
   listOfNavigationsInteractions = new Array();
 }
 
-function zoomInBox(){
+function zoomInBox() {
   window.cleanNavigationsInteractions();
   //http://openlayers.org/en/latest/apidoc/ol.events.condition.html
   var dragZoom = new ol.interaction.DragZoom({
-   condition: ol.events.condition.mouseOnly,
-   out: false
+    condition: ol.events.condition.mouseOnly,
+    out: false
   });
   map.addInteraction(dragZoom);
   listOfNavigationsInteractions.push(dragZoom);
 }
 
-function zoomOutBox(){
+function zoomOutBox() {
   window.cleanNavigationsInteractions();
   //http://openlayers.org/en/latest/apidoc/ol.events.condition.html
   var dragZoom = new ol.interaction.DragZoom({
-   condition: ol.events.condition.mouseOnly,
-   out: true
+    condition: ol.events.condition.mouseOnly,
+    out: true
   });
   map.addInteraction(dragZoom);
   listOfNavigationsInteractions.push(dragZoom);
 }
 
-function panMap(){
+function panMap() {
   window.cleanNavigationsInteractions();
-  // var dragPan = new ol.interaction.DragPan({
-  //  condition: ol.events.condition.mouseOnly,
-  //  out: true
-  // });
+  // var dragPan = new ol.interaction.DragPan();
   // map.addInteraction(dragPan);
   // listOfNavigationsInteractions.push(dragPan);
+}
+
+function createIdentify() {
+
+  /**
+   * Elements that make up the popup.
+   */
+  var container = document.getElementById('popup');
+  var content = document.getElementById('popup-content');
+  var closer = document.getElementById('popup-closer');
+
+  /**
+   * Create an overlay to anchor the popup to the map.
+   */
+  var overlay = new ol.Overlay( /** @type {olx.OverlayOptions} */ ({
+    element: container,
+    autoPan: true,
+    autoPanAnimation: {
+      duration: 250
+    }
+  }));
+
+  window.map.addOverlay(overlay);
+  /**
+   * Add a click handler to hide the popup.
+   * @return {boolean} Don't follow the href.
+   */
+  closer.onclick = function() {
+    overlay.setPosition(undefined);
+    closer.blur();
+    return false;
+  };
+
+
+  var selectInteraction = new ol.interaction.Select();
+  selectInteraction.on('select', function(evt) {
+    console.log(evt);
+    window.evt = evt;
+    var coordinate = evt.mapBrowserEvent.coordinate;
+
+    var properties = lastFeature.getProperties();
+    var contentHTML = "";
+
+    for (var property in properties) {
+      if (properties.hasOwnProperty(property)) {
+        if (['geometry'].indexOf(property) === -1) { //Si no esta
+          contentHTML += '<p>' + property + ': ' + properties[property] + '</p>';
+        }
+      }
+    }
+
+    content.innerHTML = contentHTML;
+    overlay.setPosition(coordinate);
+  });
+
+  var lastFeature = null;
+  selectInteraction.getFeatures().on("add", function(evt) {
+    console.log(evt);
+    window.evt2 = evt;
+    var feature = evt.element; //the feature selected
+    lastFeature = feature;
+  })
+
+  window.map.addInteraction(selectInteraction);
 }

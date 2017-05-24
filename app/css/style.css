@@ -164,6 +164,10 @@ html, body, #map {
   color: rgb(255, 56, 168);
 }
 
+.ol-popup-closer:after {
+    content: "✖";
+}
+
 #map_zoom_slider {
   left: 66px;
 }

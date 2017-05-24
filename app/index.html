@@ -2,114 +2,114 @@
 <html>
 
 <head>
-    <title>Visor SIGUD</title>
+  <title>Visor SIGUD</title>
 
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link href="css/img/faviconcolombia.png" rel="icon" type="image/png">
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link href="css/img/faviconcolombia.png" rel="icon" type="image/png">
 
-    <link rel="stylesheet" href="https://openlayers.org/en/v4.1.0/css/ol.css" type="text/css">
-    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
-    <link href="vendor/material-design-icons/iconfont/material-icons.css" rel="stylesheet" />
-    <link href="vendor/materialize/dist/css/materialize.min.css" rel="stylesheet" />
-    <link href="vendor/sidebar-v2/css/ol3-sidebar.css" rel="stylesheet" />
-    <link href="css/style.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://openlayers.org/en/v4.1.0/css/ol.css" type="text/css">
+  <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+  <link href="vendor/material-design-icons/iconfont/material-icons.css" rel="stylesheet" />
+  <link href="vendor/materialize/dist/css/materialize.min.css" rel="stylesheet" />
+  <link href="vendor/sidebar-v2/css/ol3-sidebar.css" rel="stylesheet" />
+  <link href="css/style.css" rel="stylesheet" />
 </head>
 
 <body>
-    <!-- Sidebar V2 -->
-    <div id="sidebar" class="sidebar collapsed">
-        <!-- Nav tabs -->
-        <div class="sidebar-tabs">
-            <ul role="tablist">
-                <li>
-                    <a href="#toc" role="tab" class="tooltipped" data-position="right" data-delay="500" data-tooltip="Tabla de Contenidos">
-                        <i class="material-icons">subject</i>
-                    </a>
-                </li>
-                <li>
-                    <a href="#reportes" role="tab" class="tooltipped" data-position="right" data-delay="500" data-tooltip="Generación de Reportes">
-                        <i class="material-icons">insert_drive_file</i>
-                    </a>
-                </li>
-                <li>
-                    <a href="#leyenda" role="tab" class="tooltipped" data-position="right" data-delay="500" data-tooltip="Leyenda">
-                        <i class="material-icons">list</i>
-                    </a>
-                </li>
-                <!-- <li class="disabled">
+  <!-- Sidebar V2 -->
+  <div id="sidebar" class="sidebar collapsed">
+    <!-- Nav tabs -->
+    <div class="sidebar-tabs">
+      <ul role="tablist">
+        <li>
+          <a href="#toc" role="tab" class="tooltipped" data-position="right" data-delay="500" data-tooltip="Tabla de Contenidos">
+            <i class="material-icons">subject</i>
+          </a>
+        </li>
+        <li>
+          <a href="#reportes" role="tab" class="tooltipped" data-position="right" data-delay="500" data-tooltip="Generación de Reportes">
+            <i class="material-icons">insert_drive_file</i>
+          </a>
+        </li>
+        <li>
+          <a href="#leyenda" role="tab" class="tooltipped" data-position="right" data-delay="500" data-tooltip="Leyenda">
+            <i class="material-icons">list</i>
+          </a>
+        </li>
+        <!-- <li class="disabled">
                     <a href="#messages" role="tab" class="tooltipped" data-position="right" data-delay="500" data-tooltip="Alertas">
                         <i class="material-icons">new_releases</i>
                     </a>
                 </li> -->
-            </ul>
+      </ul>
 
-            <!-- <ul role="tablist">
+      <!-- <ul role="tablist">
                 <li><a href="#settings" role="tab"><i class="material-icons">settings</i></a></li>
             </ul> -->
-        </div>
-        <!-- end .sidebar-tabs -->
+    </div>
+    <!-- end .sidebar-tabs -->
 
-        <!-- Tab panes -->
-        <div class="sidebar-content">
-            <div class="sidebar-pane" id="toc">
-                <div class="row">
-                    <div class="col s12">
-                        <div class="card teal lighten-5">
-                            <div class="card-content">
-                                <span class="card-title">Tabla de Contenidos</span>
-                                <div id="toc-div"></div>
-                            </div>
-                            <!-- end .card-content -->
-                        </div>
-                        <!-- end .card .teal .lighten-5 -->
-                    </div>
-                    <!-- end .col .s12 -->
-                </div>
-                <!-- end .row -->
+    <!-- Tab panes -->
+    <div class="sidebar-content">
+      <div class="sidebar-pane" id="toc">
+        <div class="row">
+          <div class="col s12">
+            <div class="card teal lighten-5">
+              <div class="card-content">
+                <span class="card-title">Tabla de Contenidos</span>
+                <div id="toc-div"></div>
+              </div>
+              <!-- end .card-content -->
             </div>
-            <!-- end #toc -->
-            <div class="sidebar-pane" id="reportes">
+            <!-- end .card .teal .lighten-5 -->
+          </div>
+          <!-- end .col .s12 -->
+        </div>
+        <!-- end .row -->
+      </div>
+      <!-- end #toc -->
+      <div class="sidebar-pane" id="reportes">
+        <div class="row">
+          <div class="col s12">
+            <div class="card teal lighten-5">
+              <div class="card-content">
+                <span class="card-title">Reportes</span>
+              </div>
+              <!-- end .card-content -->
+              <div class="card-content">
+                <b>Dibuje sobre el mapa la geometría de influencia:</b>
                 <div class="row">
-                    <div class="col s12">
-                        <div class="card teal lighten-5">
-                            <div class="card-content">
-                                <span class="card-title">Reportes</span>
-                            </div>
-                            <!-- end .card-content -->
-                            <div class="card-content">
-                                <b>Dibuje sobre el mapa la geometría de influencia:</b>
-                                <div class="row">
-                                    <ul class="col s12">
-                                        <li class="col s4">
-                                            <div id="btnDrawPoint" class="btn-floating btn-large waves-effect waves-light tooltipped grey" data-position="right" data-delay="50" data-tooltip="Punto">
-                                                <i class="large material-icons">location_on</i>
-                                            </div>
-                                        </li>
-                                        <li class="col s4">
-                                            <div id="btnDrawLine" class="btn-floating btn-large waves-effect waves-light tooltipped grey" data-position="right" data-delay="50" data-tooltip="Línea">
-                                                <i class="large material-icons">share</i>
-                                            </div>
-                                        </li>
-                                        <li class="col s4">
-                                            <div id="btnDrawPoly" class="btn-floating btn-large waves-effect waves-light tooltipped grey" data-position="right" data-delay="50" data-tooltip="Polígono">
-                                                <i class="large material-icons">signal_cellular_null</i>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                    <!-- end .col .s12 -->
-                                    <!-- <i class="material-icons prefix">settings_overscan</i> -->
-                                    <b>Opcionalmente escoja una distacia y unidad de Buffer:</b>
-                                    <form action="#" class="input-field col s12">
-                                        <div class="row">
-                                            <div class="input-field col s6">
-                                                <i class="material-icons prefix">select_all</i>
-                                                <input id="buffer_distance" type="text" class="validate" value="0">
-                                                <label for="buffer_distance">Buffer (distancia)</label>
-                                            </div>
-                                            <div class="input-field col s6">
-                                                <select id="buffer_unit">
+                  <ul class="col s12">
+                    <li class="col s4">
+                      <div id="btnDrawPoint" class="btn-floating btn-large waves-effect waves-light tooltipped grey" data-position="right" data-delay="50" data-tooltip="Punto">
+                        <i class="large material-icons">location_on</i>
+                      </div>
+                    </li>
+                    <li class="col s4">
+                      <div id="btnDrawLine" class="btn-floating btn-large waves-effect waves-light tooltipped grey" data-position="right" data-delay="50" data-tooltip="Línea">
+                        <i class="large material-icons">share</i>
+                      </div>
+                    </li>
+                    <li class="col s4">
+                      <div id="btnDrawPoly" class="btn-floating btn-large waves-effect waves-light tooltipped grey" data-position="right" data-delay="50" data-tooltip="Polígono">
+                        <i class="large material-icons">signal_cellular_null</i>
+                      </div>
+                    </li>
+                  </ul>
+                  <!-- end .col .s12 -->
+                  <!-- <i class="material-icons prefix">settings_overscan</i> -->
+                  <b>Opcionalmente escoja una distacia y unidad de Buffer:</b>
+                  <form action="#" class="input-field col s12">
+                    <div class="row">
+                      <div class="input-field col s6">
+                        <i class="material-icons prefix">select_all</i>
+                        <input id="buffer_distance" type="text" class="validate" value="0">
+                        <label for="buffer_distance">Buffer (distancia)</label>
+                      </div>
+                      <div class="input-field col s6">
+                        <select id="buffer_unit">
                                                       <option value="" disabled>Seleccione la opción</option>
                                                       <option value="UNIT_METER" selected>Metros</option>
                                                       <option value="UNIT_KILOMETER">Kilometros</option>
@@ -119,186 +119,193 @@
                                                       <option value="UNIT_US_NAUTICAL_MILE">Millas Nauticas US</option> -->
                                                       <!-- <option value="UNIT_DEGREE">Grados Sexagesimales</option> -->
                                                     </select>
-                                                <label>Unidades</label>
-                                            </div>
-                                            <div class="input-field col s12">
-                                                <button type="button" class="btn waves-effect waves-light grey" type="submit" onclick="applyBuffer(event)">Aplicar Buffer
+                        <label>Unidades</label>
+                      </div>
+                      <div class="input-field col s12">
+                        <button type="button" class="btn waves-effect waves-light grey" type="submit" onclick="applyBuffer(event)">Aplicar Buffer
                                                       <i class="material-icons right">send</i>
                                                     </button>
-                                            </div>
-                                            <div class="input-field col s12">
-                                                <button type="button" class="btn waves-effect waves-light grey" type="submit" onclick="generateReport1();">Generar Reporte
+                      </div>
+                      <div class="input-field col s12">
+                        <button type="button" class="btn waves-effect waves-light grey" type="submit" onclick="generateReport1();">Generar Reporte
                                                       <i class="material-icons right">print</i>
                                                     </button>
-                                            </div>
-                                            <div class="input-field col s12">
-                                                <button type="button" class="btn waves-effect waves-light grey" type="submit" onclick="generateReports(1, {});">Reporte Rápido
+                      </div>
+                      <div class="input-field col s12">
+                        <button type="button" class="btn waves-effect waves-light grey" type="submit" onclick="generateReports(1, {});">Reporte Rápido
                                                       <i class="material-icons right">flash_on</i>
                                                     </button>
-                                            </div>
-                                            <div id="loading-report" class="input-field col s12" style="display: none;">
-                                                <div id="loading-report-message"><b></b></div>
-                                                <div class="preloader-wrapper big active">
-                                                    <div class="spinner-layer spinner-blue">
-                                                        <div class="circle-clipper left">
-                                                            <div class="circle"></div>
-                                                        </div>
-                                                        <div class="gap-patch">
-                                                            <div class="circle"></div>
-                                                        </div>
-                                                        <div class="circle-clipper right">
-                                                            <div class="circle"></div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="spinner-layer spinner-red">
-                                                        <div class="circle-clipper left">
-                                                            <div class="circle"></div>
-                                                        </div>
-                                                        <div class="gap-patch">
-                                                            <div class="circle"></div>
-                                                        </div>
-                                                        <div class="circle-clipper right">
-                                                            <div class="circle"></div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="spinner-layer spinner-yellow">
-                                                        <div class="circle-clipper left">
-                                                            <div class="circle"></div>
-                                                        </div>
-                                                        <div class="gap-patch">
-                                                            <div class="circle"></div>
-                                                        </div>
-                                                        <div class="circle-clipper right">
-                                                            <div class="circle"></div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="spinner-layer spinner-green">
-                                                        <div class="circle-clipper left">
-                                                            <div class="circle"></div>
-                                                        </div>
-                                                        <div class="gap-patch">
-                                                            <div class="circle"></div>
-                                                        </div>
-                                                        <div class="circle-clipper right">
-                                                            <div class="circle"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- end .row-->
-                                    </form>
-                                    <!-- end form -->
-                                </div>
-                                <!-- end .row-->
+                      </div>
+                      <div id="loading-report" class="input-field col s12" style="display: none;">
+                        <div id="loading-report-message"><b></b></div>
+                        <div class="preloader-wrapper big active">
+                          <div class="spinner-layer spinner-blue">
+                            <div class="circle-clipper left">
+                              <div class="circle"></div>
                             </div>
-                            <!-- end .card-content -->
+                            <div class="gap-patch">
+                              <div class="circle"></div>
+                            </div>
+                            <div class="circle-clipper right">
+                              <div class="circle"></div>
+                            </div>
+                          </div>
+
+                          <div class="spinner-layer spinner-red">
+                            <div class="circle-clipper left">
+                              <div class="circle"></div>
+                            </div>
+                            <div class="gap-patch">
+                              <div class="circle"></div>
+                            </div>
+                            <div class="circle-clipper right">
+                              <div class="circle"></div>
+                            </div>
+                          </div>
+
+                          <div class="spinner-layer spinner-yellow">
+                            <div class="circle-clipper left">
+                              <div class="circle"></div>
+                            </div>
+                            <div class="gap-patch">
+                              <div class="circle"></div>
+                            </div>
+                            <div class="circle-clipper right">
+                              <div class="circle"></div>
+                            </div>
+                          </div>
+
+                          <div class="spinner-layer spinner-green">
+                            <div class="circle-clipper left">
+                              <div class="circle"></div>
+                            </div>
+                            <div class="gap-patch">
+                              <div class="circle"></div>
+                            </div>
+                            <div class="circle-clipper right">
+                              <div class="circle"></div>
+                            </div>
+                          </div>
                         </div>
-                        <!-- end .card-content -->
+                      </div>
                     </div>
-                    <!-- end .col .s12 -->
+                    <!-- end .row-->
+                  </form>
+                  <!-- end form -->
                 </div>
+                <!-- end .row-->
+              </div>
+              <!-- end .card-content -->
             </div>
-            <!-- end #reportes -->
-            <div class="sidebar-pane" id="leyenda">
-                <div class="row">
-                    <div class="col s12">
-                        <div class="card teal lighten-5">
-                            <div class="card-content">
-                                <span class="card-title">Leyenda</span>
-                            </div>
-                            <!-- end .card-content -->
-                            <div class="card-content">
-                                 <ul class="collection" id="legendDiv"></ul>
-                            </div>
-                            <!-- end .card-content -->
-                        </div>
-                        <!-- end .card .teal .lighten-5 -->
-                    </div>
-                    <!-- end .col .s12 -->
-                </div>
-                <!-- end .row -->
+            <!-- end .card-content -->
+          </div>
+          <!-- end .col .s12 -->
+        </div>
+      </div>
+      <!-- end #reportes -->
+      <div class="sidebar-pane" id="leyenda">
+        <div class="row">
+          <div class="col s12">
+            <div class="card teal lighten-5">
+              <div class="card-content">
+                <span class="card-title">Leyenda</span>
+              </div>
+              <!-- end .card-content -->
+              <div class="card-content">
+                <div id="info"></div>
+                <ul class="collection" id="legendDiv"></ul>
+              </div>
+              <!-- end .card-content -->
             </div>
-            <!-- end #messages -->
-            <div class="sidebar-pane" id="settings">
-                <h1 class="sidebar-header">Configuraciones<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
-            </div>
-            <!-- end #settings -->
+            <!-- end .card .teal .lighten-5 -->
+          </div>
+          <!-- end .col .s12 -->
         </div>
-        <!-- end .sidebar-content -->
+        <!-- end .row -->
+      </div>
+      <!-- end #messages -->
+      <div class="sidebar-pane" id="settings">
+        <h1 class="sidebar-header">Configuraciones<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+      </div>
+      <!-- end #settings -->
     </div>
-    <!-- end #sidebar -->
+    <!-- end .sidebar-content -->
+  </div>
+  <!-- end #sidebar -->
 
-    <div id="map" class="sidebar-map"></div>
-    <!-- end #map -->
+  <div id="map" class="sidebar-map"></div>
+  <!-- end #map -->
 
-    <!-- Menu -->
-    <div id="menu">
-        <!-- https://design.google.com/icons -->
-        <div id="btnP1" title="Medición" class="btn-nav-pane btn-floating btn-small /*btn-large*/ teal dropdown-button btn" onclick="changeNavpane(this, 'pane-medicion');">
-            <i class="material-icons">gesture</i>
-        </div>
-        <div id="btnP2" title="Identificar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="map.infoWindow.setMap(map);">
-            <i class="material-icons">search</i>
-        </div>
-        <div id="btnP3" title="Acercar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="zoomInBox();">
-            <i class="material-icons">zoom_in</i>
-        </div>
-        <div id="btnP4" title="Alejar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="zoomOutBox();">
-            <i class="material-icons">zoom_out</i>
-        </div>
-        <div id="btnP5" title="Panear" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="panMap();">
-            <i class="material-icons">pan_tool</i>
-        </div>
-        <div id="btnP6" title="Detener" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="cleanNavigationsInteractions();">
-            <i class="material-icons">clear</i>
-        </div>
-        <div id="btnP7" title="Limpiar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="window.currentGeometry=undefined;map.graphics.clear();">
-            <i class="material-icons">delete</i>
-        </div>
+  <div id="popup" class="ol-popup">
+    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+    <div id="popup-content"></div>
+  </div>
+  <!-- end #popup -->
+
+  <!-- Menu -->
+  <div id="menu">
+    <!-- https://design.google.com/icons -->
+    <div id="btnP1" title="Medición" class="btn-nav-pane btn-floating btn-small /*btn-large*/ teal dropdown-button btn" onclick="changeNavpane(this, 'pane-medicion');">
+      <i class="material-icons">gesture</i>
     </div>
-
-    <div id="navpane" class="card-panel teal lighten-5" style="display:none;">
-        <div id="pane-medicion">
-            <div id="measurementDiv"></div>
-            <span style="font-size:smaller;padding:5px 5px;">Presione <b>CTRL</b> para habilitar previsualizacion de área (snapping).</span>
-        </div>
+    <div id="btnP2" title="Identificar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="map.infoWindow.setMap(map);">
+      <i class="material-icons">search</i>
     </div>
-    <!-- end #navpane -->
-
-    <div id="extentpane" style="display: none;">
-        Escala: <span>1:noInf</span>
+    <div id="btnP3" title="Acercar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="zoomInBox();">
+      <i class="material-icons">zoom_in</i>
     </div>
-    <!-- end #extentpane -->
-
-    <!-- Modal -->
-    <!-- Modal Trigger -->
-    <!-- <a class="modal-trigger waves-effect waves-light btn" href="#modal1">Modal</a> -->
-
-    <!-- Modal Structure -->
-    <div id="modal1" class="modal modal-fixed-footer">
-        <div class="modal-content">
-            <h4>Advertencia</h4>
-            <p id="message-modal1">Texto del modal</p>
-        </div>
-        <div class="modal-footer">
-            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Aceptar</a>
-        </div>
+    <div id="btnP4" title="Alejar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="zoomOutBox();">
+      <i class="material-icons">zoom_out</i>
     </div>
-    <!-- end #modal1 -->
+    <div id="btnP5" title="Panear" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="panMap();">
+      <i class="material-icons">pan_tool</i>
+    </div>
+    <div id="btnP6" title="Detener" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="cleanNavigationsInteractions();">
+      <i class="material-icons">clear</i>
+    </div>
+    <div id="btnP7" title="Limpiar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="window.currentGeometry=undefined;map.graphics.clear();">
+      <i class="material-icons">delete</i>
+    </div>
+  </div>
 
-    <script src="vendor/jquery/dist/jquery.min.js" type="text/javascript"></script>
-    <script src="vendor/materialize/dist/js/materialize.min.js" type="text/javascript"></script>
-    <script src="vendor/sidebar-v2/js/jquery-sidebar.js" type="text/javascript"></script>
-    <script src="//openlayers.org/en/v4.1.0/build/ol.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/dojo/1.11.2/dojo/dojo.js"></script>
-    <script src="js/createMap.js"></script>
-    <script src="js/init.js"></script>
-    <!-- <script src="js/reportes.js" async defer></script> -->
-    <script src="js/mustache-dojo.js" async defer></script>
+  <div id="navpane" class="card-panel teal lighten-5" style="display:none;">
+    <div id="pane-medicion">
+      <div id="measurementDiv"></div>
+      <span style="font-size:smaller;padding:5px 5px;">Presione <b>CTRL</b> para habilitar previsualizacion de área (snapping).</span>
+    </div>
+  </div>
+  <!-- end #navpane -->
+
+  <div id="extentpane" style="display: none;">
+    Escala: <span>1:noInf</span>
+  </div>
+  <!-- end #extentpane -->
+
+  <!-- Modal -->
+  <!-- Modal Trigger -->
+  <!-- <a class="modal-trigger waves-effect waves-light btn" href="#modal1">Modal</a> -->
+
+  <!-- Modal Structure -->
+  <div id="modal1" class="modal modal-fixed-footer">
+    <div class="modal-content">
+      <h4>Advertencia</h4>
+      <p id="message-modal1">Texto del modal</p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Aceptar</a>
+    </div>
+  </div>
+  <!-- end #modal1 -->
+
+  <script src="vendor/jquery/dist/jquery.min.js" type="text/javascript"></script>
+  <script src="vendor/materialize/dist/js/materialize.min.js" type="text/javascript"></script>
+  <script src="vendor/sidebar-v2/js/jquery-sidebar.js" type="text/javascript"></script>
+  <script src="//openlayers.org/en/v4.1.0/build/ol.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/dojo/1.11.2/dojo/dojo.js"></script>
+  <script src="js/createMap.js"></script>
+  <script src="js/init.js"></script>
+  <!-- <script src="js/reportes.js" async defer></script> -->
+  <script src="js/mustache-dojo.js" async defer></script>
 </body>
 
 </html>
