@@ -799,7 +799,7 @@ function changeNavpane(button, opt) {
 
 function _getLayerById(id) {
   var layers = map.getLayers().getArray();
-  return layers.find(function (layer) {
+  return layers.find(function(layer) {
     var source = layer.getSource();
     if (typeof(source.config) !== 'undefined') {
       return source.config.id === id;
@@ -809,7 +809,7 @@ function _getLayerById(id) {
 }
 
 function getFeatureLayerObjectById(id) {
-  return window.mapFeatureLayerObjects.find(function (featureLayerObject) {
+  return window.mapFeatureLayerObjects.find(function(featureLayerObject) {
     return featureLayerObject.id === id;
   });
 }
@@ -851,6 +851,8 @@ function panMap() {
   // map.addInteraction(dragPan);
   // listOfNavigationsInteractions.push(dragPan);
 }
+
+var identifyInteraction = null;
 
 function createIdentify() {
 
@@ -915,6 +917,17 @@ function createIdentify() {
   });
 
   window.map.addInteraction(selectInteraction);
+  window.identifyInteraction = selectInteraction;
+}
+
+function turnOffPopup() {
+  window.identifyInteraction.getFeatures().clear();
+  hideOverlays();
+  map.removeInteraction(window.identifyInteraction);
+}
+
+function turnOnPopup() {
+  map.addInteraction(window.identifyInteraction);
 }
 
 function addZoomSlider() {
@@ -923,25 +936,93 @@ function addZoomSlider() {
 }
 
 function searchFeaturesLayersByCoordinate(coordinate) {
-  var features = new Array();
+  var featuresByLayer = new Array();
   for (i = 0; i < window.mapFeatureLayerObjects.length; i++) {
     var layer = window.mapFeatureLayerObjects[i];
     var type = layer.serviceType;
     //console.log(layer);
     if (type === 'WFS') {
       var layerId = mapFeatureLayerObjects[i].id;
-      features.push({
+      featuresByLayer.push({
         'layerId': layerId,
-        'feature': searchFeaturesLayerByCoordinate(layerId, coordinate)
+        'features': searchFeaturesLayerByCoordinate(layerId, coordinate)
       });
     }
   }
-  return features;
+  return featuresByLayer;
 }
 
 function searchFeaturesLayerByCoordinate(layerId, coordinate) {
   //console.log(layerId);
   var layer = map.getLayer(layerId);
   var source = layer.getSource();
-  return source.getFeaturesAtCoordinate(window.coordinate);
+  return source.getFeaturesAtCoordinate(coordinate);
+}
+
+function hideOverlays(){
+  var overlays = map.getOverlays().getArray();
+  for (var i = 0; i < overlays.length; i++) {
+    overlays[i].setPosition(undefined);
+  }
+}
+
+function identifyInLayers() {
+  turnOffPopup();
+  $('#map').css('cursor', 'crosshair');
+  var clkEvent = function(evt) {
+    $('#map').css('cursor', 'default');
+    window.evt3 = evt;
+    map.un('click', clkEvent);
+    evt.stopPropagation();
+    evt.preventDefault();
+    var coordinate = evt.coordinate;
+    var featuresByLayer = searchFeaturesLayersByCoordinate(coordinate);
+    console.log('features', featuresByLayer);
+    showResultFeatures(featuresByLayer);
+    setTimeout(function(){
+      turnOnPopup();
+    }, 2000);
+  }
+  map.on('click', clkEvent);
+}
+
+function showResultFeatures(featuresByLayer) {
+  var resultadosDiv = $('#resultadosDiv');
+  resultadosDiv.html('');
+
+  for (var i = 0; i < featuresByLayer.length; i++) {
+    var layer = featuresByLayer[i];
+    var layerObject = window.getFeatureLayerObjectById(layer.layerId);
+    var item =
+      '<li class="collection-header">\n' +
+      '     <h5>' + layerObject.name + '</h5>\n' +
+      '</li>\n';
+    resultadosDiv.append(item);
+
+    var contentHTML = '';
+    var features = layer.features;
+    if (features.length > 0) {
+      for (var j = 0; j < features.length; j++) {
+        var feature = features[j];
+        var properties = feature.getProperties();
+        contentHTML += '<li class="collection-item">\n';
+        for (var property in properties) {
+          if (properties.hasOwnProperty(property)) {
+            if (['geometry'].indexOf(property) === -1) { //Si no esta
+              contentHTML += '<p>' + property + ': ' + properties[property] + '</p>\n';
+            }
+          }
+        }
+        contentHTML +='</li>\n';
+      }
+    } else {
+      contentHTML +=
+        '<li class="collection-item">\n' +
+        '     <p>No hay resultados.</p>\n' +
+        '</li>\n';
+    }
+    resultadosDiv.append(contentHTML);
+    var sidebar = $('#sidebar').sidebar();
+    sidebar.open('resultados');
+  }
 }
