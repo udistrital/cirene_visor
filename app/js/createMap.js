@@ -67,165 +67,10 @@ function createMap() {
     });
     window.map = map;
 
-    var zoomslider = new ol.control.ZoomSlider();
-    map.addControl(zoomslider);
-
     map.getLayer = window._getLayerById;
 
-    // The URL referenced in the constructor may point to a style url JSON (as in this sample)
-    // or directly to a vector tile service
-    // NOT SUPPORT IN CHROME
-    // var vtlayer = new VectorTileLayer('https://www.arcgis.com/sharing/rest/content/items/bf79e422e9454565ae0cbe9553cf6471/resources/styles/root.json')
-    // map.addLayer(vtlayer)
-
-    //configBufferTool()
-
-    //map.on('load', createDrawToolbar)
-
-    // https://developers.arcgis.com/javascript/3/jssamples/fl_ondemand.html
-    //map.infoWindow.resize(400, 200)
-
-    // Base map
-    var osmLayer = new ol.layer.Tile({
-      source: new ol.source.OSM()
-    });
-
-    map.addLayer(osmLayer);
-
-    // format used to parse WFS GetFeature responses
-    var geojsonFormat = new ol.format.GeoJSON();
-
-    // var scalebar = new Scalebar({
-    //     map: map,
-    //     // "dual" displays both miles and kilometers
-    //     // "english" is the default, which displays miles
-    //     // use "metric" for kilometers
-    //     scalebarUnit: 'dual'
-    // })
-
-    window.mapFeatureLayerObjects = [];
-    // map.on('zoom-end', function() {
-    //     checkVisibilityAtScale()
-    //     showScale()
-    // })
-    // showScale()
-
-    var servicios = window.servicios;
-
-    var wfsLoader = function(extent, resolution, projection) {
-      var indice = this.indice;
-      var wfsSource = this;
-      var url = servicios[indice].url + //'/geoserver/parqueaderos/ows?service=WFS&' +
-        //'version=1.0.0&request=GetFeature&typename=parqueaderos:isla&' +
-        //'outputFormat=application%2Fjson' +
-        '&srsname=EPSG:4326&bbox=' + extent.join(',') + ',EPSG:4326';
-      // use jsonp: false to prevent jQuery from adding the "callback"
-      // parameter to the URL
-      $.ajax({
-        url: url,
-        dataType: 'json',
-        jsonp: false
-      }).done(function(response) {
-        wfsSource.addFeatures(geojsonFormat.readFeatures(response));
-      });
-    };
-
-    for (var i = 0; i < servicios.length; i++) {
-      var servicio = servicios[i];
-      if (servicio.enable) {
-        if (servicio.serviceType === 'WFS') {
-          window.mapFeatureLayerObjects.push(servicio);
-          var wfsSource = new ol.source.Vector({
-            loader: wfsLoader,
-            strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-              maxZoom: 19
-            }))
-          });
-          wfsSource.indice = i;
-          wfsSource.config = servicio;
-
-          var wfsLayer = new ol.layer.Vector({
-            source: wfsSource,
-            style: new ol.style.Style({
-              stroke: new ol.style.Stroke({
-                color: (typeof(servicio.color) === undefined) ? 'rgba(255, 255, 255, 1.0)' : servicio.color,
-                width: 2
-              }),
-              opacity: (typeof(servicio.opacity) === undefined) ? 1 : servicio.opacity
-            })
-          });
-
-          map.addLayer(wfsLayer);
-        } else if (servicio.serviceType === 'WMS') {
-          window.mapFeatureLayerObjects.push(servicio);
-          var wmsSource = new ol.source.TileWMS({
-            url: '/geoserver/wms',
-            params: {
-              'LAYERS': 'parqueaderos:sotano1_50ppp_georeferenced',
-              'FORMAT': 'image/png',
-              'TILED': true
-            },
-            serverType: 'geoserver',
-            crossOrigin: 'anonymous'
-          });
-          wmsSource.indice = i;
-          wmsSource.config = servicio;
-
-          var wmsLayer = new ol.layer.Tile({
-            source: wmsSource,
-            opacity: servicio.opacity
-          });
-          map.addLayer(wmsLayer);
-
-        } else if (servicio.serviceType === 'WMSServer') {
-          window.mapFeatureLayerObjects.push(servicio);
-          var wmsServerSource = new ol.source.TileWMS({
-            url: servicio.url,
-            params: {
-              LAYERS: servicio.layers,
-              FORMAT: "image/png",
-            },
-            crossOrigin: ''
-          });
-          wmsServerSource.indice = i;
-          wmsServerSource.config = servicio;
-
-          var wmsServerLayer = new ol.layer.Tile({
-            source: wmsServerSource,
-            opacity: servicio.opacity
-          });
-          window.milayer = wmsServerLayer;
-          map.addLayer(wmsServerLayer);
-
-        } else if (servicio.serviceType === 'FeatureServer') {
-          for (var j = 0; j < servicio.layers.length; j++) {
-            var layer = servicio.layers[j];
-            if (layer.enable) {
-              var url = servicio.url + '/' + layer.layerId;
-
-              var infoTemplate = new InfoTemplate();
-              infoTemplate.setTitle(layer.name);
-              var templateContent = generateTemplateContent(layer, i, j);
-              infoTemplate.setContent(templateContent);
-
-              var featureLayer = new FeatureLayer(url, {
-                id: layer.id,
-                mode: FeatureLayer[servicio.mode],
-                outFields: ['*'],
-                infoTemplate: infoTemplate,
-                visible: layer.visible
-                // maxAllowableOffset: calcOffset()
-              });
-
-              window.mapFeatureLayerObjects.push(layer);
-              // featureLayer.setMaxScale(layer.maxScale)
-              // featureLayer.setMinScale(layer.minScale)
-              map.addLayer(featureLayer);
-            }
-          }
-        }
-      }
-    }
+    addLayers();
+    addZoomSlider();
     //checkVisibilityAtScale()
     //add the legend
     createLegend();
@@ -233,6 +78,163 @@ function createMap() {
     //createMeasurement()
     createIdentify();
   });
+}
+
+function addLayers() {
+  // The URL referenced in the constructor may point to a style url JSON (as in this sample)
+  // or directly to a vector tile service
+  // NOT SUPPORT IN CHROME
+  // var vtlayer = new VectorTileLayer('https://www.arcgis.com/sharing/rest/content/items/bf79e422e9454565ae0cbe9553cf6471/resources/styles/root.json')
+  // map.addLayer(vtlayer)
+
+  //configBufferTool()
+
+  //map.on('load', createDrawToolbar)
+
+  // https://developers.arcgis.com/javascript/3/jssamples/fl_ondemand.html
+  //map.infoWindow.resize(400, 200)
+
+  // Base map
+  var osmLayer = new ol.layer.Tile({
+    source: new ol.source.OSM()
+  });
+
+  map.addLayer(osmLayer);
+
+  // format used to parse WFS GetFeature responses
+  var geojsonFormat = new ol.format.GeoJSON();
+
+  // var scalebar = new Scalebar({
+  //     map: map,
+  //     // "dual" displays both miles and kilometers
+  //     // "english" is the default, which displays miles
+  //     // use "metric" for kilometers
+  //     scalebarUnit: 'dual'
+  // })
+
+  window.mapFeatureLayerObjects = [];
+  // map.on('zoom-end', function() {
+  //     checkVisibilityAtScale()
+  //     showScale()
+  // })
+  // showScale()
+
+  var servicios = window.servicios;
+
+  var wfsLoader = function(extent, resolution, projection) {
+    var indice = this.indice;
+    var wfsSource = this;
+    var url = servicios[indice].url + //'/geoserver/parqueaderos/ows?service=WFS&' +
+      //'version=1.0.0&request=GetFeature&typename=parqueaderos:isla&' +
+      //'outputFormat=application%2Fjson' +
+      '&srsname=EPSG:4326&bbox=' + extent.join(',') + ',EPSG:4326';
+    // use jsonp: false to prevent jQuery from adding the "callback"
+    // parameter to the URL
+    $.ajax({
+      url: url,
+      dataType: 'json',
+      jsonp: false
+    }).done(function(response) {
+      wfsSource.addFeatures(geojsonFormat.readFeatures(response));
+    });
+  };
+
+  for (var i = 0; i < servicios.length; i++) {
+    var servicio = servicios[i];
+    if (servicio.enable) {
+      if (servicio.serviceType === 'WFS') {
+        window.mapFeatureLayerObjects.push(servicio);
+        var wfsSource = new ol.source.Vector({
+          loader: wfsLoader,
+          strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+            maxZoom: 19
+          }))
+        });
+        wfsSource.indice = i;
+        wfsSource.config = servicio;
+
+        var wfsLayer = new ol.layer.Vector({
+          source: wfsSource,
+          style: new ol.style.Style({
+            stroke: new ol.style.Stroke({
+              color: (typeof(servicio.color) === undefined) ? 'rgba(255, 255, 255, 1.0)' : servicio.color,
+              width: 2
+            }),
+            opacity: (typeof(servicio.opacity) === undefined) ? 1 : servicio.opacity
+          })
+        });
+
+        map.addLayer(wfsLayer);
+      } else if (servicio.serviceType === 'WMS') {
+        window.mapFeatureLayerObjects.push(servicio);
+        var wmsSource = new ol.source.TileWMS({
+          url: '/geoserver/wms',
+          params: {
+            'LAYERS': 'parqueaderos:sotano1_50ppp_georeferenced',
+            'FORMAT': 'image/png',
+            'TILED': true
+          },
+          serverType: 'geoserver',
+          crossOrigin: 'anonymous'
+        });
+        wmsSource.indice = i;
+        wmsSource.config = servicio;
+
+        var wmsLayer = new ol.layer.Tile({
+          source: wmsSource,
+          opacity: servicio.opacity
+        });
+        map.addLayer(wmsLayer);
+
+      } else if (servicio.serviceType === 'WMSServer') {
+        window.mapFeatureLayerObjects.push(servicio);
+        var wmsServerSource = new ol.source.TileWMS({
+          url: servicio.url,
+          params: {
+            LAYERS: servicio.layers,
+            FORMAT: 'image/png',
+          },
+          crossOrigin: ''
+        });
+        wmsServerSource.indice = i;
+        wmsServerSource.config = servicio;
+
+        var wmsServerLayer = new ol.layer.Tile({
+          source: wmsServerSource,
+          opacity: servicio.opacity
+        });
+        window.milayer = wmsServerLayer;
+        map.addLayer(wmsServerLayer);
+
+      } else if (servicio.serviceType === 'FeatureServer') {
+        for (var j = 0; j < servicio.layers.length; j++) {
+          var layer = servicio.layers[j];
+          if (layer.enable) {
+            var url = servicio.url + '/' + layer.layerId;
+
+            var infoTemplate = new InfoTemplate();
+            infoTemplate.setTitle(layer.name);
+            var templateContent = generateTemplateContent(layer, i, j);
+            infoTemplate.setContent(templateContent);
+
+            var featureLayer = new FeatureLayer(url, {
+              id: layer.id,
+              mode: FeatureLayer[servicio.mode],
+              outFields: ['*'],
+              infoTemplate: infoTemplate,
+              visible: layer.visible
+              // maxAllowableOffset: calcOffset()
+            });
+
+            window.mapFeatureLayerObjects.push(layer);
+            // featureLayer.setMaxScale(layer.maxScale)
+            // featureLayer.setMinScale(layer.minScale)
+            map.addLayer(featureLayer);
+          }
+        }
+      }
+    }
+  }
 }
 
 function showScale() {
@@ -797,14 +799,19 @@ function changeNavpane(button, opt) {
 
 function _getLayerById(id) {
   var layers = map.getLayers().getArray();
-  for (var i = 0; i < layers.length; i++) {
-    var layer = layers[i];
+  return layers.find(function (layer) {
     var source = layer.getSource();
-    //console.log(source);
-    if (typeof(source.config) !== 'undefined' && source.config.id === id) {
-      return layer;
+    if (typeof(source.config) !== 'undefined') {
+      return source.config.id === id;
     }
-  }
+    return false;
+  });
+}
+
+function getFeatureLayerObjectById(id) {
+  return window.mapFeatureLayerObjects.find(function (featureLayerObject) {
+    return featureLayerObject.id === id;
+  });
 }
 
 var listOfNavigationsInteractions = new Array();
@@ -879,12 +886,12 @@ function createIdentify() {
 
   var selectInteraction = new ol.interaction.Select();
   selectInteraction.on('select', function(evt) {
-    console.log(evt);
-    window.evt = evt;
+    console.log('evt select', evt);
+    //window.evt = evt;
     var coordinate = evt.mapBrowserEvent.coordinate;
 
     var properties = lastFeature.getProperties();
-    var contentHTML = "";
+    var contentHTML = '';
 
     for (var property in properties) {
       if (properties.hasOwnProperty(property)) {
@@ -896,15 +903,45 @@ function createIdentify() {
 
     content.innerHTML = contentHTML;
     overlay.setPosition(coordinate);
+    window.coordinate = coordinate;
   });
 
   var lastFeature = null;
-  selectInteraction.getFeatures().on("add", function(evt) {
-    console.log(evt);
-    window.evt2 = evt;
+  selectInteraction.getFeatures().on('add', function(evt) {
+    console.log('evt add', evt);
+    //window.evt2 = evt;
     var feature = evt.element; //the feature selected
     lastFeature = feature;
-  })
+  });
 
   window.map.addInteraction(selectInteraction);
+}
+
+function addZoomSlider() {
+  var zoomslider = new ol.control.ZoomSlider();
+  map.addControl(zoomslider);
+}
+
+function searchFeaturesLayersByCoordinate(coordinate) {
+  var features = new Array();
+  for (i = 0; i < window.mapFeatureLayerObjects.length; i++) {
+    var layer = window.mapFeatureLayerObjects[i];
+    var type = layer.serviceType;
+    //console.log(layer);
+    if (type === 'WFS') {
+      var layerId = mapFeatureLayerObjects[i].id;
+      features.push({
+        'layerId': layerId,
+        'feature': searchFeaturesLayerByCoordinate(layerId, coordinate)
+      });
+    }
+  }
+  return features;
+}
+
+function searchFeaturesLayerByCoordinate(layerId, coordinate) {
+  //console.log(layerId);
+  var layer = map.getLayer(layerId);
+  var source = layer.getSource();
+  return source.getFeaturesAtCoordinate(window.coordinate);
 }

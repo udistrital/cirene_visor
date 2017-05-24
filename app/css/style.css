@@ -311,18 +311,6 @@ html, body, #map {
   top: 2.75em;
 }
 
-#map .sidebar-pane.active .ol-zoomslider.desplegado {
-  display: none;
-}
-
-#map .ol-zoomslider.desplegado {
-  margin-left: 470px;
-}
-
-#map .ol-zoomslider {
-  margin-left: 53px;
-}
-
 #map .ol-zoom-in.ol-has-tooltip:hover [role=tooltip], #map .ol-zoom-in.ol-has-tooltip:focus [role=tooltip] {
   top: 3px;
 }
@@ -330,3 +318,28 @@ html, body, #map {
 #map .ol-zoom-out.ol-has-tooltip:hover [role=tooltip], #map .ol-zoom-out.ol-has-tooltip:focus [role=tooltip] {
   top: 232px;
 }
+
+/**
+ * utiliza CSS para reubicar elementos
+ */
+
+.sidebar-left ~ .sidebar-map .ol-zoomslider {
+  margin-left: 46px; }
+  @media (min-width: 768px) {
+    .sidebar-left ~ .sidebar-map .ol-zoomslider {
+      transition: margin-left 500ms; } }
+  @media (min-width: 768px) and (max-width: 991px) {
+    .sidebar-left ~ .sidebar-map .ol-zoomslider {
+      margin-left: 317px; } }
+  @media (min-width: 992px) and (max-width: 1199px) {
+    .sidebar-left ~ .sidebar-map .ol-zoomslider {
+      margin-left: 402px; } }
+  @media (min-width: 1200px) {
+    .sidebar-left ~ .sidebar-map .ol-zoomslider {
+      margin-left: 472px; } }
+
+@media (min-width: 768px) {
+  .sidebar-left.collapsed ~ .sidebar-map .ol-zoomslider {
+    margin-left: 52px; } }
+
+/*end*/
