@@ -971,10 +971,8 @@ function identifyInLayers() {
   $('#map').css('cursor', 'crosshair');
   var clkEvent = function(evt) {
     $('#map').css('cursor', 'default');
-    window.evt3 = evt;
+    $('#boton-resultados').removeClass('disabled');
     map.un('click', clkEvent);
-    evt.stopPropagation();
-    evt.preventDefault();
     var coordinate = evt.coordinate;
     var featuresByLayer = searchFeaturesLayersByCoordinate(coordinate);
     console.log('features', featuresByLayer);
@@ -1022,7 +1020,6 @@ function showResultFeatures(featuresByLayer) {
         '</li>\n';
     }
     resultadosDiv.append(contentHTML);
-    var sidebar = $('#sidebar').sidebar();
-    sidebar.open('resultados');
+    window.sidebar.open('resultados');
   }
 }
