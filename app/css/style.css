@@ -343,3 +343,13 @@ html, body, #map {
     margin-left: 52px; } }
 
 /*end*/
+
+.item-leyenda-wms-title {
+  
+}
+
+.item-leyenda-wms-content {
+  background-color: rgb(255, 255, 255);
+  padding: 5px;
+  padding-left: 20px;
+}

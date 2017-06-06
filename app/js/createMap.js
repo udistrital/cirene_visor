@@ -339,18 +339,25 @@ function generateHTMLLegendWMS(response) {
     '</li>\n';
   legendDiv.append(item);
 
+  var collapsible =
+    '<ul class="collapsible" data-collapsible="expandable">\n' +
+    '</ul>\n';
+  collapsible = $(collapsible);
+  legendDiv.append(collapsible);
+
   searchLayerRecursive(layers, function(layer) {
     var url = layer.Style[0].LegendURL[0].OnlineResource;
     var title = layer.Title;
     if (url) {
       var item =
-        '<li class="collection-item">\n' +
-        '     <h5>' + title + '</h5>\n' +
-        '     <img src="' + url + '">\n' +
+        '<li>\n' +
+        '  <div class="collapsible-header item-leyenda-wms-title">' + title + '</div>\n' +
+        '  <div class="collapsible-body item-leyenda-wms-content"><span><img src="' + url + '" /></span></div>\n' +
         '</li>\n';
-      legendDiv.append(item);
+      collapsible.append(item);
     }
   });
+  $('.collapsible').collapsible();
 }
 
 function searchLayerRecursive(layers, listenFunction) {
@@ -422,9 +429,10 @@ function createTOC() {
     var i, li;
     for (i = 0; i < window.grupoServicios.length; i++) {
       var grupo = window.grupoServicios[i];
+      var active = (i === 0)?'active':'';
       li =
         '<li> ' +
-        '     <div class="collapsible-header">\n' +
+        '     <div class="collapsible-header ' + active + '">\n' +
         '        <i class="material-icons">layers</i>\n' +
         '        ' + grupo.name + '\n' +
         '        <a href="#!" onclick="changeVisibilityGroup(event, \'' + grupo.id + '\', false)">\n' +
