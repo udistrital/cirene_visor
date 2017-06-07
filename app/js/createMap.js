@@ -1025,7 +1025,7 @@ function showResultFeatures(featuresByLayer) {
         }
         var item =
           '<li class="active">\n' +
-          '  <div class="collapsible-header active"><i class="material-icons">filter_drama</i>' + layerObject.name + '</div>\n' +
+          '  <div class="collapsible-header active"><i class="material-icons tiny">play_arrow</i>' + layerObject.name + '</div>\n' +
           '  <div class="collapsible-body">' + contentHTML + '</div>\n' +
           '</li>\n';
         item = $(item);
@@ -1037,7 +1037,7 @@ function showResultFeatures(featuresByLayer) {
           '<div>\n';
         var item =
           '<li class="active">\n' +
-          '  <div class="collapsible-header active"><i class="material-icons">filter_drama</i>' + layerObject.name + '</div>\n' +
+          '  <div class="collapsible-header active"><i class="material-icons tiny">play_arrow</i>' + layerObject.name + '</div>\n' +
           '  <div class="collapsible-body">' + contentHTML + '</div>\n' +
           '</li>\n';
         item = $(item);
