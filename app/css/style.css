@@ -168,6 +168,10 @@ html, body, #map {
     content: "✖";
 }
 
+#popup-content p {
+    line-height: 1px;
+}
+
 #map_zoom_slider {
   left: 66px;
 }
@@ -345,7 +349,7 @@ html, body, #map {
 /*end*/
 
 .item-leyenda-wms-title {
-  
+
 }
 
 .item-leyenda-wms-content {

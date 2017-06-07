@@ -351,7 +351,7 @@ function generateHTMLLegendWMS(response) {
     if (url) {
       var item =
         '<li>\n' +
-        '  <div class="collapsible-header item-leyenda-wms-title">' + title + '</div>\n' +
+        '  <div class="collapsible-header item-leyenda-wms-title"><i class="material-icons tiny">play_arrow</i>' + title + '</div>\n' +
         '  <div class="collapsible-body item-leyenda-wms-content"><span><img src="' + url + '" /></span></div>\n' +
         '</li>\n';
       collapsible.append(item);
