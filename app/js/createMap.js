@@ -999,35 +999,44 @@ function showResultFeatures(featuresByLayer) {
   for (var i = 0; i < featuresByLayer.length; i++) {
     var layer = featuresByLayer[i];
     var layerObject = window.getFeatureLayerObjectById(layer.layerId);
-    var item =
-      '<li class="collection-header">\n' +
-      '     <h5>' + layerObject.name + '</h5>\n' +
-      '</li>\n';
-    resultadosDiv.append(item);
+    var capaVisible = window.map.getLayer(layer.layerId).getVisible();
+    if(capaVisible) {
+      var item =
+        '<li class="collection-header">\n' +
+        '     <h5>' + layerObject.name + '</h5>\n' +
+        '</li>\n';
+      resultadosDiv.append(item);
 
-    var contentHTML = '';
-    var features = layer.features;
-    if (features.length > 0) {
-      for (var j = 0; j < features.length; j++) {
-        var feature = features[j];
-        var properties = feature.getProperties();
-        contentHTML += '<li class="collection-item">\n';
-        for (var property in properties) {
-          if (properties.hasOwnProperty(property)) {
-            if (['geometry'].indexOf(property) === -1) { //Si no esta
-              contentHTML += '<p>' + property + ': ' + properties[property] + '</p>\n';
+      var contentHTML = '';
+      var features = layer.features;
+      if (features.length > 0) {
+        for (var j = 0; j < features.length; j++) {
+          var feature = features[j];
+          var properties = feature.getProperties();
+          contentHTML += '<li class="collection-item">\n';
+          for (var property in properties) {
+            if (properties.hasOwnProperty(property)) {
+              if (['geometry'].indexOf(property) === -1) { //Si no esta
+                contentHTML += '<p>' + property + ': ' + properties[property] + '</p>\n';
+              }
             }
           }
+          contentHTML +='</li>\n';
         }
-        contentHTML +='</li>\n';
+      } else {
+        contentHTML +=
+          '<li class="collection-item">\n' +
+          '     <p>No hay resultados.</p>\n' +
+          '</li>\n';
       }
-    } else {
-      contentHTML +=
-        '<li class="collection-item">\n' +
-        '     <p>No hay resultados.</p>\n' +
-        '</li>\n';
+      resultadosDiv.append(contentHTML);
     }
-    resultadosDiv.append(contentHTML);
-    window.sidebar.open('resultados');
   }
+
+  if(resultadosDiv.html() === ''){//no hubo resultados
+    var contentHTML = '<h2>No hay capas activas.</h2>';
+    resultadosDiv.append(contentHTML);
+  }
+
+  window.sidebar.open('resultados');
 }
