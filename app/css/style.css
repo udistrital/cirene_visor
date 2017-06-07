@@ -357,3 +357,15 @@ html, body, #map {
   padding: 5px;
   padding-left: 20px;
 }
+
+#resultadosDiv .collapsible-body {
+  background-color: rgba(200, 200, 200, 0.1);
+}
+
+#resultadosDiv .collapsible-body p{
+  padding: 10px;
+}
+
+.resultadoIdentificar {
+  margin: 10px;
+}

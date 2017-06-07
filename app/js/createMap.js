@@ -357,7 +357,7 @@ function generateHTMLLegendWMS(response) {
       collapsible.append(item);
     }
   });
-  $('.collapsible').collapsible();
+  $('#legendDiv .collapsible').collapsible();
 }
 
 function searchLayerRecursive(layers, listenFunction) {
@@ -996,47 +996,63 @@ function showResultFeatures(featuresByLayer) {
   var resultadosDiv = $('#resultadosDiv');
   resultadosDiv.html('');
 
+  var accordion = '<ul class="collapsible" data-collapsible="expandable"></ul>';
+  accordion = $(accordion);
+
+  var hayResultados = false;
+
   for (var i = 0; i < featuresByLayer.length; i++) {
     var layer = featuresByLayer[i];
     var layerObject = window.getFeatureLayerObjectById(layer.layerId);
     var capaVisible = window.map.getLayer(layer.layerId).getVisible();
     if(capaVisible) {
-      var item =
-        '<li class="collection-header">\n' +
-        '     <h5>' + layerObject.name + '</h5>\n' +
-        '</li>\n';
-      resultadosDiv.append(item);
-
+      hayResultados = true;
       var contentHTML = '';
       var features = layer.features;
       if (features.length > 0) {
         for (var j = 0; j < features.length; j++) {
           var feature = features[j];
           var properties = feature.getProperties();
-          contentHTML += '<li class="collection-item">\n';
+          contentHTML += '<div class="resultadoIdentificar">\n';
           for (var property in properties) {
             if (properties.hasOwnProperty(property)) {
               if (['geometry'].indexOf(property) === -1) { //Si no esta
-                contentHTML += '<p>' + property + ': ' + properties[property] + '</p>\n';
+                contentHTML += '<span>' + property + ': ' + properties[property] + '</span><br/>\n';
               }
             }
           }
-          contentHTML +='</li>\n';
+          contentHTML +='</div>\n';
         }
+        var item =
+          '<li class="active">\n' +
+          '  <div class="collapsible-header active"><i class="material-icons">filter_drama</i>' + layerObject.name + '</div>\n' +
+          '  <div class="collapsible-body">' + contentHTML + '</div>\n' +
+          '</li>\n';
+        item = $(item);
+        accordion.append(item);
       } else {
         contentHTML +=
-          '<li class="collection-item">\n' +
-          '     <p>No hay resultados.</p>\n' +
+          '<div class="resultadoIdentificar">\n' +
+          '     <span>No hay resultados.</span>\n' +
+          '<div>\n';
+        var item =
+          '<li class="active">\n' +
+          '  <div class="collapsible-header active"><i class="material-icons">filter_drama</i>' + layerObject.name + '</div>\n' +
+          '  <div class="collapsible-body">' + contentHTML + '</div>\n' +
           '</li>\n';
+        item = $(item);
+        accordion.append(item);
       }
-      resultadosDiv.append(contentHTML);
     }
   }
-
-  if(resultadosDiv.html() === ''){//no hubo resultados
+  if(hayResultados){//no hubo resultados
+    resultadosDiv.append(accordion);
+  } else {
     var contentHTML = '<h2>No hay capas activas.</h2>';
     resultadosDiv.append(contentHTML);
   }
+
+  $('#resultadosDiv .collapsible').collapsible();
 
   window.sidebar.open('resultados');
 }
