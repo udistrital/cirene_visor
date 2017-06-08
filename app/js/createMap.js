@@ -7,22 +7,12 @@ var navToolbar;
 var geometriaAnalisis;
 
 require([
-  'dojo/request/xhr',
-  'dojo/promise/all',
-  'dojo/Deferred'
-], function(
-  xhr,
-  all,
-  Deferred
-) {
+  'dojo/request/xhr', 'dojo/promise/all', 'dojo/Deferred'
+], function(xhr, all, Deferred) {
 
-  var promise1 = xhr('conf/servicios.json', {
-    handleAs: 'json'
-  });
+  var promise1 = xhr('conf/servicios.json', {handleAs: 'json'});
 
-  var promise2 = xhr('conf/grupos.json', {
-    handleAs: 'json'
-  });
+  var promise2 = xhr('conf/grupos.json', {handleAs: 'json'});
 
   all([promise1, promise2]).then(function(results) {
     console.log('results', results);
@@ -41,15 +31,9 @@ require([
 });
 
 function createMap() {
-  require([
-    'dojo/domReady!'
-  ], function() {
+  require(['dojo/domReady!'], function() {
 
-    var projection = new ol.proj.Projection({
-      code: 'EPSG:4326',
-      units: 'degrees',
-      axisOrientation: 'neu'
-    });
+    var projection = new ol.proj.Projection({code: 'EPSG:4326', units: 'degrees', axisOrientation: 'neu'});
 
     var map = new ol.Map({
       //layers: [osmLayer, wmsLayer, grupoislaLayer, islaLayer],
@@ -57,13 +41,13 @@ function createMap() {
       target: document.getElementById('map'),
       view: new ol.View({
         projection: projection,
-        center: [-74.06567902549436, 4.6281822385875655],
+        center: [
+          -74.06567902549436, 4.6281822385875655
+        ],
         maxZoom: 26,
         zoom: 18
       }),
-      controls: ol.control.defaults().extend([
-        new ol.control.ScaleLine()
-      ])
+      controls: ol.control.defaults().extend([new ol.control.ScaleLine()])
     });
     window.map = map;
 
@@ -75,7 +59,7 @@ function createMap() {
     //add the legend
     createLegend();
     createTOC();
-    //createMeasurement()
+    createMeasurement()
     createIdentify();
   });
 }
@@ -95,9 +79,7 @@ function addLayers() {
   //map.infoWindow.resize(400, 200)
 
   // Base map
-  var osmLayer = new ol.layer.Tile({
-    source: new ol.source.OSM()
-  });
+  var osmLayer = new ol.layer.Tile({source: new ol.source.OSM()});
 
   map.addLayer(osmLayer);
 
@@ -125,16 +107,12 @@ function addLayers() {
     var indice = this.indice;
     var wfsSource = this;
     var url = servicios[indice].url + //'/geoserver/parqueaderos/ows?service=WFS&' +
-      //'version=1.0.0&request=GetFeature&typename=parqueaderos:isla&' +
-      //'outputFormat=application%2Fjson' +
-      '&srsname=EPSG:4326&bbox=' + extent.join(',') + ',EPSG:4326';
+    //'version=1.0.0&request=GetFeature&typename=parqueaderos:isla&' +
+    //'outputFormat=application%2Fjson' +
+    '&srsname=EPSG:4326&bbox=' + extent.join(',') + ',EPSG:4326';
     // use jsonp: false to prevent jQuery from adding the "callback"
     // parameter to the URL
-    $.ajax({
-      url: url,
-      dataType: 'json',
-      jsonp: false
-    }).done(function(response) {
+    $.ajax({url: url, dataType: 'json', jsonp: false}).done(function(response) {
       wfsSource.addFeatures(geojsonFormat.readFeatures(response));
     });
   };
@@ -146,9 +124,7 @@ function addLayers() {
         window.mapFeatureLayerObjects.push(servicio);
         var wfsSource = new ol.source.Vector({
           loader: wfsLoader,
-          strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-            maxZoom: 19
-          }))
+          strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({maxZoom: 19}))
         });
         wfsSource.indice = i;
         wfsSource.config = servicio;
@@ -157,10 +133,14 @@ function addLayers() {
           source: wfsSource,
           style: new ol.style.Style({
             stroke: new ol.style.Stroke({
-              color: (typeof(servicio.color) === undefined) ? 'rgba(255, 255, 255, 1.0)' : servicio.color,
+              color: (typeof(servicio.color) === undefined)
+                ? 'rgba(255, 255, 255, 1.0)'
+                : servicio.color,
               width: 2
             }),
-            opacity: (typeof(servicio.opacity) === undefined) ? 1 : servicio.opacity
+            opacity: (typeof(servicio.opacity) === undefined)
+              ? 1
+              : servicio.opacity
           })
         });
 
@@ -180,10 +160,7 @@ function addLayers() {
         wmsSource.indice = i;
         wmsSource.config = servicio;
 
-        var wmsLayer = new ol.layer.Tile({
-          source: wmsSource,
-          opacity: servicio.opacity
-        });
+        var wmsLayer = new ol.layer.Tile({source: wmsSource, opacity: servicio.opacity});
         map.addLayer(wmsLayer);
 
       } else if (servicio.serviceType === 'WMSServer') {
@@ -192,17 +169,14 @@ function addLayers() {
           url: servicio.url,
           params: {
             LAYERS: servicio.layers,
-            FORMAT: 'image/png',
+            FORMAT: 'image/png'
           },
           crossOrigin: ''
         });
         wmsServerSource.indice = i;
         wmsServerSource.config = servicio;
 
-        var wmsServerLayer = new ol.layer.Tile({
-          source: wmsServerSource,
-          opacity: servicio.opacity
-        });
+        var wmsServerLayer = new ol.layer.Tile({source: wmsServerSource, opacity: servicio.opacity});
         window.milayer = wmsServerLayer;
         map.addLayer(wmsServerLayer);
 
@@ -292,12 +266,8 @@ function generateTemplateContent(layer, SERVICE_NUM, LAYER_NUM) {
 
 function configBufferTool() {
   require([
-    'esri/config',
-    'esri/tasks/GeometryService'
-  ], function(
-    esriConfig,
-    GeometryService
-  ) {
+    'esri/config', 'esri/tasks/GeometryService'
+  ], function(esriConfig, GeometryService) {
     window.esriConfig = esriConfig;
     esriConfig.defaults.geometryService = new GeometryService('https://utility.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer');
     esriConfig.defaults.io.proxyUrl = '/arcgis/proxy.php';
@@ -333,15 +303,12 @@ function generateHTMLLegendWMS(response) {
   window.result = result;
   var layer = result.Capability.Layer;
   var layers = layer.Layer;
-  var item =
-    '<li class="collection-header">\n' +
-    '     <h5>' + layer.Title + '</h5>\n' +
-    '</li>\n';
+  var item = '<li class="collection-header">\n' +
+  '     <h5>' + layer.Title + '</h5>\n' + '</li>\n';
   legendDiv.append(item);
 
-  var collapsible =
-    '<ul class="collapsible" data-collapsible="expandable">\n' +
-    '</ul>\n';
+  var collapsible = '<ul class="collapsible" data-collapsible="expandable">\n' +
+  '</ul>\n';
   collapsible = $(collapsible);
   legendDiv.append(collapsible);
 
@@ -349,11 +316,8 @@ function generateHTMLLegendWMS(response) {
     var url = layer.Style[0].LegendURL[0].OnlineResource;
     var title = layer.Title;
     if (url) {
-      var item =
-        '<li>\n' +
-        '  <div class="collapsible-header item-leyenda-wms-title"><i class="material-icons tiny">play_arrow</i>' + title + '</div>\n' +
-        '  <div class="collapsible-body item-leyenda-wms-content"><span><img src="' + url + '" /></span></div>\n' +
-        '</li>\n';
+      var item = '<li>\n' +
+      '  <div class="collapsible-header item-leyenda-wms-title"><i class="material-icons tiny">play_arrow</i>' + title + '</div>\n' + '  <div class="collapsible-body item-leyenda-wms-content"><span><img src="' + url + '" /></span></div>\n' + '</li>\n';
       collapsible.append(item);
     }
   });
@@ -379,71 +343,275 @@ function generateHTMLLegendWFS(config) {
   var layer = config;
   var style = 'border-color:' + layer.color;
 
-  var item =
-    '<li class="collection-header collection-item">\n' +
-    '     <h5>' + layer.name + '</h5>\n' +
-    '     <span class="leyenda-icon" style="' + style + '"></span>\n' +
-    '</li>\n';
+  var item = '<li class="collection-header collection-item">\n' +
+  '     <h5>' + layer.name + '</h5>\n' + '     <span class="leyenda-icon" style="' + style + '"></span>\n' + '</li>\n';
   legendDiv.append(item);
 }
 
 function createMeasurement() {
-  require([
-    'dojo/dom',
-    'esri/SnappingManager',
-    'esri/dijit/Measurement',
-    'esri/sniff',
-    'dojo/keys',
-    'dojo/parser'
-  ], function(
-    dom,
-    SnappingManager,
-    Measurement,
-    has,
-    keys
-    //parser
-  ) {
-    //parser.parse()
-    //dojo.keys.copyKey maps to CTRL on windows and Cmd on Mac., but has wrong code for Chrome on Mac
-    var snapManager = map.enableSnapping({
-      snapKey: has("mac") ? keys.META : keys.CTRL
-    });
+  // based on http://openlayers.org/en/latest/examples/measure.html
+  var wgs84Sphere = new ol.Sphere(6378137);
 
-    var measurement = new Measurement({
-      map: map
-    }, dom.byId("measurementDiv"));
-    measurement.startup();
+  var source = new ol.source.Vector();
+
+  /**
+   * Currently drawn feature.
+   * @type {ol.Feature}
+   */
+  var sketch;
+
+  /**
+   * The help tooltip element.
+   * @type {Element}
+   */
+  var helpTooltipElement;
+
+  /**
+   * Overlay to show the help messages.
+   * @type {ol.Overlay}
+   */
+  var helpTooltip;
+
+  /**
+   * The measure tooltip element.
+   * @type {Element}
+   */
+  var measureTooltipElement;
+
+  /**
+   * Overlay to show the measurement.
+   * @type {ol.Overlay}
+   */
+  var measureTooltip;
+
+  /**
+   * Message to show when the user is drawing a polygon.
+   * @type {string}
+   */
+  var continuePolygonMsg = 'Click to continue drawing the polygon';
+
+  /**
+   * Message to show when the user is drawing a line.
+   * @type {string}
+   */
+  var continueLineMsg = 'Click to continue drawing the line';
+
+  /**
+   * Handle pointer move.
+   * @param {ol.MapBrowserEvent} evt The event.
+   */
+  var pointerMoveHandler = function(evt) {
+    if (evt.dragging) {
+      return;
+    }
+    /** @type {string} */
+    var helpMsg = 'Click to start drawing';
+
+    if (sketch) {
+      var geom = (sketch.getGeometry());
+      if (geom instanceof ol.geom.Polygon) {
+        helpMsg = continuePolygonMsg;
+      } else if (geom instanceof ol.geom.LineString) {
+        helpMsg = continueLineMsg;
+      }
+    }
+
+    helpTooltipElement.innerHTML = helpMsg;
+    helpTooltip.setPosition(evt.coordinate);
+
+    helpTooltipElement.classList.remove('hidden');
+  };
+
+  map.on('pointermove', pointerMoveHandler);
+
+  map.getViewport().addEventListener('mouseout', function() {
+    helpTooltipElement.classList.add('hidden');
   });
+
+  var typeSelect = document.getElementById('type');
+  var geodesicCheckbox = document.getElementById('geodesic');
+
+  var draw; // global so we can remove it later
+
+  /**
+    * Format length output.
+    * @param {ol.geom.LineString} line The line.
+    * @return {string} The formatted length.
+    */
+  var formatLength = function(line) {
+    var length;
+    if (geodesicCheckbox.checked) {
+      var coordinates = line.getCoordinates();
+      length = 0;
+      var sourceProj = map.getView().getProjection();
+      for (var i = 0, ii = coordinates.length - 1; i < ii; ++i) {
+        var c1 = ol.proj.transform(coordinates[i], sourceProj, 'EPSG:4326');
+        var c2 = ol.proj.transform(coordinates[i + 1], sourceProj, 'EPSG:4326');
+        length += wgs84Sphere.haversineDistance(c1, c2);
+      }
+    } else {
+      length = Math.round(line.getLength() * 100) / 100;
+    }
+    var output;
+    if (length > 100) {
+      output = (Math.round(length / 1000 * 100) / 100) + ' ' + 'km';
+    } else {
+      output = (Math.round(length * 100) / 100) + ' ' + 'm';
+    }
+    return output;
+  };
+
+  /**
+    * Format area output.
+    * @param {ol.geom.Polygon} polygon The polygon.
+    * @return {string} Formatted area.
+    */
+  var formatArea = function(polygon) {
+    var area;
+    if (geodesicCheckbox.checked) {
+      var sourceProj = map.getView().getProjection();
+      var geom =/** @type {ol.geom.Polygon} */
+      (polygon.clone().transform(sourceProj, 'EPSG:4326'));
+      var coordinates = geom.getLinearRing(0).getCoordinates();
+      area = Math.abs(wgs84Sphere.geodesicArea(coordinates));
+    } else {
+      area = polygon.getArea();
+    }
+    var output;
+    if (area > 10000) {
+      output = (Math.round(area / 1000000 * 100) / 100) + ' ' + 'km<sup>2</sup>';
+    } else {
+      output = (Math.round(area * 100) / 100) + ' ' + 'm<sup>2</sup>';
+    }
+    return output;
+  };
+
+  function addInteraction() {
+    var type = (typeSelect.value == 'area'
+      ? 'Polygon'
+      : 'LineString');
+    draw = new ol.interaction.Draw({
+      source: source, type:/** @type {ol.geom.GeometryType} */
+      (type),
+      style: new ol.style.Style({
+        fill: new ol.style.Fill({color: 'rgba(255, 255, 255, 0.2)'}),
+        stroke: new ol.style.Stroke({
+          color: 'rgba(0, 0, 0, 0.5)',
+          lineDash: [
+            10, 10
+          ],
+          width: 2
+        }),
+        image: new ol.style.Circle({
+          radius: 5,
+          stroke: new ol.style.Stroke({color: 'rgba(0, 0, 0, 0.7)'}),
+          fill: new ol.style.Fill({color: 'rgba(255, 255, 255, 0.2)'})
+        })
+      })
+    });
+    map.addInteraction(draw);
+
+    createMeasureTooltip();
+    createHelpTooltip();
+    var listener;
+    draw.on('drawstart', function(evt) {
+      // set sketch
+      sketch = evt.feature;
+
+      /** @type {ol.Coordinate|undefined} */
+      var tooltipCoord = evt.coordinate;
+
+      listener = sketch.getGeometry().on('change', function(evt) {
+        var geom = evt.target;
+        var output;
+        if (geom instanceof ol.geom.Polygon) {
+          output = formatArea(geom);
+          tooltipCoord = geom.getInteriorPoint().getCoordinates();
+        } else if (geom instanceof ol.geom.LineString) {
+          output = formatLength(geom);
+          tooltipCoord = geom.getLastCoordinate();
+        }
+        measureTooltipElement.innerHTML = output;
+        measureTooltip.setPosition(tooltipCoord);
+      });
+    }, this);
+
+    draw.on('drawend', function() {
+      measureTooltipElement.className = 'tooltip tooltip-static';
+      measureTooltip.setOffset([0, -7]);
+      // unset sketch
+      sketch = null;
+      // unset tooltip so that a new one can be created
+      measureTooltipElement = null;
+      createMeasureTooltip();
+      ol.Observable.unByKey(listener);
+    }, this);
+  }
+
+  /**
+   * Creates a new help tooltip
+   */
+  function createHelpTooltip() {
+    if (helpTooltipElement) {
+      helpTooltipElement.parentNode.removeChild(helpTooltipElement);
+    }
+    helpTooltipElement = document.createElement('div');
+    helpTooltipElement.className = 'tooltip hidden';
+    helpTooltip = new ol.Overlay({
+      element: helpTooltipElement,
+      offset: [
+        15, 0
+      ],
+      positioning: 'center-left'
+    });
+    map.addOverlay(helpTooltip);
+  }
+
+  /**
+   * Creates a new measure tooltip
+   */
+  function createMeasureTooltip() {
+    if (measureTooltipElement) {
+      measureTooltipElement.parentNode.removeChild(measureTooltipElement);
+    }
+    measureTooltipElement = document.createElement('div');
+    measureTooltipElement.className = 'tooltip tooltip-measure';
+    measureTooltip = new ol.Overlay({
+      element: measureTooltipElement,
+      offset: [
+        0, -15
+      ],
+      positioning: 'bottom-center'
+    });
+    map.addOverlay(measureTooltip);
+  }
+
+  /**
+   * Let user change the geometry type.
+   */
+  typeSelect.onchange = function() {
+    map.removeInteraction(draw);
+    addInteraction();
+  };
+
+  addInteraction();
 }
 
 function createTOC() {
   require([
-    'dojo/dom',
-    'dojo/query'
-  ], function(
-    dom,
-    query
-  ) {
+    'dojo/dom', 'dojo/query'
+  ], function(dom, query) {
     var toc = dom.byId('toc-div');
     var collapsible = '<ul class="collapsible" data-collapsible="accordion">';
-    var i, li;
+    var i,
+      li;
     for (i = 0; i < window.grupoServicios.length; i++) {
       var grupo = window.grupoServicios[i];
-      var active = (i === 0)?'active':'';
-      li =
-        '<li> ' +
-        '     <div class="collapsible-header ' + active + '">\n' +
-        '        <i class="material-icons">layers</i>\n' +
-        '        ' + grupo.name + '\n' +
-        '        <a href="#!" onclick="changeVisibilityGroup(event, \'' + grupo.id + '\', false)">\n' +
-        '            <i class="material-icons btnEyeGroup">visibility_off</i>\n' +
-        '        </a>\n' +
-        '        <a href="#!" onclick="changeVisibilityGroup(event, \'' + grupo.id + '\', true)">\n' +
-        '            <i class="material-icons btnEyeGroup">visibility</i>\n' +
-        '        </a>\n' +
-        '        </div>\n' +
-        '    <div class="collapsible-body"><ul class="collection" data-group="' + grupo.id + '"></ul></div>\n' +
-        '</li>\n';
+      var active = (i === 0)
+        ? 'active'
+        : '';
+      li = '<li> ' +
+        '     <div class="collapsible-header ' + active + '">\n' + '        <i class="material-icons">layers</i>\n' + '        ' + grupo.name + '\n' + '        <a href="#!" onclick="changeVisibilityGroup(event, \'' + grupo.id + '\', false)">\n' + '            <i class="material-icons btnEyeGroup">visibility_off</i>\n' + '        </a>\n' + '        <a href="#!" onclick="changeVisibilityGroup(event, \'' + grupo.id + '\', true)">\n' + '            <i class="material-icons btnEyeGroup">visibility</i>\n' + '        </a>\n' + '        </div>\n' + '    <div class="collapsible-body"><ul class="collection" data-group="' + grupo.id + '"></ul></div>\n' + '</li>\n';
       collapsible += li;
     }
     collapsible += '</ul>';
@@ -455,17 +623,16 @@ function createTOC() {
       if (layer.visible === 'false') {
         classVisible = 'visibility_off';
       }
-      var imageUrl = (typeof(layer.icon) === 'undefined' || layer.icon === '') ? 'css/img/oas.jpg' : layer.icon;
-      var layerMaxScale = (typeof(layer.maxScale) === 'undefined') ? 'Inf' : layer.maxScale;
-      li =
-        '<li class="collection-item avatar">\n' +
-        '    <img src="' + imageUrl + '" alt="" class="circle">\n' +
-        '    <span class="title" style="padding-right: 22px; display: block;">' + layer.name + '</span>\n' +
-        //'    <p>Desde escala 1:' + layerMaxScale + '</p>\n' +
-        '    <a href="#!" onclick="changeVisibilityLayer(\'' + layer.id + '\')" class="secondary-content">\n' +
-        '        <i class="material-icons btnEye" data-layer-icon="' + layer.id + '">' + classVisible + '</i>\n' +
-        '    </a>\n' +
-        '</li>';
+      var imageUrl = (typeof(layer.icon) === 'undefined' || layer.icon === '')
+        ? 'css/img/oas.jpg'
+        : layer.icon;
+      var layerMaxScale = (typeof(layer.maxScale) === 'undefined')
+        ? 'Inf'
+        : layer.maxScale;
+      li = '<li class="collection-item avatar">\n' +
+        '    <img src="' + imageUrl + '" alt="" class="circle">\n' + '    <span class="title" style="padding-right: 22px; display: block;">' + layer.name + '</span>\n' +
+      //'    <p>Desde escala 1:' + layerMaxScale + '</p>\n' +
+      '    <a href="#!" onclick="changeVisibilityLayer(\'' + layer.id + '\')" class="secondary-content">\n' + '        <i class="material-icons btnEye" data-layer-icon="' + layer.id + '">' + classVisible + '</i>\n' + '    </a>\n' + '</li>';
       var group = query('[data-group="' + layer.groupId + '"]')[0];
       group.innerHTML += li;
     }
@@ -478,12 +645,8 @@ function createTOC() {
 
 function changeVisibilityLayer(layerId) {
   require([
-    'dojo/query',
-    'dojo/dom'
-  ], function(
-    query,
-    dom
-  ) {
+    'dojo/query', 'dojo/dom'
+  ], function(query, dom) {
     var layer = map.getLayer(layerId);
     var icon = query('[data-layer-icon="' + layerId + '"]')[0];
     //window.layer = layer;
@@ -500,12 +663,8 @@ function changeVisibilityLayer(layerId) {
 function changeVisibilityGroup(evt, groupId, visibility) {
   //evt.preventDefault()
   require([
-    'dojo/query',
-    'dojo/dom'
-  ], function(
-    query,
-    dom
-  ) {
+    'dojo/query', 'dojo/dom'
+  ], function(query, dom) {
     evt.stopPropagation();
     for (var i = 0; i < window.mapFeatureLayerObjects.length; i++) {
       var layer = window.mapFeatureLayerObjects[i];
@@ -526,18 +685,13 @@ function changeVisibilityGroup(evt, groupId, visibility) {
 
 function createDrawToolbar(themap) {
   require([
-    'esri/toolbars/draw',
-    'dojo/dom',
-    'dojo/on'
-  ], function(
-    Draw,
-    dom,
-    on
-  ) {
+    'esri/toolbars/draw', 'dojo/dom', 'dojo/on'
+  ], function(Draw, dom, on) {
     window.toolbar = new Draw(map);
     toolbar.on('draw-end', addToMap);
 
-    var boton, signal;
+    var boton,
+      signal;
 
     boton = dom.byId('btnDrawPoint');
     signal = on(boton, 'click', function() {
@@ -556,16 +710,8 @@ function createDrawToolbar(themap) {
 
 function addToMap(evt) {
   require([
-    'esri/graphic',
-    'esri/symbols/SimpleMarkerSymbol',
-    'esri/symbols/SimpleLineSymbol',
-    'esri/symbols/SimpleFillSymbol'
-  ], function(
-    Graphic,
-    SimpleMarkerSymbol,
-    SimpleLineSymbol,
-    SimpleFillSymbol
-  ) {
+    'esri/graphic', 'esri/symbols/SimpleMarkerSymbol', 'esri/symbols/SimpleLineSymbol', 'esri/symbols/SimpleFillSymbol'
+  ], function(Graphic, SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol) {
     var symbol;
     toolbar.deactivate();
     map.showZoomSlider();
@@ -588,7 +734,6 @@ function addToMap(evt) {
     zoomToGeometry(window.currentGeometry);
   });
 }
-
 
 // Because this is such a useful idea, it is done automatically for Feature Layers hosted by ArcGIS online.
 // function calcOffset() {
@@ -643,17 +788,7 @@ function doBuffer(evtObj) {
     'esri/tasks/BufferParameters',
     'esri/geometry/normalizeUtils',
     'dojo/dom'
-  ], function(
-    GeometryService,
-    Graphic,
-    SimpleMarkerSymbol,
-    SimpleLineSymbol,
-    SimpleFillSymbol,
-    Color,
-    BufferParameters,
-    normalizeUtils,
-    dom
-  ) {
+  ], function(GeometryService, Graphic, SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol, Color, BufferParameters, normalizeUtils, dom) {
     //toolbar.deactivate()
     // valida parámetros
     var distance = dom.byId('buffer_distance').value;
@@ -709,26 +844,9 @@ function doBuffer(evtObj) {
 
 function showBuffer(bufferedGeometries) {
   require([
-    'esri/graphic',
-    'esri/symbols/SimpleFillSymbol',
-    'esri/symbols/SimpleLineSymbol',
-    'esri/Color',
-    'dojo/_base/array'
-  ], function(
-    Graphic,
-    SimpleFillSymbol,
-    SimpleLineSymbol,
-    Color,
-    array
-  ) {
-    var symbol = new SimpleFillSymbol(
-      SimpleFillSymbol.STYLE_SOLID,
-      new SimpleLineSymbol(
-        SimpleLineSymbol.STYLE_SOLID,
-        new Color([255, 0, 0, 0.65]), 2
-      ),
-      new Color([255, 0, 0, 0.35])
-    );
+    'esri/graphic', 'esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol', 'esri/Color', 'dojo/_base/array'
+  ], function(Graphic, SimpleFillSymbol, SimpleLineSymbol, Color, array) {
+    var symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([255, 0, 0, 0.65]), 2), new Color([255, 0, 0, 0.35]));
     array.forEach(bufferedGeometries, function(geometry) {
       var graphic = new Graphic(geometry, symbol);
       map.graphics.add(graphic);
@@ -743,9 +861,7 @@ function applyBuffer(evt) {
   if (!window.currentGeometry) {
     displayMessage('Por favor dibujer primero una geometría.');
   } else {
-    doBuffer({
-      geometry: window.currentGeometry
-    });
+    doBuffer({geometry: window.currentGeometry});
   }
 }
 
@@ -834,10 +950,7 @@ function cleanNavigationsInteractions() {
 function zoomInBox() {
   window.cleanNavigationsInteractions();
   //http://openlayers.org/en/latest/apidoc/ol.events.condition.html
-  var dragZoom = new ol.interaction.DragZoom({
-    condition: ol.events.condition.mouseOnly,
-    out: false
-  });
+  var dragZoom = new ol.interaction.DragZoom({condition: ol.events.condition.mouseOnly, out: false});
   map.addInteraction(dragZoom);
   listOfNavigationsInteractions.push(dragZoom);
 }
@@ -845,10 +958,7 @@ function zoomInBox() {
 function zoomOutBox() {
   window.cleanNavigationsInteractions();
   //http://openlayers.org/en/latest/apidoc/ol.events.condition.html
-  var dragZoom = new ol.interaction.DragZoom({
-    condition: ol.events.condition.mouseOnly,
-    out: true
-  });
+  var dragZoom = new ol.interaction.DragZoom({condition: ol.events.condition.mouseOnly, out: true});
   map.addInteraction(dragZoom);
   listOfNavigationsInteractions.push(dragZoom);
 }
@@ -874,7 +984,8 @@ function createIdentify() {
   /**
    * Create an overlay to anchor the popup to the map.
    */
-  var overlay = new ol.Overlay( /** @type {olx.OverlayOptions} */ ({
+  var overlay = new ol.Overlay(/** @type {olx.OverlayOptions} */
+  ({
     element: container,
     autoPan: true,
     autoPanAnimation: {
@@ -892,7 +1003,6 @@ function createIdentify() {
     closer.blur();
     return false;
   };
-
 
   var selectInteraction = new ol.interaction.Select();
   selectInteraction.on('select', function(evt) {
@@ -967,7 +1077,7 @@ function searchFeaturesLayerByCoordinate(layerId, coordinate) {
   return source.getFeaturesAtCoordinate(coordinate);
 }
 
-function hideOverlays(){
+function hideOverlays() {
   var overlays = map.getOverlays().getArray();
   for (var i = 0; i < overlays.length; i++) {
     overlays[i].setPosition(undefined);
@@ -985,7 +1095,7 @@ function identifyInLayers() {
     var featuresByLayer = searchFeaturesLayersByCoordinate(coordinate);
     console.log('features', featuresByLayer);
     showResultFeatures(featuresByLayer);
-    setTimeout(function(){
+    setTimeout(function() {
       turnOnPopup();
     }, 2000);
   }
@@ -1005,7 +1115,7 @@ function showResultFeatures(featuresByLayer) {
     var layer = featuresByLayer[i];
     var layerObject = window.getFeatureLayerObjectById(layer.layerId);
     var capaVisible = window.map.getLayer(layer.layerId).getVisible();
-    if(capaVisible) {
+    if (capaVisible) {
       hayResultados = true;
       var contentHTML = '';
       var features = layer.features;
@@ -1021,31 +1131,22 @@ function showResultFeatures(featuresByLayer) {
               }
             }
           }
-          contentHTML +='</div>\n';
+          contentHTML += '</div>\n';
         }
-        var item =
-          '<li class="active">\n' +
-          '  <div class="collapsible-header active"><i class="material-icons tiny">play_arrow</i>' + layerObject.name + '</div>\n' +
-          '  <div class="collapsible-body">' + contentHTML + '</div>\n' +
-          '</li>\n';
+        var item = '<li class="active">\n' +
+        '  <div class="collapsible-header active"><i class="material-icons tiny">play_arrow</i>' + layerObject.name + '</div>\n' + '  <div class="collapsible-body">' + contentHTML + '</div>\n' + '</li>\n';
         item = $(item);
         accordion.append(item);
       } else {
-        contentHTML +=
-          '<div class="resultadoIdentificar">\n' +
-          '     <span>No hay resultados.</span>\n' +
-          '<div>\n';
-        var item =
-          '<li class="active">\n' +
-          '  <div class="collapsible-header active"><i class="material-icons tiny">play_arrow</i>' + layerObject.name + '</div>\n' +
-          '  <div class="collapsible-body">' + contentHTML + '</div>\n' +
-          '</li>\n';
+        contentHTML += '<div class="resultadoIdentificar">\n' + '   <span>No hay resultados.</span>\n' + '<div>\n';
+        var item = '<li class="active">\n' +
+        '  <div class="collapsible-header active"><i class="material-icons tiny">play_arrow</i>' + layerObject.name + '</div>\n' + '  <div class="collapsible-body">' + contentHTML + '</div>\n' + '</li>\n';
         item = $(item);
         accordion.append(item);
       }
     }
   }
-  if(hayResultados){//no hubo resultados
+  if (hayResultados) { //no hubo resultados
     resultadosDiv.append(accordion);
   } else {
     var contentHTML = '<h2>No hay capas activas.</h2>';
