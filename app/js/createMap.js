@@ -59,7 +59,6 @@ function createMap() {
     //add the legend
     createLegend();
     createTOC();
-    createMeasurement()
     createIdentify();
   });
 }
@@ -113,7 +112,17 @@ function addLayers() {
     // use jsonp: false to prevent jQuery from adding the "callback"
     // parameter to the URL
     $.ajax({url: url, dataType: 'json', jsonp: false}).done(function(response) {
-      wfsSource.addFeatures(geojsonFormat.readFeatures(response));
+      var features = geojsonFormat.readFeatures(response);
+      var filter = wfsSource.config.filter;
+      console.log('filter', filter);
+      if(typeof(filter) !== 'undefined'){
+        window.features = features;
+        features = features.filter(function (feature){
+          console.log('eval(filter)', eval(filter), wfsSource.config.id);
+          return eval(filter);
+        });
+      }
+      wfsSource.addFeatures(features);
     });
   };
 
@@ -346,6 +355,10 @@ function generateHTMLLegendWFS(config) {
   var item = '<li class="collection-header collection-item">\n' +
   '     <h5>' + layer.name + '</h5>\n' + '     <span class="leyenda-icon" style="' + style + '"></span>\n' + '</li>\n';
   legendDiv.append(item);
+}
+
+window.measureInMap = function (){
+  createMeasurement();
 }
 
 function createMeasurement() {
