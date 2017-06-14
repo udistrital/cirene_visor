@@ -114,13 +114,14 @@ function addLayers() {
     $.ajax({url: url, dataType: 'json', jsonp: false}).done(function(response) {
       var features = geojsonFormat.readFeatures(response);
       var filter = wfsSource.config.filter;
-      console.log('filter', filter);
-      if(typeof(filter) !== 'undefined' || filter !== ''){
-        window.features = features;
-        features = features.filter(function (feature){
-          console.log('eval(filter)', eval(filter), wfsSource.config.id);
-          return eval(filter);
-        });
+      if (typeof(filter) !== 'undefined') {
+        if(filter !== ''){
+          window.features = features;
+          features = features.filter(function(feature) {
+            console.log('eval(filter)', eval(filter), wfsSource.config.id);
+            return eval(filter);
+          });
+        }
       }
       wfsSource.addFeatures(features);
     });
@@ -149,7 +150,10 @@ function addLayers() {
             }),
             opacity: (typeof(servicio.opacity) === undefined)
               ? 1
-              : servicio.opacity
+              : servicio.opacity,
+            visible: (typeof(servicio.visible) === undefined)
+              ? true
+              : servicio.visible
           })
         });
 
@@ -169,7 +173,15 @@ function addLayers() {
         wmsSource.indice = i;
         wmsSource.config = servicio;
 
-        var wmsLayer = new ol.layer.Tile({source: wmsSource, opacity: servicio.opacity});
+        var wmsLayer = new ol.layer.Tile({
+          source: wmsSource,
+          opacity: (typeof(servicio.opacity) === undefined)
+            ? 1
+            : servicio.opacity,
+          visible: (typeof(servicio.visible) === undefined)
+            ? true
+            : servicio.visible
+        });
         map.addLayer(wmsLayer);
 
       } else if (servicio.serviceType === 'WMSServer') {
@@ -185,7 +197,15 @@ function addLayers() {
         wmsServerSource.indice = i;
         wmsServerSource.config = servicio;
 
-        var wmsServerLayer = new ol.layer.Tile({source: wmsServerSource, opacity: servicio.opacity});
+        var wmsServerLayer = new ol.layer.Tile({
+          source: wmsServerSource,
+          opacity: (typeof(servicio.opacity) === undefined)
+            ? 1
+            : servicio.opacity,
+          visible: (typeof(servicio.visible) === undefined)
+            ? true
+            : servicio.visible
+        });
         window.milayer = wmsServerLayer;
         map.addLayer(wmsServerLayer);
 
@@ -357,7 +377,7 @@ function generateHTMLLegendWFS(config) {
   legendDiv.append(item);
 }
 
-window.measureInMap = function (){
+window.measureInMap = function() {
   createMeasurement();
 }
 
@@ -633,7 +653,7 @@ function createTOC() {
     for (i = 0; i < window.mapFeatureLayerObjects.length; i++) {
       var layer = window.mapFeatureLayerObjects[i];
       var classVisible = 'visibility';
-      if (layer.visible === 'false') {
+      if (layer.visible === false) {
         classVisible = 'visibility_off';
       }
       var imageUrl = (typeof(layer.icon) === 'undefined' || layer.icon === '')

@@ -50,8 +50,8 @@
 }, {
   "serviceId": 6,
   "serviceType": "WFS",
-  "name": "Nivel S3",
-  "id": "nivels3",
+  "name": "Nivel",
+  "id": "nivel",
   "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typename=SIGUD:nivel&outputFormat=application%2Fjson",
   "filter": "",
   "filters": [{
@@ -103,7 +103,7 @@
   "color": "rgba(59, 255, 0, 1)",
   "type": "",
   "groupId": "sedes",
-  "visible": true,
+  "visible": false,
   "enable": true
 }, {
   "serviceId": 7,
