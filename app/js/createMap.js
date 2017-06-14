@@ -115,7 +115,7 @@ function addLayers() {
       var features = geojsonFormat.readFeatures(response);
       var filter = wfsSource.config.filter;
       console.log('filter', filter);
-      if(typeof(filter) !== 'undefined'){
+      if(typeof(filter) !== 'undefined' || filter !== ''){
         window.features = features;
         features = features.filter(function (feature){
           console.log('eval(filter)', eval(filter), wfsSource.config.id);

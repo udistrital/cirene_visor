@@ -6,9 +6,10 @@
   "url": "http://serviciosgis.catastrobogota.gov.co/arcgis/services/Mapa_Referencia/Mapa_Referencia/MapServer/WMSServer",
   "layers": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24",
   "opacity": 1,
-  "color":"",
+  "color": "",
   "type": "",
   "groupId": "urbano",
+  "visible": true,
   "enable": true
 }, {
   "serviceId": 2,
@@ -17,9 +18,10 @@
   "id": "localidades_bogota",
   "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typename=SIGUD:Localidades&outputFormat=application%2Fjson",
   "opacity": 1,
-  "color":"rgba(255, 255, 255, 1.0)",
+  "color": "rgba(255, 255, 255, 1.0)",
   "type": "",
   "groupId": "sedes",
+  "visible": true,
   "enable": true
 }, {
   "serviceId": 3,
@@ -28,9 +30,10 @@
   "id": "lote",
   "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typename=SIGUD:lote&outputFormat=application%2Fjson",
   "opacity": 1,
-  "color":"rgba(0, 255, 255, 1.0)",
+  "color": "rgba(0, 255, 255, 1.0)",
   "type": "",
   "groupId": "sedes",
+  "visible": true,
   "enable": true
 }, {
   "serviceId": 5,
@@ -39,9 +42,10 @@
   "id": "construccion",
   "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typename=SIGUD:construccion&outputFormat=application%2Fjson",
   "opacity": 1,
-  "color":"rgba(255, 0, 255, 1.0)",
+  "color": "rgba(255, 0, 255, 1.0)",
   "type": "",
   "groupId": "arquitectonica",
+  "visible": true,
   "enable": true
 }, {
   "serviceId": 6,
@@ -49,88 +53,69 @@
   "name": "Nivel S3",
   "id": "nivels3",
   "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typename=SIGUD:nivel&outputFormat=application%2Fjson",
-  "filter": "feature.get('nivel') == 'S3'",
-  "cql_filter": "nivel='S3",
+  "filter": "",
+  "filters": [{
+    "name": "Piso 8",
+    "filter": "feature.get('nivel') == '08'",
+    "cql_filter": "nivel='08'"
+  }, {
+    "name": "Piso 7",
+    "filter": "feature.get('nivel') == '07'",
+    "cql_filter": "nivel='07'"
+  }, {
+    "name": "Piso 6",
+    "filter": "feature.get('nivel') == '06'",
+    "cql_filter": "nivel='06'"
+  }, {
+    "name": "Piso 5",
+    "filter": "feature.get('nivel') == '05'",
+    "cql_filter": "nivel='05'"
+  }, {
+    "name": "Piso 4",
+    "filter": "feature.get('nivel') == '04'",
+    "cql_filter": "nivel='04'"
+  }, {
+    "name": "Piso 3",
+    "filter": "feature.get('nivel') == '03'",
+    "cql_filter": "nivel='03'"
+  }, {
+    "name": "Piso 2",
+    "filter": "feature.get('nivel') == '02'",
+    "cql_filter": "nivel='02'"
+  }, {
+    "name": "Piso 1",
+    "filter": "feature.get('nivel') == 'S2'",
+    "cql_filter": "nivel='S2'"
+  }, {
+    "name": "Sótano 1",
+    "filter": "feature.get('nivel') == 'S1'",
+    "cql_filter": "nivel='S1'"
+  }, {
+    "name": "Sótano 2",
+    "filter": "feature.get('nivel') == 'S2'",
+    "cql_filter": "nivel='S2'"
+  }, {
+    "name": "Sótano 3",
+    "filter": "feature.get('nivel') == 'S3'",
+    "cql_filter": "nivel='S3'"
+  }],
   "opacity": 1,
-  "color":"rgba(59, 255, 0, 1)",
+  "color": "rgba(59, 255, 0, 1)",
   "type": "",
-  "groupId": "nivel",
-  "enable": true
-}, {
-  "serviceId": 6,
-  "serviceType": "WFS",
-  "name": "Nivel S2",
-  "id": "nivels2",
-  "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typename=SIGUD:nivel&outputFormat=application%2Fjson",
-  "filter": "feature.get('nivel') == 'S2'",
-  "cql_filter": "nivel='S2'",
-  "opacity": 1,
-  "color":"rgba(255, 168, 0, 1)",
-  "type": "",
-  "groupId": "nivel",
-  "enable": true
-}, {
-  "serviceId": 6,
-  "serviceType": "WFS",
-  "name": "Nivel S1",
-  "id": "nivels1",
-  "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typename=SIGUD:nivel&outputFormat=application%2Fjson",
-  "filter": "feature.get('nivel') == 'S1'",
-  "cql_filter": "nivel='S1'",
-  "opacity": 1,
-  "color":"rgba(255, 255, 0, 1.0)",
-  "type": "",
-  "groupId": "nivel",
-  "enable": true
-}, {
-  "serviceId": 6,
-  "serviceType": "WFS",
-  "name": "Nivel 01",
-  "id": "nivel01",
-  "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typename=SIGUD:nivel&outputFormat=application%2Fjson",
-  "filter": "feature.get('nivel') == '01'",
-  "cql_filter": "nivel='01'",
-  "opacity": 1,
-  "color":"rgba(175, 143, 241, 1)",
-  "type": "",
-  "groupId": "nivel",
-  "enable": true
-}, {
-  "serviceId": 6,
-  "serviceType": "WFS",
-  "name": "Nivel 02",
-  "id": "nivel02",
-  "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typename=SIGUD:nivel&outputFormat=application%2Fjson",
-  "filter": "feature.get('nivel') == '02'",
-  "cql_filter": "nivel='02'",
-  "opacity": 1,
-  "color":"rgba(189, 0, 255, 1)",
-  "type": "",
-  "groupId": "nivel",
-  "enable": true
-}, {
-  "serviceId": 6,
-  "serviceType": "WFS",
-  "name": "Nivel 03",
-  "id": "nivel03",
-  "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typename=SIGUD:nivel&outputFormat=application%2Fjson",
-  "filter": "feature.get('nivel') == 'S1'",
-  "cql_filter": "nivel='03'",
-  "opacity": 1,
-  "color":"rgba(255, 0, 138, 1)",
-  "type": "",
-  "groupId": "nivel",
+  "groupId": "sedes",
+  "visible": true,
   "enable": true
 }, {
   "serviceId": 7,
   "serviceType": "WFS",
   "name": "Puntos Sede",
   "id": "sede_pto",
-  "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typename=SIGUD:sede_pto&outputFormat=application%2Fjson",
+  "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=SIGUD:sede_pto&outputFormat=application%2Fjson",
   "opacity": 1,
-  "color":"rgba(0, 0, 255, 1.0)",
+  "color": "rgba(0, 0, 255, 1.0)",
   "type": "",
   "groupId": "sedes",
+  "visible": true,
   "enable": true
 }, {
   "serviceId": 9,
