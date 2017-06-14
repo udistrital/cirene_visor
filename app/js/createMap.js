@@ -150,11 +150,11 @@ function addLayers() {
             }),
             opacity: (typeof(servicio.opacity) === undefined)
               ? 1
-              : servicio.opacity,
-            visible: (typeof(servicio.visible) === undefined)
-              ? true
-              : servicio.visible
-          })
+              : servicio.opacity
+          }),
+          visible: (typeof(servicio.visible) === undefined)
+            ? true
+            : servicio.visible
         });
 
         map.addLayer(wfsLayer);

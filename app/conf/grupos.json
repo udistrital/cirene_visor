@@ -2,9 +2,6 @@
   "id": "sedes",
   "name": "Capas Escala Sedes"
 }, {
-  "id": "nivel",
-  "name": "Capas Sedes por Nivel"
-}, {
   "id": "arquitectonica",
   "name": "Capas Escala Arquitectónica"
 }, {

@@ -118,7 +118,19 @@
   "visible": true,
   "enable": true
 }, {
-  "serviceId": 9,
+  "serviceId": 8,
+  "serviceType": "WFS",
+  "name": "Espacios Físicos",
+  "id": "espacio_fisico",
+  "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=SIGUD:espacio_fisico&outputFormat=application%2Fjson",
+  "opacity": 1,
+  "color": "rgba(90, 196, 63, 1)",
+  "type": "",
+  "groupId": "sedes",
+  "visible": false,
+  "enable": true
+}, {
+  "serviceId": 15,
   "serviceType": "MapServer",
   "name": "OrtoFoto Bogotá",
   "id": "Ortho2014",
