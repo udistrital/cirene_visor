@@ -650,6 +650,7 @@ function createTOC() {
 
     for (i = 0; i < window.mapFeatureLayerObjects.length; i++) {
       var layer = window.mapFeatureLayerObjects[i];
+      console.log('layerId', layer.id);
       var classVisible = 'visibility';
       if (layer.visible === false) {
         classVisible = 'visibility_off';
@@ -669,8 +670,8 @@ function createTOC() {
         '  <select onchange="changeFilter(this, \'' + layer.id + '\')" multiple>\n'+
         '    <option value="" disabled selected>Seleccione un filtro</option>\n';
 
-        for (var i = 0; i < layer.filters.length; i++) {
-          var filter = layer.filters[i];
+        for (var j = 0; j < layer.filters.length; j++) {
+          var filter = layer.filters[j];
           filters += '<option value="' + filter.filter + '">' + filter.name + '</option>\n'
         }
 
@@ -681,11 +682,13 @@ function createTOC() {
       }
 
       li = '<li class="collection-item avatar' + filterClass + '">\n' +
-        '    <img src="' + imageUrl + '" alt="" class="circle">\n' + '    <span class="title" style="padding-right: 22px; display: block;">' + layer.name + '</span>\n' +
+        '    <img src="' + imageUrl + '" alt="" class="circle">\n' +
+        '    <span class="title" style="padding-right: 22px; display: block;">' + layer.name + '</span>\n' +
       //'    <p>Desde escala 1:' + layerMaxScale + '</p>\n' +
-      '    <a href="#!" onclick="changeVisibilityLayer(\'' + layer.id + '\')" class="secondary-content">\n' + '        <i class="material-icons btnEye" data-layer-icon="' + layer.id + '">' + classVisible + '</i>\n' + '    </a>\n' +
-      filters
-          + '</li>';
+        '    <a href="#!" onclick="changeVisibilityLayer(\'' + layer.id + '\')" class="secondary-content">\n' +
+        '        <i class="material-icons btnEye" data-layer-icon="' + layer.id + '">' + classVisible + '</i>\n' +
+        '    </a>\n' + filters +
+        '</li>\n';
       var group = query('[data-group="' + layer.groupId + '"]')[0];
       group.innerHTML += li;
     }
