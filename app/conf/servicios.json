@@ -56,47 +56,47 @@
   "filter": "",
   "filters": [{
     "name": "Piso 8",
-    "filter": "feature.get('nivel') == '08'",
+    "filter": "feature.get('nivel') === '08'",
     "cql_filter": "nivel='08'"
   }, {
     "name": "Piso 7",
-    "filter": "feature.get('nivel') == '07'",
+    "filter": "feature.get('nivel') === '07'",
     "cql_filter": "nivel='07'"
   }, {
     "name": "Piso 6",
-    "filter": "feature.get('nivel') == '06'",
+    "filter": "feature.get('nivel') === '06'",
     "cql_filter": "nivel='06'"
   }, {
     "name": "Piso 5",
-    "filter": "feature.get('nivel') == '05'",
+    "filter": "feature.get('nivel') === '05'",
     "cql_filter": "nivel='05'"
   }, {
     "name": "Piso 4",
-    "filter": "feature.get('nivel') == '04'",
+    "filter": "feature.get('nivel') === '04'",
     "cql_filter": "nivel='04'"
   }, {
     "name": "Piso 3",
-    "filter": "feature.get('nivel') == '03'",
+    "filter": "feature.get('nivel') === '03'",
     "cql_filter": "nivel='03'"
   }, {
     "name": "Piso 2",
-    "filter": "feature.get('nivel') == '02'",
+    "filter": "feature.get('nivel') === '02'",
     "cql_filter": "nivel='02'"
   }, {
     "name": "Piso 1",
-    "filter": "feature.get('nivel') == 'S2'",
-    "cql_filter": "nivel='S2'"
+    "filter": "feature.get('nivel') === '01'",
+    "cql_filter": "nivel='01'"
   }, {
     "name": "Sótano 1",
-    "filter": "feature.get('nivel') == 'S1'",
+    "filter": "feature.get('nivel') === 'S1'",
     "cql_filter": "nivel='S1'"
   }, {
     "name": "Sótano 2",
-    "filter": "feature.get('nivel') == 'S2'",
+    "filter": "feature.get('nivel') === 'S2'",
     "cql_filter": "nivel='S2'"
   }, {
     "name": "Sótano 3",
-    "filter": "feature.get('nivel') == 'S3'",
+    "filter": "feature.get('nivel') === 'S3'",
     "cql_filter": "nivel='S3'"
   }],
   "opacity": 1,
@@ -123,6 +123,29 @@
   "name": "Espacios Físicos",
   "id": "espacio_fisico",
   "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=SIGUD:espacio_fisico&outputFormat=application%2Fjson",
+  "filter": "",
+  "filters": [
+    {
+      "_comment": "Probar con https://regex101.com/",
+      "name": "Piso 6",
+      "filter": "/^FICC06/.test(feature.get('id_nivel'))"
+    }, {
+      "name": "Piso 5",
+      "filter": "/^FICC05/.test(feature.get('id_nivel'))"
+    }, {
+      "name": "Piso 4",
+      "filter": "/^FICC04/.test(feature.get('id_nivel'))"
+    }, {
+      "name": "Piso 3",
+      "filter": "/^FICC03/.test(feature.get('id_nivel'))"
+    }, {
+      "name": "Piso 2",
+      "filter": "/^FICC02/.test(feature.get('id_nivel'))"
+    }, {
+      "name": "Piso 1",
+      "filter": "/^FICC01/.test(feature.get('id_nivel'))"
+    }
+  ],
   "opacity": 1,
   "color": "rgba(90, 196, 63, 1)",
   "type": "",

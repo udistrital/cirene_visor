@@ -650,7 +650,6 @@ function createTOC() {
 
     for (i = 0; i < window.mapFeatureLayerObjects.length; i++) {
       var layer = window.mapFeatureLayerObjects[i];
-      console.log('layerId', layer.id);
       var classVisible = 'visibility';
       if (layer.visible === false) {
         classVisible = 'visibility_off';
