@@ -114,14 +114,12 @@ function addLayers() {
     $.ajax({url: url, dataType: 'json', jsonp: false}).done(function(response) {
       var features = geojsonFormat.readFeatures(response);
       var filter = wfsSource.config.filter;
-      if (typeof(filter) !== 'undefined') {
-        if(filter !== ''){
-          window.features = features;
-          features = features.filter(function(feature) {
-            console.log('eval(filter)', eval(filter), wfsSource.config.id);
-            return eval(filter);
-          });
-        }
+      if (typeof(filter) !== 'undefined' && filter !== '') {
+        //window.features = features;
+        features = features.filter(function(feature) {
+          console.log('eval(filter)', eval(filter), wfsSource.config.id);
+          return eval(filter);
+        });
       }
       wfsSource.addFeatures(features);
     });
@@ -662,16 +660,39 @@ function createTOC() {
       var layerMaxScale = (typeof(layer.maxScale) === 'undefined')
         ? 'Inf'
         : layer.maxScale;
-      li = '<li class="collection-item avatar">\n' +
+      var filters = '';
+      var filterClass = '';
+      if (typeof(layer.filters) !== 'undefined' && layer.filters !== '') {
+        filterClass = ' toc-layer-filters';
+        filters +=
+        '<div class="input-field col s12">\n' +
+        '  <select onchange="changeFilter(this, \'' + layer.id + '\')" multiple>\n'+
+        '    <option value="" disabled selected>Seleccione un filtro</option>\n';
+
+        for (var i = 0; i < layer.filters.length; i++) {
+          var filter = layer.filters[i];
+          filters += '<option value="' + filter.filter + '">' + filter.name + '</option>\n'
+        }
+
+        filters +=
+        '  </select>\n' +
+        // '  <label>Seleccione el Filtro</label>\n' +
+        '</div>\n';
+      }
+
+      li = '<li class="collection-item avatar' + filterClass + '">\n' +
         '    <img src="' + imageUrl + '" alt="" class="circle">\n' + '    <span class="title" style="padding-right: 22px; display: block;">' + layer.name + '</span>\n' +
       //'    <p>Desde escala 1:' + layerMaxScale + '</p>\n' +
-      '    <a href="#!" onclick="changeVisibilityLayer(\'' + layer.id + '\')" class="secondary-content">\n' + '        <i class="material-icons btnEye" data-layer-icon="' + layer.id + '">' + classVisible + '</i>\n' + '    </a>\n' + '</li>';
+      '    <a href="#!" onclick="changeVisibilityLayer(\'' + layer.id + '\')" class="secondary-content">\n' + '        <i class="material-icons btnEye" data-layer-icon="' + layer.id + '">' + classVisible + '</i>\n' + '    </a>\n' +
+      filters
+          + '</li>';
       var group = query('[data-group="' + layer.groupId + '"]')[0];
       group.innerHTML += li;
     }
 
     // Se cargan las cosas necesarias
     $('.collapsible').collapsible();
+    $(toc).find('select').material_select();
     //checkVisibilityAtScale();
   });
 }
@@ -1189,4 +1210,21 @@ function showResultFeatures(featuresByLayer) {
   $('#resultadosDiv .collapsible').collapsible();
 
   window.sidebar.open('resultados');
+}
+
+window.changeFilter = function(element, layerId) {
+  console.log('changeFilter', element, layerId);
+  var layer = window.map.getLayer(layerId);
+  var source = layer.getSource();
+  var filters = $(element).val(); // Array
+  var filter = '';
+  for (var i = 0; i < filters.length; i++) {
+    filter += filters[i] + ' || ';
+  }
+  filter = filter.substring(0, filter.length - ' || '.length);
+  console.log('filter', filter);
+  source.config.filter = filter;
+  window.source = source;
+  //source.refresh();
+  source.clear(true);
 }
