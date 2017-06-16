@@ -1157,6 +1157,11 @@ function addZoomSlider() {
   map.addControl(zoomslider);
 }
 
+function cleanMap(){
+  window.identifyInteraction.getFeatures().clear();
+  hideOverlays();
+}
+
 function searchFeaturesLayersByCoordinate(coordinate) {
   var featuresByLayer = new Array();
   for (i = 0; i < window.mapFeatureLayerObjects.length; i++) {
