@@ -114,7 +114,7 @@ function addLayers() {
     $.ajax({url: url, dataType: 'json', jsonp: false}).done(function(response) {
       var features = geojsonFormat.readFeatures(response);
       var filter = wfsSource.config.filter;
-      if (typeof(filter) !== 'undefined' && filter !== '') {
+      if (typeof filter !== 'undefined' && filter !== '') {
         //window.features = features;
         features = features.filter(function(feature) {
           console.log('eval(filter)', eval(filter), wfsSource.config.id);
@@ -139,21 +139,15 @@ function addLayers() {
 
         var wfsLayer = new ol.layer.Vector({
           source: wfsSource,
-          style: new ol.style.Style({
-            stroke: new ol.style.Stroke({
-              color: (typeof(servicio.color) === undefined)
-                ? 'rgba(255, 255, 255, 1.0)'
-                : servicio.color,
-              width: 2
-            }),
-            opacity: (typeof(servicio.opacity) === undefined)
-              ? 1
-              : servicio.opacity
-          }),
-          visible: (typeof(servicio.visible) === undefined)
+          style: (function(feature) {
+            var ctxServicio = this;
+            return getLayerStyle(feature, ctxServicio.colorFill, ctxServicio.colorStroke, ctxServicio.opacity);
+          }).bind(servicio),
+          visible: (typeof servicio.visible === 'undefined')
             ? true
             : servicio.visible
         });
+        wfsLayer.indice = i;
 
         map.addLayer(wfsLayer);
       } else if (servicio.serviceType === 'WMS') {
@@ -173,10 +167,10 @@ function addLayers() {
 
         var wmsLayer = new ol.layer.Tile({
           source: wmsSource,
-          opacity: (typeof(servicio.opacity) === undefined)
+          opacity: (typeof servicio.opacity === 'undefined')
             ? 1
             : servicio.opacity,
-          visible: (typeof(servicio.visible) === undefined)
+          visible: (typeof servicio.visible === 'undefined')
             ? true
             : servicio.visible
         });
@@ -197,10 +191,10 @@ function addLayers() {
 
         var wmsServerLayer = new ol.layer.Tile({
           source: wmsServerSource,
-          opacity: (typeof(servicio.opacity) === undefined)
+          opacity: (typeof servicio.opacity === 'undefined')
             ? 1
             : servicio.opacity,
-          visible: (typeof(servicio.visible) === undefined)
+          visible: (typeof servicio.visible === 'undefined')
             ? true
             : servicio.visible
         });
@@ -236,6 +230,65 @@ function addLayers() {
       }
     }
   }
+}
+
+function getLayerStyle(feature, layerFillColor, layerStrokeColor, layerOpacity) { //graphic layer?
+  layerFillColor = (typeof layerFillColor === 'undefined')
+    ? 'rgba(255, 255, 255, 0.1)'
+    : layerFillColor;
+  layerStrokeColor = (typeof layerStrokeColor === 'undefined')
+    ? 'rgba(255, 255, 255, 1.0)'
+    : layerStrokeColor;
+  layerOpacity = (typeof layerOpacity === 'undefined')
+    ? 'rgba(255, 255, 255, 1.0)'
+    : layerOpacity;
+
+  var image = new ol.style.Circle({
+    radius: 5,
+    fill: new ol.style.Fill({color: layerFillColor}),
+    stroke: new ol.style.Stroke({color: layerStrokeColor, width: 1}),
+    opacity: layerOpacity
+  });
+
+  var styles = {
+    'Point': new ol.style.Style({image: image}),
+    'LineString': new ol.style.Style({
+      stroke: new ol.style.Stroke({color: layerStrokeColor, width: 1}),
+      opacity: layerOpacity
+    }),
+    'MultiLineString': new ol.style.Style({
+      stroke: new ol.style.Stroke({color: layerStrokeColor, width: 1}),
+      opacity: layerOpacity
+    }),
+    'MultiPoint': new ol.style.Style({image: image}),
+    'MultiPolygon': new ol.style.Style({
+      stroke: new ol.style.Stroke({color: layerStrokeColor, width: 1}),
+      fill: new ol.style.Fill({color: layerFillColor}),
+      opacity: layerOpacity
+    }),
+    'Polygon': new ol.style.Style({
+      stroke: new ol.style.Stroke({color: layerStrokeColor, lineDash: [4], width: 3}),
+      fill: new ol.style.Fill({color: layerFillColor}),
+      opacity: layerOpacity
+    }),
+    'GeometryCollection': new ol.style.Style({
+      stroke: new ol.style.Stroke({color: layerStrokeColor, width: 2}),
+      fill: new ol.style.Fill({color: layerFillColor}),
+      image: new ol.style.Circle({
+        radius: 5,
+        fill: null,
+        stroke: new ol.style.Stroke({color: layerStrokeColor})
+      }),
+      opacity: layerOpacity
+    }),
+    'Circle': new ol.style.Style({
+      stroke: new ol.style.Stroke({color: layerStrokeColor, width: 2}),
+      fill: new ol.style.Fill({color: layerFillColor}),
+      opacity: layerOpacity
+    })
+  };
+
+  return styles[feature.getGeometry().getType()];
 }
 
 function showScale() {
@@ -368,7 +421,7 @@ function searchLayerRecursive(layers, listenFunction) {
 function generateHTMLLegendWFS(config) {
   var legendDiv = $('#legendDiv');
   var layer = config;
-  var style = 'border-color:' + layer.color;
+  var style = 'border-color:' + layer.colorStroke + ';border-style: dashed;';
 
   var item = '<li class="collection-header collection-item">\n' +
   '     <h5>' + layer.name + '</h5>\n' + '     <span class="leyenda-icon" style="' + style + '"></span>\n' + '</li>\n';
@@ -662,32 +715,27 @@ function createTOC() {
         : layer.maxScale;
       var filters = '';
       var filterClass = '';
+      var selectParams = '';
+      if (typeof(layer.select) !== 'undefined' && layer.select !== '') {
+        selectParams = layer.select;
+      }
       if (typeof(layer.filters) !== 'undefined' && layer.filters !== '') {
         filterClass = ' toc-layer-filters';
-        filters +=
-        '<div class="input-field col s12">\n' +
-        '  <select onchange="changeFilter(this, \'' + layer.id + '\')" multiple>\n'+
-        '    <option value="" disabled selected>Seleccione un filtro</option>\n';
+        filters += '<div class="input-field col s12">\n' + '  <select onchange="changeFilter(this, \'' + layer.id + '\')" ' + selectParams + '>\n' + '    <option value="" disabled selected>Seleccione un filtro</option>\n';
 
         for (var j = 0; j < layer.filters.length; j++) {
           var filter = layer.filters[j];
           filters += '<option value="' + filter.filter + '">' + filter.name + '</option>\n'
         }
 
-        filters +=
-        '  </select>\n' +
+        filters += '  </select>\n' +
         // '  <label>Seleccione el Filtro</label>\n' +
         '</div>\n';
       }
 
-      li = '<li class="collection-item avatar' + filterClass + '">\n' +
-        '    <img src="' + imageUrl + '" alt="" class="circle">\n' +
-        '    <span class="title" style="padding-right: 22px; display: block;">' + layer.name + '</span>\n' +
+      li = '<li class="collection-item avatar' + filterClass + '">\n' + '    <img src="' + imageUrl + '" alt="" class="circle">\n' + '    <span class="title" style="padding-right: 22px; display: block;">' + layer.name + '</span>\n' +
       //'    <p>Desde escala 1:' + layerMaxScale + '</p>\n' +
-        '    <a href="#!" onclick="changeVisibilityLayer(\'' + layer.id + '\')" class="secondary-content">\n' +
-        '        <i class="material-icons btnEye" data-layer-icon="' + layer.id + '">' + classVisible + '</i>\n' +
-        '    </a>\n' + filters +
-        '</li>\n';
+      '    <a href="#!" onclick="changeVisibilityLayer(\'' + layer.id + '\')" class="secondary-content">\n' + '        <i class="material-icons btnEye" data-layer-icon="' + layer.id + '">' + classVisible + '</i>\n' + '    </a>\n' + filters + '</li>\n';
       var group = query('[data-group="' + layer.groupId + '"]')[0];
       group.innerHTML += li;
     }
@@ -1218,12 +1266,16 @@ window.changeFilter = function(element, layerId) {
   console.log('changeFilter', element, layerId);
   var layer = window.map.getLayer(layerId);
   var source = layer.getSource();
-  var filters = $(element).val(); // Array
+  var filters = $(element).val();
   var filter = '';
-  for (var i = 0; i < filters.length; i++) {
-    filter += filters[i] + ' || ';
+  if (typeof filters === 'object') { //is array
+    for (var i = 0; i < filters.length; i++) {
+      filter += filters[i] + ' || ';
+    }
+    filter = filter.substring(0, filter.length - ' || '.length);
+  } else { //is string?
+    filter = filters;
   }
-  filter = filter.substring(0, filter.length - ' || '.length);
   console.log('filter', filter);
   source.config.filter = filter;
   window.source = source;
