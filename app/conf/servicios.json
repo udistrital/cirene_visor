@@ -2,9 +2,9 @@
   "serviceId": 0,
   "serviceType": "WMSServer",
   "name": "Mapa Referencia IDECA",
-  "id": "ideca",
+  "id": "ideca2",
   "url": "http://serviciosgis.catastrobogota.gov.co/arcgis/services/Mapa_Referencia/Mapa_Referencia/MapServer/WMSServer",
-  "layers": "11,12,13",
+  "layers": "49,46,38,40,39,25,23,14,12,15,8,4",
   "opacity": 1,
   "strokeColor": "",
   "type": "",
@@ -14,10 +14,10 @@
 }, {
   "serviceId": 1,
   "serviceType": "WMSServer",
-  "name": "Mapa Referencia IDECA 2",
-  "id": "ideca2",
+  "name": "Mapa Referencia IDECA Alternativa",
+  "id": "ideca",
   "url": "http://serviciosgis.catastrobogota.gov.co/arcgis/services/Mapa_Referencia/Mapa_Referencia/MapServer/WMSServer",
-  "layers": "1,2,3,4,8,9,17,22,23,24,25,26,27,28",
+  "layers": "11,12,13",
   "opacity": 1,
   "strokeColor": "",
   "type": "",
@@ -140,46 +140,44 @@
   "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=SIGUD:espacio_fisico&outputFormat=application%2Fjson",
   "filter": "",
   "select": "multiple",
-  "filters": [
-    {
-      "_comment": "Probar con https://regex101.com/ debe retornar true, false",
-      "name": "Piso 8",
-      "filter": "/08$/.test(feature.get('id_nivel'))"
-    }, {
-      "name": "Piso 7",
-      "filter": "/07$/.test(feature.get('id_nivel'))"
-    }, {
-      "name": "Piso 6",
-      "filter": "/06$/.test(feature.get('id_nivel'))"
-    }, {
-      "name": "Piso 5",
-      "filter": "/05$/.test(feature.get('id_nivel'))"
-    }, {
-      "name": "Piso 4",
-      "filter": "/04$/.test(feature.get('id_nivel'))"
-    }, {
-      "name": "Piso 3",
-      "filter": "/03$/.test(feature.get('id_nivel'))"
-    }, {
-      "name": "Piso 2",
-      "filter": "/02$/.test(feature.get('id_nivel'))"
-    }, {
-      "name": "Piso 1",
-      "filter": "/01$/.test(feature.get('id_nivel'))"
-    }, {
-      "name": "Piso S1",
-      "filter": "/S1$/.test(feature.get('id_nivel'))"
-    }, {
-      "name": "Piso S2",
-      "filter": "/S2$/.test(feature.get('id_nivel'))"
-    }, {
-      "name": "Piso S3",
-      "filter": "/S3$/.test(feature.get('id_nivel'))"
-    }, {
-      "name": "Piso ME",
-      "filter": "/ME$/.test(feature.get('id_nivel'))"
-    }
-  ],
+  "filters": [{
+    "_comment": "Probar con https://regex101.com/ debe retornar true, false",
+    "name": "Piso 8",
+    "filter": "/08$/.test(feature.get('id_nivel'))"
+  }, {
+    "name": "Piso 7",
+    "filter": "/07$/.test(feature.get('id_nivel'))"
+  }, {
+    "name": "Piso 6",
+    "filter": "/06$/.test(feature.get('id_nivel'))"
+  }, {
+    "name": "Piso 5",
+    "filter": "/05$/.test(feature.get('id_nivel'))"
+  }, {
+    "name": "Piso 4",
+    "filter": "/04$/.test(feature.get('id_nivel'))"
+  }, {
+    "name": "Piso 3",
+    "filter": "/03$/.test(feature.get('id_nivel'))"
+  }, {
+    "name": "Piso 2",
+    "filter": "/02$/.test(feature.get('id_nivel'))"
+  }, {
+    "name": "Piso 1",
+    "filter": "/01$/.test(feature.get('id_nivel'))"
+  }, {
+    "name": "Piso S1",
+    "filter": "/S1$/.test(feature.get('id_nivel'))"
+  }, {
+    "name": "Piso S2",
+    "filter": "/S2$/.test(feature.get('id_nivel'))"
+  }, {
+    "name": "Piso S3",
+    "filter": "/S3$/.test(feature.get('id_nivel'))"
+  }, {
+    "name": "Piso ME",
+    "filter": "/ME$/.test(feature.get('id_nivel'))"
+  }],
   "opacity": 1,
   "strokeColor": "rgba(90, 196, 63, 1)",
   "type": "",
