@@ -437,7 +437,13 @@ function searchLayerRecursive(layers, listenFunction) {
 function generateHTMLLegendWFS(config) {
   var legendDiv = $('#legendDiv');
   var layer = config;
-  var style = 'border-color:' + layer.strokeColor + ';border-style: dashed;';
+
+  var style = '';
+  if (typeof layer.iconImage !== 'undefined' && layer.iconImage !== '') {
+    style = 'background-image:url(' + layer.iconImage + '); background-size: 100% 100%; border-style: none;';
+  } else {
+    style = 'border-color:' + layer.strokeColor + ';border-style: dashed;';
+  }
 
   var item = '<li class="collection-header collection-item">\n' +
   '     <h5>' + layer.name + '</h5>\n' + '     <span class="leyenda-icon" style="' + style + '"></span>\n' + '</li>\n';
@@ -1136,7 +1142,11 @@ function createIdentify() {
     for (var property in properties) {
       if (properties.hasOwnProperty(property)) {
         if (['geometry'].indexOf(property) === -1) { //Si no esta
-          contentHTML += '<p>' + property + ': ' + properties[property] + '</p>';
+          if (property === 'imagen') {
+            contentHTML += '<span>' + property + ':<img src="' + properties[property] + '" style="width:200px; height:200px;"/><span/><br/>';
+          } else {
+            contentHTML += '<span>' + property + ': ' + properties[property] + '</span><br/>';
+          }
         }
       }
     }

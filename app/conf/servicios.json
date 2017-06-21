@@ -139,7 +139,7 @@
   "id": "espacio_fisico",
   "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=SIGUD:espacio_fisico&outputFormat=application%2Fjson",
   "filter": "",
-  "select": "multiple",
+  "select": "",
   "filters": [{
     "_comment": "Probar con https://regex101.com/ debe retornar true, false",
     "name": "Piso 8",
