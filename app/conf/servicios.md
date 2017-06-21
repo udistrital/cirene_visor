@@ -12,7 +12,6 @@ Ejemplo:
   "url": "http://serviciosgis.catastrobogota.gov.co/arcgis/services/Mapa_Referencia/Mapa_Referencia/MapServer/WMSServer",
   "layers": "49,46,38,40,39,25,23,14,12,15,8,4",
   "opacity": 1,
-  "strokeColor": "",
   "type": "",
   "groupId": "urbano",
   "visible": true,
@@ -55,6 +54,7 @@ Este se compone de algunos parámetros.
    "opacity": 1,
    "strokeColor": "rgba(255, 255, 255, 1.0)",
    "fillColor": "rgba(255, 255, 255, 0.1)",
+   "iconImage": "css/img/facultad.png",
    "type": "",
    "groupId": "sedes",
    "visible": true,
@@ -99,6 +99,7 @@ En donde *name* es el nombre del filtro y filter es un tipo de filtro como el de
 - **opacity** (float, no requerido): es el nivel de opacidad (no transparencia) de una capa, es un valor que puede ser decimal entre 0 y 1. Predeterminado en 1.
 - **strokeColor** (css color string, no requerido): es el color del trazo de los objetos que se dibujarán en el mapa. Predeterminado en *rgba(255, 255, 255, 0.1)*.
 - **fillColor** (css color string, no requerido): es el color del relleno de los objetos que se dibujarán en el mapa. Predeterminado en *rgba(255, 255, 255, 1.0)*.
+- **iconImage** (string, no requerido): si el WFS contiene puntos, se puede opcionalmente poner una imagen para los puntos, esto hará inválida e innecesaria la opción de *strokeColor* y *fillColor* ya que se toma con preponderación el parámetro *iconImage*.
 - **type** (NO IMPLEMENTADO): PERMITE DIFERENCIAR ENTRE SUB TIPOS DE ESTA CAPA.
 - **groupId** (string, requerido): es el identificador del grupo de capas descrito en el archivo *grupos.json*
 - **visible** (bool, no requerido): este tiene dos valores, true o false, cuando es true la capa se será visible de manera predeterminada, en false, tendrá que habilitarse manualmente en el TOC.
