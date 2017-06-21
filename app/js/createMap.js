@@ -127,7 +127,7 @@ function addLayers() {
 
   for (var i = 0; i < servicios.length; i++) {
     var servicio = servicios[i];
-    if (servicio.enable) {
+    if (typeof servicio.enable === 'undefined' || servicio.enable === true) {
       if (servicio.serviceType === 'WFS') {
         window.mapFeatureLayerObjects.push(servicio);
         var wfsSource = new ol.source.Vector({
@@ -234,15 +234,15 @@ function addLayers() {
 
 function getLayerStyle(feature, options) { //graphic layer?
   var opt = options;
-  var layerFillColor = (typeof opt.colorFill !== 'undefined' && opt.colorFill !== '')
-    ? opt.colorFill
+  var layerFillColor = (typeof opt.fillColor !== 'undefined' && opt.fillColor !== '')
+    ? opt.fillColor
     : 'rgba(255, 255, 255, 0.1)';
   var layerStrokeColor = (typeof opt.strokeColor !== 'undefined' && opt.strokeColor !== '')
     ? opt.strokeColor
     : 'rgba(255, 255, 255, 1.0)';
-  var layerOpacity = (typeof opt.opacity !== 'undefined' && opt.opacity !== '')
-    ? opt.opacity
-    : 'rgba(255, 255, 255, 1.0)';
+  var layerOpacity = (typeof opt.opacity === 'undefined')
+    ? 1
+    : opt.opacity;
 
   var image = null;
   if (typeof opt.iconImage !== 'undefined' && opt.iconImage !== '') {
@@ -1143,9 +1143,9 @@ function createIdentify() {
       if (properties.hasOwnProperty(property)) {
         if (['geometry'].indexOf(property) === -1) { //Si no esta
           if (property === 'imagen') {
-            contentHTML += '<span>' + property + ':<img src="' + properties[property] + '" style="width:200px; height:200px;"/><span/><br/>';
+            contentHTML += '<span><b>' + property + ':</b> <img src="' + properties[property] + '" style="width:200px; height:200px;"/><span/><br/>';
           } else {
-            contentHTML += '<span>' + property + ': ' + properties[property] + '</span><br/>';
+            contentHTML += '<span><b>' + property + ':</b> ' + properties[property] + '</span><br/>';
           }
         }
       }
