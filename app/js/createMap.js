@@ -141,7 +141,7 @@ function addLayers() {
           source: wfsSource,
           style: (function(feature) {
             var ctxServicio = this;
-            return getLayerStyle(feature, ctxServicio.colorFill, ctxServicio.colorStroke, ctxServicio.opacity);
+            return getLayerStyle(feature, ctxServicio);
           }).bind(servicio),
           visible: (typeof servicio.visible === 'undefined')
             ? true
@@ -232,23 +232,39 @@ function addLayers() {
   }
 }
 
-function getLayerStyle(feature, layerFillColor, layerStrokeColor, layerOpacity) { //graphic layer?
-  layerFillColor = (typeof layerFillColor === 'undefined')
-    ? 'rgba(255, 255, 255, 0.1)'
-    : layerFillColor;
-  layerStrokeColor = (typeof layerStrokeColor === 'undefined')
-    ? 'rgba(255, 255, 255, 1.0)'
-    : layerStrokeColor;
-  layerOpacity = (typeof layerOpacity === 'undefined')
-    ? 'rgba(255, 255, 255, 1.0)'
-    : layerOpacity;
+function getLayerStyle(feature, options) { //graphic layer?
+  var opt = options;
+  var layerFillColor = (typeof opt.colorFill !== 'undefined' && opt.colorFill !== '')
+    ? opt.colorFill
+    : 'rgba(255, 255, 255, 0.1)';
+  var layerStrokeColor = (typeof opt.strokeColor !== 'undefined' && opt.strokeColor !== '')
+    ? opt.strokeColor
+    : 'rgba(255, 255, 255, 1.0)';
+  var layerOpacity = (typeof opt.opacity !== 'undefined' && opt.opacity !== '')
+    ? opt.opacity
+    : 'rgba(255, 255, 255, 1.0)';
 
-  var image = new ol.style.Circle({
-    radius: 5,
-    fill: new ol.style.Fill({color: layerFillColor}),
-    stroke: new ol.style.Stroke({color: layerStrokeColor, width: 1}),
-    opacity: layerOpacity
-  });
+  var image = null;
+  if (typeof opt.iconImage !== 'undefined' && opt.iconImage !== '') {
+    console.log('opt.image', opt.iconImage);
+    var imageURL = opt.iconImage;
+    image = new ol.style.Icon(/** @type {olx.style.IconOptions} */
+    ({
+      anchor: [
+        0.5, 14
+      ],
+      anchorXUnits: 'fraction',
+      anchorYUnits: 'pixels',
+      src: imageURL
+    }));
+  } else {
+    image = new ol.style.Circle({
+      radius: 5,
+      fill: new ol.style.Fill({color: layerFillColor}),
+      stroke: new ol.style.Stroke({color: layerStrokeColor, width: 1}),
+      opacity: layerOpacity
+    });
+  }
 
   var styles = {
     'Point': new ol.style.Style({image: image}),
@@ -421,7 +437,7 @@ function searchLayerRecursive(layers, listenFunction) {
 function generateHTMLLegendWFS(config) {
   var legendDiv = $('#legendDiv');
   var layer = config;
-  var style = 'border-color:' + layer.colorStroke + ';border-style: dashed;';
+  var style = 'border-color:' + layer.strokeColor + ';border-style: dashed;';
 
   var item = '<li class="collection-header collection-item">\n' +
   '     <h5>' + layer.name + '</h5>\n' + '     <span class="leyenda-icon" style="' + style + '"></span>\n' + '</li>\n';
@@ -1157,7 +1173,7 @@ function addZoomSlider() {
   map.addControl(zoomslider);
 }
 
-function cleanMap(){
+function cleanMap() {
   window.identifyInteraction.getFeatures().clear();
   hideOverlays();
 }

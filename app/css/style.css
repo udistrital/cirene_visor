@@ -55,6 +55,16 @@ html, body, #map {
   color: #26a69a;
 }
 
+.identify-icon {
+    text-transform: lowercase;
+    font-style: normal;
+    font-weight: 900;
+}
+
+.identify-icon:after {
+    content: "¡";
+}
+
 #btnP1 {
   position: absolute;
   top: 10px;

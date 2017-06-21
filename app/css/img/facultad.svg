@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="7.3377776mm"
+   height="7.3377776mm"
+   viewBox="0 0 25.999999 25.999999"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="facultad.svg"
+   inkscape:export-filename="/home/jorge/Desktop/facultad.png"
+   inkscape:export-xdpi="110.76923"
+   inkscape:export-ydpi="110.76923">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="5.6"
+     inkscape:cx="-5.5205637"
+     inkscape:cy="15.840557"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1920"
+     inkscape:window-height="1010"
+     inkscape:window-x="0"
+     inkscape:window-y="33"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-502.44641,-885.74615)">
+    <circle
+       style="fill:#007e0f;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path4147"
+       cx="515.44641"
+       cy="898.74615"
+       r="12.5" />
+    <path
+       style="fill:#ffffff;fill-opacity:1"
+       d="m 514.68813,904.5112 c -1.29329,-0.11843 -2.00564,-0.25009 -2.45537,-0.45365 -0.77498,-0.39326 -1.12183,-0.54377 -1.61408,-0.99692 l -0.15165,-0.22365 0,-2.16009 0,-2.1601 c 1.36404,0.37842 3.01409,0.83162 4.61287,1.27047 2.4252,-0.13423 4.34929,-1.26383 5.17507,-1.2952 l 0.1708,0.0248 0,2.15652 0,2.15654 -0.14917,0.2356 c -1.17583,0.82206 -1.95395,1.14484 -3.41809,1.37536 -0.38278,0.0985 -1.47725,0.1342 -2.17038,0.0707 z m 7.51255,-0.35023 c -0.20182,-0.0455 -0.44313,-0.40938 -0.5147,-0.77623 -0.0685,-0.351 -8.2e-4,-0.9028 0.12942,-1.05539 0.0654,-0.0765 0.0764,-0.45577 0.0764,-2.63966 l 0,-2.55025 -0.15166,0.01 c -1.90555,0.51567 -3.79852,1.1467 -5.66183,1.70333 -0.11113,0.0448 -0.39556,0.0816 -0.6319,0.0816 -0.23632,0 -0.52068,-0.0367 -0.6319,-0.0816 -2.99896,-0.85154 -4.83835,-1.30587 -7.91139,-2.93613 -0.10388,-0.20973 0.0462,-0.52276 0.46577,-0.65111 2.13024,-0.66413 4.03497,-1.20831 6.25765,-1.9129 1.52095,-0.53847 2.13661,-0.53834 3.63975,8.9e-4 2.147,0.65321 4.16655,1.29253 6.28521,1.91208 0.17416,0 0.43821,0.39235 0.43821,0.65111 0,0.10847 -0.0512,0.2765 -0.11371,0.37344 -0.10721,0.16609 -0.51619,0.39456 -0.7962,0.44477 l -0.12644,0.0227 -0.0136,2.66139 -0.0136,2.66139 0.12712,0.28296 c 0.0986,0.21965 0.12697,0.37962 0.12697,0.71503 0,0.39769 -0.0156,0.45624 -0.19453,0.73548 -0.1742,0.27169 -0.40614,0.42781 -0.5827,0.39221 -0.0313,-0.007 -0.12265,-0.0263 -0.20296,-0.0444 z"
+       id="path4164"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccccccccccccccccscccsccccccsccccccscccc" />
+  </g>
+</svg>
