@@ -1,0 +1,43 @@
+[{
+  "layerId": "puntos_sede",
+  "fields": [{
+    "name": "codigo_factura_de_energía",
+    "alias": "Código Factura de Energía",
+    "codedValues": [{
+        "code": "0",
+        "name": "Primer Tipo de Factura de Energía"
+      },
+      {
+        "code": "1",
+        "name": "Segundo Tipo de Factura de Energía"
+      }
+    ]
+  }]
+}, {
+  "layerId": "nivel",
+  "fields": [{
+    "name": "area_construida",
+    "alias": "AreaConstruída"
+  },{
+    "name": "fecha_inicial",
+    "alias": "Fecha Inicial"
+  },{
+    "name": "fecha_final",
+    "alias": "Fecha Final"
+  },{
+    "name": "nivel",
+    "alias": "Nivel"
+  },{
+    "name": "area_util",
+    "alias": "Area Útil"
+  },{
+    "name": "area_estructura",
+    "alias": "Area Estructura"
+  },{
+    "name": "area_libre",
+    "alias": "Area Libre"
+  },{
+    "name": "id_construccion",
+    "alias": "Id Construcción"
+  }]
+}]
