@@ -241,9 +241,9 @@ html, body, #map {
   display: block;
   width: 20px;
   height: 20px;
-  position: relative;
-  right: -300px;
-  top: -33px;
+  float: right;
+  margin-top: -31px;
+  margin-right: 8px;
 }
 
 .esriPopup .sizer {

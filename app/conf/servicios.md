@@ -67,7 +67,7 @@ Este se compone de algunos parámetros.
 - **serviceType** (string, requerido) para que sea de este tipo debe ser "WFS".
 - **name** (string, requerido): nombre del servicio para ser visualizado en TOC y leyenda.
 - **id** (string, requerido): nombre del servicio para ser usado dentro de las consultas internas del visor, se recomienda NO usar mayúsculas, espacios o acentos.
-- **url** (string, requerido): url del WFS, puede ser relativa o absoluta, no debe contener parámetros adicionales.
+- **url** (string, requerido): url del WFS en formato geojson, puede obtenerse a partir del layer preview de geoserver en formato *geojson*, puede ser relativa o absoluta, puede contener parámetros adicionales como *maxFeatures=50*.
 - **filter** (string, no requerido): con este parámetro se puede filtrar toda la capa por operaciones boleanas o expresión regular, estas están expresadas en lenguaje javascript. Algunos ejemplos son:
 ```js
 cql filter: nivel = 10

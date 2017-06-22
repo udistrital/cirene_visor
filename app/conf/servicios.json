@@ -31,7 +31,7 @@
   "opacity": 1,
   "strokeColor": "rgba(255, 255, 255, 1.0)",
   "type": "",
-  "groupId": "sedes",
+  "groupId": "urbano",
   "visible": true,
   "enable": true
 }, {
@@ -43,7 +43,7 @@
   "opacity": 1,
   "strokeColor": "rgba(0, 255, 255, 1.0)",
   "type": "",
-  "groupId": "sedes",
+  "groupId": "urbano",
   "visible": true,
   "enable": true
 }, {
@@ -55,7 +55,7 @@
   "opacity": 1,
   "strokeColor": "rgba(255, 0, 255, 1.0)",
   "type": "",
-  "groupId": "arquitectonica",
+  "groupId": "sedes",
   "visible": true,
   "enable": true
 }, {
@@ -121,8 +121,8 @@
   "serviceId": 7,
   "serviceType": "WFS",
   "name": "Puntos Sede",
-  "id": "sede_pto",
-  "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=SIGUD:sede_pto&outputFormat=application%2Fjson",
+  "id": "sede_punto",
+  "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=SIGUD:sede_punto&outputFormat=application%2Fjson",
   "opacity": 1,
   "strokeColor": "",
   "iconImage": "css/img/facultad.png",
@@ -179,7 +179,18 @@
   "opacity": 1,
   "strokeColor": "rgba(90, 196, 63, 1)",
   "type": "",
-  "groupId": "sedes",
+  "groupId": "arquitectonica",
+  "visible": false,
+  "enable": true
+}, {
+  "serviceId": 9,
+  "serviceType": "WFS",
+  "name": "Zonas Exteriores",
+  "id": "zonas_exteriores",
+  "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=SIGUD:zona_exterior&maxFeatures=50&outputFormat=application%2Fjson",
+  "strokeColor": "rgba(235, 255, 0, 1)",
+  "type": "",
+  "groupId": "arquitectonica",
   "visible": false,
   "enable": true
 }, {

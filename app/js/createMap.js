@@ -44,8 +44,11 @@ function createMap() {
         center: [
           -74.06567902549436, 4.6281822385875655
         ],
-        maxZoom: 26,
-        zoom: 18
+        extent: [
+          -74.18615000043059, 4.514284463291831, -73.92439112512187, 4.659751162274072
+        ],
+        zoom: 18,
+        maxZoom: 26
       }),
       controls: ol.control.defaults().extend([new ol.control.ScaleLine()])
     });
@@ -60,7 +63,15 @@ function createMap() {
     createLegend();
     createTOC();
     createIdentify();
+    zoomToInitialExtent();
   });
+}
+
+function zoomToInitialExtent() {
+  setTimeout(function() {
+    var initialExtent = map.getLayer('sede_punto').getSource().getExtent();
+    map.getView().fit(initialExtent, map.getSize());
+  }, 1000);
 }
 
 function addLayers() {
