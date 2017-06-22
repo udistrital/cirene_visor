@@ -68,48 +68,40 @@
   "select": "",
   "filters": [{
     "name": "Piso 8",
-    "filter": "feature.get('nivel') === '08'",
-    "cql_filter": "nivel='08'"
+    "filter": "feature.get('nivel') === '08'"
   }, {
     "name": "Piso 7",
-    "filter": "feature.get('nivel') === '07'",
-    "cql_filter": "nivel='07'"
+    "filter": "feature.get('nivel') === '07'"
   }, {
     "name": "Piso 6",
-    "filter": "feature.get('nivel') === '06'",
-    "cql_filter": "nivel='06'"
+    "filter": "feature.get('nivel') === '06'"
   }, {
     "name": "Piso 5",
-    "filter": "feature.get('nivel') === '05'",
-    "cql_filter": "nivel='05'"
+    "filter": "feature.get('nivel') === '05'"
   }, {
     "name": "Piso 4",
-    "filter": "feature.get('nivel') === '04'",
-    "cql_filter": "nivel='04'"
+    "filter": "feature.get('nivel') === '04'"
   }, {
     "name": "Piso 3",
-    "filter": "feature.get('nivel') === '03'",
-    "cql_filter": "nivel='03'"
+    "filter": "feature.get('nivel') === '03'"
   }, {
     "name": "Piso 2",
-    "filter": "feature.get('nivel') === '02'",
-    "cql_filter": "nivel='02'"
+    "filter": "feature.get('nivel') === '02'"
   }, {
     "name": "Piso 1",
-    "filter": "feature.get('nivel') === '01'",
-    "cql_filter": "nivel='01'"
+    "filter": "feature.get('nivel') === '01'"
+  }, {
+    "name": "Semisótano",
+    "filter": "feature.get('nivel') === 'SS'"
   }, {
     "name": "Sótano 1",
-    "filter": "feature.get('nivel') === 'S1'",
-    "cql_filter": "nivel='S1'"
+    "filter": "feature.get('nivel') === 'S1'"
   }, {
     "name": "Sótano 2",
-    "filter": "feature.get('nivel') === 'S2'",
-    "cql_filter": "nivel='S2'"
+    "filter": "feature.get('nivel') === 'S2'"
   }, {
     "name": "Sótano 3",
-    "filter": "feature.get('nivel') === 'S3'",
-    "cql_filter": "nivel='S3'"
+    "filter": "feature.get('nivel') === 'S3'"
   }],
   "opacity": 1,
   "strokeColor": "rgba(59, 255, 0, 1)",
@@ -164,6 +156,9 @@
     "name": "Piso 1",
     "filter": "/01$/.test(feature.get('id_nivel'))"
   }, {
+    "name": "Piso SS",
+    "filter": "/SS$/.test(feature.get('id_nivel'))"
+  }, {
     "name": "Piso S1",
     "filter": "/S1$/.test(feature.get('id_nivel'))"
   }, {
@@ -190,7 +185,7 @@
   "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=SIGUD:zona_exterior&maxFeatures=50&outputFormat=application%2Fjson",
   "strokeColor": "rgba(235, 255, 0, 1)",
   "type": "",
-  "groupId": "arquitectonica",
+  "groupId": "sedes",
   "visible": false,
   "enable": true
 }, {
