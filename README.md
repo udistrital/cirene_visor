@@ -44,3 +44,7 @@ Los archivos del directorio ***app*** deben ser copiados en el servidor web.
 
 Para entornos de producción puede buscar la aplicación "comprimida" o "minimizada" en ***dist***
 y desplegarla de igual manera que con el código fuente.
+
+# Enlaces de interés
+- http://openlayers.org/en/latest/examples/
+- http://www.acuriousanimal.com/thebookofopenlayers3/
