@@ -6,65 +6,57 @@ var grupoServicios;
 var navToolbar;
 var geometriaAnalisis;
 
-require([
-  'dojo/request/xhr', 'dojo/promise/all', 'dojo/Deferred'
-], function(xhr, all, Deferred) {
-
-  var promise1 = xhr('conf/servicios.json', {handleAs: 'json'});
-
-  var promise2 = xhr('conf/grupos.json', {handleAs: 'json'});
-
-  all([promise1, promise2]).then(function(results) {
-    console.log('results', results);
-    window.servicios = results[0];
-    window.grupoServicios = results[1];
-    createMap();
-    // results will be an Array
-  }, function(err) {
-    // Handle the error condition
-    console.log('err', err);
-  }, function(evt) {
-    // Handle a progress event from the request if the
-    // browser supports XHR2
-    console.log('Browser supports XHR2', 'evt', evt);
-  });
+$(function() {
+  console.log("ready!");
+  loadData();
 });
 
-function createMap() {
-  require(['dojo/domReady!'], function() {
+function loadData() {
+  var serviciosPromise = $.get('conf/servicios.json');
+  var gruposPromise = $.get('conf/grupos.json');
 
-    var projection = new ol.proj.Projection({code: 'EPSG:4326', units: 'degrees', axisOrientation: 'neu'});
-
-    var map = new ol.Map({
-      //layers: [osmLayer, wmsLayer, grupoislaLayer, islaLayer],
-      //overlays: [overlay],
-      target: document.getElementById('map'),
-      view: new ol.View({
-        projection: projection,
-        center: [
-          -74.06567902549436, 4.6281822385875655
-        ],
-        extent: [
-          -74.18615000043059, 4.514284463291831, -73.92439112512187, 4.659751162274072
-        ],
-        zoom: 18,
-        maxZoom: 26
-      }),
-      controls: ol.control.defaults().extend([new ol.control.ScaleLine()])
-    });
-    window.map = map;
-
-    map.getLayer = window._getLayerById;
-
-    addLayers();
-    addZoomSlider();
-    //checkVisibilityAtScale()
-    //add the legend
-    createLegend();
-    createTOC();
-    createIdentify();
-    zoomToInitialExtent();
+  $.when(serviciosPromise, gruposPromise).done(function(servicios, grupos) {
+    // do something
+    console.log('results', servicios, grupos);
+    window.servicios = servicios[0];
+    window.grupoServicios = grupos[0];
+    createMap();
   });
+}
+
+function createMap() {
+
+  var projection = new ol.proj.Projection({code: 'EPSG:4326', units: 'degrees', axisOrientation: 'neu'});
+
+  var map = new ol.Map({
+    //layers: [osmLayer, wmsLayer, grupoislaLayer, islaLayer],
+    //overlays: [overlay],
+    target: document.getElementById('map'),
+    view: new ol.View({
+      projection: projection,
+      center: [
+        -74.06567902549436, 4.6281822385875655
+      ],
+      extent: [
+        -74.18615000043059, 4.514284463291831, -73.92439112512187, 4.659751162274072
+      ],
+      zoom: 18,
+      maxZoom: 26
+    }),
+    controls: ol.control.defaults().extend([new ol.control.ScaleLine()])
+  });
+  window.map = map;
+
+  map.getLayer = window._getLayerById;
+
+  addLayers();
+  addZoomSlider();
+  //checkVisibilityAtScale()
+  //add the legend
+  createLegend();
+  createTOC();
+  createIdentify();
+  zoomToInitialExtent();
 }
 
 function zoomToInitialExtent() {
@@ -98,9 +90,9 @@ function addLayers() {
 
   // var scalebar = new Scalebar({
   //     map: map,
-  //     // "dual" displays both miles and kilometers
-  //     // "english" is the default, which displays miles
-  //     // use "metric" for kilometers
+  //     // 'dual' displays both miles and kilometers
+  //     // 'english' is the default, which displays miles
+  //     // use 'metric' for kilometers
   //     scalebarUnit: 'dual'
   // })
 
@@ -715,109 +707,97 @@ function createMeasurement() {
 }
 
 function createTOC() {
-  require([
-    'dojo/dom', 'dojo/query'
-  ], function(dom, query) {
-    var toc = dom.byId('toc-div');
-    var collapsible = '<ul class="collapsible" data-collapsible="accordion">';
-    var i,
-      li;
-    for (i = 0; i < window.grupoServicios.length; i++) {
-      var grupo = window.grupoServicios[i];
-      var active = (i === 0)
-        ? 'active'
-        : '';
-      li = '<li> ' +
-        '     <div class="collapsible-header ' + active + '">\n' + '        <i class="material-icons">layers</i>\n' + '        ' + grupo.name + '\n' + '        <a href="#!" onclick="changeVisibilityGroup(event, \'' + grupo.id + '\', false)">\n' + '            <i class="material-icons btnEyeGroup">visibility_off</i>\n' + '        </a>\n' + '        <a href="#!" onclick="changeVisibilityGroup(event, \'' + grupo.id + '\', true)">\n' + '            <i class="material-icons btnEyeGroup">visibility</i>\n' + '        </a>\n' + '        </div>\n' + '    <div class="collapsible-body"><ul class="collection" data-group="' + grupo.id + '"></ul></div>\n' + '</li>\n';
-      collapsible += li;
+  var toc = $('#toc-div');
+  var collapsible = '<ul class="collapsible" data-collapsible="accordion">';
+  var i,
+    li;
+  for (i = 0; i < window.grupoServicios.length; i++) {
+    var grupo = window.grupoServicios[i];
+    var active = (i === 0)
+      ? 'active'
+      : '';
+    li = '<li> ' +
+      '     <div class="collapsible-header ' + active + '">\n' + '        <i class="material-icons">layers</i>\n' + '        ' + grupo.name + '\n' + '        <a href="#!" onclick="changeVisibilityGroup(event, \'' + grupo.id + '\', false)">\n' + '            <i class="material-icons btnEyeGroup">visibility_off</i>\n' + '        </a>\n' + '        <a href="#!" onclick="changeVisibilityGroup(event, \'' + grupo.id + '\', true)">\n' + '            <i class="material-icons btnEyeGroup">visibility</i>\n' + '        </a>\n' + '        </div>\n' + '    <div class="collapsible-body"><ul class="collection" data-group="' + grupo.id + '"></ul></div>\n' + '</li>\n';
+    collapsible += li;
+  }
+  collapsible += '</ul>';
+  toc.html(collapsible);
+
+  for (i = 0; i < window.mapFeatureLayerObjects.length; i++) {
+    var layer = window.mapFeatureLayerObjects[i];
+    var classVisible = 'visibility';
+    if (layer.visible === false) {
+      classVisible = 'visibility_off';
     }
-    collapsible += '</ul>';
-    toc.innerHTML = collapsible;
+    var imageUrl = (typeof(layer.icon) === 'undefined' || layer.icon === '')
+      ? 'css/img/oas.jpg'
+      : layer.icon;
+    var layerMaxScale = (typeof(layer.maxScale) === 'undefined')
+      ? 'Inf'
+      : layer.maxScale;
+    var filters = '';
+    var filterClass = '';
+    var selectParams = '';
+    if (typeof(layer.select) !== 'undefined' && layer.select !== '') {
+      selectParams = layer.select;
+    }
+    if (typeof(layer.filters) !== 'undefined' && layer.filters !== '') {
+      filterClass = ' toc-layer-filters';
+      filters += '<div class="input-field col s12">\n' + '  <select onchange="changeFilter(this, \'' + layer.id + '\')" ' + selectParams + '>\n' + '    <option value="" disabled selected>Seleccione un filtro</option>\n';
 
-    for (i = 0; i < window.mapFeatureLayerObjects.length; i++) {
-      var layer = window.mapFeatureLayerObjects[i];
-      var classVisible = 'visibility';
-      if (layer.visible === false) {
-        classVisible = 'visibility_off';
-      }
-      var imageUrl = (typeof(layer.icon) === 'undefined' || layer.icon === '')
-        ? 'css/img/oas.jpg'
-        : layer.icon;
-      var layerMaxScale = (typeof(layer.maxScale) === 'undefined')
-        ? 'Inf'
-        : layer.maxScale;
-      var filters = '';
-      var filterClass = '';
-      var selectParams = '';
-      if (typeof(layer.select) !== 'undefined' && layer.select !== '') {
-        selectParams = layer.select;
-      }
-      if (typeof(layer.filters) !== 'undefined' && layer.filters !== '') {
-        filterClass = ' toc-layer-filters';
-        filters += '<div class="input-field col s12">\n' + '  <select onchange="changeFilter(this, \'' + layer.id + '\')" ' + selectParams + '>\n' + '    <option value="" disabled selected>Seleccione un filtro</option>\n';
-
-        for (var j = 0; j < layer.filters.length; j++) {
-          var filter = layer.filters[j];
-          filters += '<option value="' + filter.filter + '">' + filter.name + '</option>\n'
-        }
-
-        filters += '  </select>\n' +
-        // '  <label>Seleccione el Filtro</label>\n' +
-        '</div>\n';
+      for (var j = 0; j < layer.filters.length; j++) {
+        var filter = layer.filters[j];
+        filters += '<option value="' + filter.filter + '">' + filter.name + '</option>\n'
       }
 
-      li = '<li class="collection-item avatar' + filterClass + '">\n' + '    <img src="' + imageUrl + '" alt="" class="circle">\n' + '    <span class="title" style="padding-right: 22px; display: block;">' + layer.name + '</span>\n' +
-      //'    <p>Desde escala 1:' + layerMaxScale + '</p>\n' +
-      '    <a href="#!" onclick="changeVisibilityLayer(\'' + layer.id + '\')" class="secondary-content">\n' + '        <i class="material-icons btnEye" data-layer-icon="' + layer.id + '">' + classVisible + '</i>\n' + '    </a>\n' + filters + '</li>\n';
-      var group = query('[data-group="' + layer.groupId + '"]')[0];
-      group.innerHTML += li;
+      filters += '  </select>\n' +
+      // '  <label>Seleccione el Filtro</label>\n' +
+      '</div>\n';
     }
 
-    // Se cargan las cosas necesarias
-    $('.collapsible').collapsible();
-    $(toc).find('select').material_select();
-    //checkVisibilityAtScale();
-  });
+    li = '<li class="collection-item avatar' + filterClass + '">\n' + '    <img src="' + imageUrl + '" alt="" class="circle">\n' + '    <span class="title" style="padding-right: 22px; display: block;">' + layer.name + '</span>\n' +
+    //'    <p>Desde escala 1:' + layerMaxScale + '</p>\n' +
+    '    <a href="#!" onclick="changeVisibilityLayer(\'' + layer.id + '\')" class="secondary-content">\n' + '        <i class="material-icons btnEye" data-layer-icon="' + layer.id + '">' + classVisible + '</i>\n' + '    </a>\n' + filters + '</li>\n';
+    var group = $('[data-group="' + layer.groupId + '"]')[0];
+    group.innerHTML += li;
+  }
+
+  // Se cargan las cosas necesarias
+  $('.collapsible').collapsible();
+  $(toc).find('select').material_select();
+  //checkVisibilityAtScale();
 }
 
 function changeVisibilityLayer(layerId) {
-  require([
-    'dojo/query', 'dojo/dom'
-  ], function(query, dom) {
-    var layer = map.getLayer(layerId);
-    var icon = query('[data-layer-icon="' + layerId + '"]')[0];
-    //window.layer = layer;
-    if (layer.getVisible()) {
-      layer.setVisible(false);
-      icon.innerHTML = 'visibility_off';
-    } else {
-      layer.setVisible(true);
-      icon.innerHTML = 'visibility';
-    }
-  });
+  var layer = map.getLayer(layerId);
+  var icon = $('[data-layer-icon="' + layerId + '"]')[0];
+  //window.layer = layer;
+  if (layer.getVisible()) {
+    layer.setVisible(false);
+    icon.innerHTML = 'visibility_off';
+  } else {
+    layer.setVisible(true);
+    icon.innerHTML = 'visibility';
+  }
 }
 
 function changeVisibilityGroup(evt, groupId, visibility) {
   //evt.preventDefault()
-  require([
-    'dojo/query', 'dojo/dom'
-  ], function(query, dom) {
-    evt.stopPropagation();
-    for (var i = 0; i < window.mapFeatureLayerObjects.length; i++) {
-      var layer = window.mapFeatureLayerObjects[i];
-      if (layer.groupId === groupId) {
-        var olLayer = map.getLayer(layer.id);
-        var icon = query('[data-layer-icon="' + layer.id + '"]')[0];
-        if (visibility) {
-          olLayer.setVisible(true);
-          icon.innerHTML = 'visibility';
-        } else {
-          olLayer.setVisible(false);
-          icon.innerHTML = 'visibility_off';
-        }
+  evt.stopPropagation();
+  for (var i = 0; i < window.mapFeatureLayerObjects.length; i++) {
+    var layer = window.mapFeatureLayerObjects[i];
+    if (layer.groupId === groupId) {
+      var olLayer = map.getLayer(layer.id);
+      var icon = $('[data-layer-icon="' + layer.id + '"]')[0];
+      if (visibility) {
+        olLayer.setVisible(true);
+        icon.innerHTML = 'visibility';
+      } else {
+        olLayer.setVisible(false);
+        icon.innerHTML = 'visibility_off';
       }
     }
-  });
+  }
 }
 
 function createDrawToolbar(themap) {
