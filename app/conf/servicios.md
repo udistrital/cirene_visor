@@ -104,6 +104,7 @@ En donde *name* es el nombre del filtro y filter es un tipo de filtro como el de
 - **groupId** (string, requerido): es el identificador del grupo de capas descrito en el archivo *grupos.json*
 - **visible** (bool, no requerido): este tiene dos valores, true o false, cuando es true la capa se será visible de manera predeterminada, en false, tendrá que habilitarse manualmente en el TOC.
 - **enable** (bool, no requerido): está predeterminado en true, permite habilitar o deshabilitar la capa en cuestión, no se agrega al visor si su valor es false.
+- **icon** (string, requerido): es la URL relativa o absoluta de la imagen que se muestra en el TOC (Table Of Contents). De manera predeterminada es "css/img/oas.jpg".
 
 ## Agregar MapServer (Servicio MapServer de ArcGIS) NO IMPLEMENTADO
 Ejemplo:
