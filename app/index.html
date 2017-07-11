@@ -319,25 +319,25 @@
   <!-- Menu -->
   <div id="menu">
     <!-- https://design.google.com/icons -->
-    <div id="btnP1" title="Medición (En desarrollo)" class="btn-nav-pane btn-floating btn-small /*btn-large*/ teal dropdown-button btn" onclick="measureInMap();">
+    <div id="btnP1" title="Medición (En desarrollo)" class="btn-nav-pane btn-floating btn-small /*btn-large*/ teal dropdown-button btn" onclick="mapTools.measureInMap();">
       <i class="material-icons">gesture</i>
     </div>
-    <div id="btnP2" title="Identificar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="identifyInLayers();">
+    <div id="btnP2" title="Identificar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="mapTools.identifyInLayers();">
         <i class="fa fa-info" aria-hidden="true"></i>
     </div>
-    <div id="btnP3" title="Acercar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="zoomInBox();">
+    <div id="btnP3" title="Acercar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="mapTools.zoomInBox();">
       <i class="material-icons">zoom_in</i>
     </div>
-    <div id="btnP4" title="Alejar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="zoomOutBox();">
+    <div id="btnP4" title="Alejar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="mapTools.zoomOutBox();">
       <i class="material-icons">zoom_out</i>
     </div>
-    <div id="btnP5" title="Panear" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="panMap();">
+    <div id="btnP5" title="Panear" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="mapTools.panMap();">
       <i class="material-icons">pan_tool</i>
     </div>
-    <div id="btnP6" title="Detener" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="cleanNavigationsInteractions();">
+    <div id="btnP6" title="Detener" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="mapTools.cleanNavigationsInteractions();">
       <i class="material-icons">clear</i>
     </div>
-    <div id="btnP7" title="Limpiar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="cleanMap();">
+    <div id="btnP7" title="Limpiar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="mapTools.cleanMap();">
       <i class="material-icons">delete</i>
     </div>
   </div>
@@ -377,6 +377,7 @@
   <script src="//openlayers.org/en/v4.1.0/build/ol.js"></script>
   <script src="//cdn.rawgit.com/bjornharrtell/jsts/gh-pages/1.2.0/jsts.min.js"></script>
   <script src="js/createMap.js"></script>
+  <script src="js/mapTools.js"></script>
   <script src="js/init.js"></script>
   <!-- <script src="js/reportes.js" async defer></script> -->
   <script src="js/mustache-dojo.js" async defer></script>
