@@ -5,6 +5,7 @@ var servicios;
 var grupoServicios;
 var navToolbar;
 var geometriaAnalisis;
+var jstsParser;
 
 $(function() {
   console.log("ready!");
@@ -25,6 +26,8 @@ function loadData() {
 }
 
 function createMap() {
+
+  window.jstsParser = new jsts.io.OL3Parser();
 
   var projection = new ol.proj.Projection({code: 'EPSG:4326', units: 'degrees', axisOrientation: 'neu'});
 
@@ -983,6 +986,10 @@ function applyBuffer(evt) {
 }
 
 function zoomToGeometry(geometry) {
+
+  //var initialExtent = map.getLayer('sede_punto').getSource().getExtent();
+  map.getView().fit(initialExtent, map.getSize());
+  //
   if (geometry.type == "point") {
     map.centerAt(geometry);
   }
@@ -1196,11 +1203,32 @@ function searchFeaturesLayersByCoordinate(coordinate) {
   return featuresByLayer;
 }
 
+// https://openlayers.org/en/latest/examples/jsts.html
 function searchFeaturesLayerByCoordinate(layerId, coordinate) {
   //console.log(layerId);
   var layer = map.getLayer(layerId);
   var source = layer.getSource();
-  return source.getFeaturesAtCoordinate(coordinate);
+  var geometry = new ol.geom.Point(coordinate);
+  var newGeometry = bufferGeometry(geometry, 10);
+  return source.getFeaturesInExtent(newGeometry.getExtent());
+  //return source.getFeaturesAtCoordinate(coordinate);
+}
+
+function bufferGeometry(geometry, meters) {
+  meters = (typeof meters !== 'undefined')
+    ? meters
+    : 0;
+
+  var sourceProj = map.getView().getProjection();
+  var transformedGeometry = (geometry.clone().transform(sourceProj, 'EPSG:3857'));
+  var jstsGeom = jstsParser.read(transformedGeometry); //Only accept 3857
+  console.log('jstsGeom', jstsGeom);
+  // create a buffer of 1 meters around each line
+  var buffered = jstsGeom.buffer(meters);
+
+  // convert back from JSTS and replace the geometry on the feature
+  var bufferedGeometry = jstsParser.write(buffered);
+  return bufferedGeometry.transform('EPSG:3857', sourceProj);
 }
 
 function hideOverlays() {
@@ -1254,6 +1282,12 @@ function showResultFeatures(featuresByLayer) {
             if (properties.hasOwnProperty(property)) {
               if (['geometry'].indexOf(property) === -1) { //Si no esta
                 contentHTML += '<span>' + property + ': ' + properties[property] + '</span><br/>\n';
+              } else {
+                console.log('Hola property', property);
+                window.hiii = (typeof window.hiii === 'undefined')
+                  ? []
+                  : window.hiii;
+                window.hiii.push(properties[property]);
               }
             }
           }
