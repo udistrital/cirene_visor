@@ -8,7 +8,7 @@ window.consultas = {
       source: source,
       style: function(feature) {
         var opt = {
-          'fillColor': 'rgb(40, 187, 21)',
+          'fillColor': 'rgba(40, 187, 21, 0.45)',
           'strokeColor': 'rgb(0, 119, 255)',
           'opacity': '1',
           'iconImage': ''
@@ -19,16 +19,23 @@ window.consultas = {
     window.map.addLayer(featureOverlay);
   },
   addGeometryHighlight: function(geometry) {
-    var feature = new ol.Feature({geometry: geometry, name: 'New Feature'});
+    var feature = new ol.Feature({geometry: geometry, name: 'Geometría resaltada.'});
     this.addFeatureHighlight(feature);
   },
   addFeatureHighlight: function(feature) {
     var featureOverlay = window.map.getLayer('highlight');
     var source = featureOverlay.getSource();
     var features = source.getFeatures();
-    for (var i = 0; i < features.length; i++) {
-      source.removeFeature(features[i]);
-    }
+    source.clear();
     source.addFeature(feature);
+    var clkEvent = function(evt) {
+      map.un('click', clkEvent);
+      consultas.cleanHighlight();
+    }
+    map.on('click', clkEvent);
+  },
+  cleanHighlight: function() {
+    var featureOverlay = window.map.getLayer('highlight');
+    featureOverlay.getSource().clear();
   }
 }

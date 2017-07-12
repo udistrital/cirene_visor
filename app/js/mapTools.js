@@ -60,7 +60,6 @@ window.mapTools = {
 
     var image = null;
     if (typeof opt.iconImage !== 'undefined' && opt.iconImage !== '') {
-      console.log('opt.image', opt.iconImage);
       var imageURL = opt.iconImage;
       image = new ol.style.Icon(/** @type {olx.style.IconOptions} */
       ({
@@ -235,6 +234,7 @@ window.mapTools = {
   },
   cleanMap: function() {
     window.identifyInteraction.getFeatures().clear();
-    mapTools.hideOverlays();
+    this.hideOverlays();
+    consultas.cleanHighlight();
   }
 }

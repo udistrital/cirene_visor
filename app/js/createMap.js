@@ -8,7 +8,7 @@ var geometriaAnalisis;
 var jstsParser;
 
 $(function() {
-  console.log("ready!");
+  console.log("Ready!");
   loadData();
 });
 
@@ -351,8 +351,6 @@ function generateHTMLLegendWMS(response) {
   });
   $('#legendDiv .collapsible').collapsible();
 }
-
-
 
 function generateHTMLLegendWFS(config) {
   var legendDiv = $('#legendDiv');
@@ -1086,13 +1084,14 @@ function searchFeaturesLayerByCoordinate(layerId, coordinate) {
   var layer = map.getLayer(layerId);
   var source = layer.getSource();
   var geometry = new ol.geom.Point(coordinate);
-  //OJO puede cambiar por el dpi de la pantalla, hay que probar
-  function mapScale (dpi) {
-      var unit = map.getView().getProjection().getUnits();
-      var resolution = map.getView().getResolution();
-      var inchesPerMetre = 39.37;
+  // OJO puede cambiar por el dpi de la pantalla, hay que probar
+  // https://gis.stackexchange.com/questions/242424/how-to-get-map-units-to-find-current-scale-in-openlayers
+  function mapScale(dpi) {
+    var unit = map.getView().getProjection().getUnits();
+    var resolution = map.getView().getResolution();
+    var inchesPerMetre = 39.37;
 
-      return resolution * ol.proj.METERS_PER_UNIT[unit] * inchesPerMetre * dpi;
+    return resolution * ol.proj.METERS_PER_UNIT[unit] * inchesPerMetre * dpi;
   }
   var meters = mapScale(0.8);
   console.log('mapScale meters', meters);
