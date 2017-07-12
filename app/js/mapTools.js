@@ -45,7 +45,9 @@ window.mapTools = {
     }
   },
   getLayerStyle: function(feature, options) { //graphic layer?
-    var opt = options;
+    var opt = (typeof options !== 'undefined')
+      ? options
+      : {};
     var layerFillColor = (typeof opt.fillColor !== 'undefined' && opt.fillColor !== '')
       ? opt.fillColor
       : 'rgba(255, 255, 255, 0.1)';
@@ -149,10 +151,11 @@ window.mapTools = {
                 }
               }
             }
-            var geometrySpan = $('<span><a href="#">Ir a</a></span>');
+            var geometrySpan = $('<span><a href="#">Acercar a</a></span>');
             geometrySpan[0].geometry = properties['geometry'];
             geometrySpan.click(function() {
               mapTools.zoomToGeometry(this.geometry);
+              consultas.addGeometryHighlight(this.geometry)
             });
             resultadoIdentificar.append(geometrySpan);
           }

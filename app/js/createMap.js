@@ -60,6 +60,7 @@ function createMap() {
   createTOC();
   createIdentify();
   zoomToInitialExtent();
+  consultas.addLayerHighlight();
 }
 
 function zoomToInitialExtent() {
@@ -1085,7 +1086,18 @@ function searchFeaturesLayerByCoordinate(layerId, coordinate) {
   var layer = map.getLayer(layerId);
   var source = layer.getSource();
   var geometry = new ol.geom.Point(coordinate);
-  var newGeometry = mapTools.bufferGeometry(geometry, 10);
+  //OJO puede cambiar por el dpi de la pantalla, hay que probar
+  function mapScale (dpi) {
+      var unit = map.getView().getProjection().getUnits();
+      var resolution = map.getView().getResolution();
+      var inchesPerMetre = 39.37;
+
+      return resolution * ol.proj.METERS_PER_UNIT[unit] * inchesPerMetre * dpi;
+  }
+  var meters = mapScale(0.8);
+  console.log('mapScale meters', meters);
+  // end
+  var newGeometry = mapTools.bufferGeometry(geometry, meters);
   return source.getFeaturesInExtent(newGeometry.getExtent());
   //return source.getFeaturesAtCoordinate(coordinate);
 }
