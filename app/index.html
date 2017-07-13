@@ -31,6 +31,11 @@
           </a>
         </li>
         <li>
+          <a href="#consultas" role="tab" class="tooltipped" data-position="right" data-delay="500" data-tooltip="Consulta por parámetros">
+            <i class="material-icons">search</i>
+          </a>
+        </li>
+        <li>
           <a href="#reportes" role="tab" class="tooltipped" data-position="right" data-delay="500" data-tooltip="Generación de Reportes">
             <i class="material-icons">insert_drive_file</i>
           </a>
@@ -82,12 +87,12 @@
         <!-- end .row -->
       </div>
       <!-- end #toc -->
-      <div class="sidebar-pane" id="reportes">
+      <div class="sidebar-pane" id="consultas">
         <div class="row">
           <div class="col s12">
             <div class="card teal lighten-5">
               <div class="card-content">
-                <span class="card-title">Reportes (En desarrollo)</span>
+                <span class="card-title">Consulta de espacios</span>
               </div>
               <!-- end .card-content -->
               <div class="card-content">
@@ -102,7 +107,7 @@
                         <label>Capas disponibles</label>
                       </div>
                       <!-- end .input-field .col .s12 -->
-                      <b>Forme el tipo de consulta <a href="http://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html" target="_blank">filtro cql</a>:</b>
+                      <b>Forme un tipo de consulta <a href="http://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html" target="_blank">filtro cql</a>:</b>
                       <br />
                       <div class="row">
                         <div class="input-field col s4">
@@ -136,8 +141,8 @@
                         </div>
                         <!-- end .input-field .col .s4 -->
                         <div class="input-field col s12">
-                          <span><b>CQL Filter generado.</b></span>
-                          <div id="cql_filter"></div>
+                          <span><b>Filtro CQL generado:</b></span>
+                          <div id="cql_filter">...</div>
                         </div>
                         <!-- end .input-field .col .s12 -->
                       </div>
@@ -147,11 +152,6 @@
                           Consultar
                           <i class="material-icons right">send</i>
                         </button>
-                      </div>
-                      <!-- end .input-field .col .s12 -->
-                      <div class="input-field col s12">
-                        <br />
-                        <div id="generalReportResultsDiv"></div>
                       </div>
                       <!-- end .input-field .col .s12 -->
                       <div id="loading-report" class="input-field col s12" style="display: none;">
@@ -206,12 +206,64 @@
                           </div>
                         </div>
                       </div>
+                      <div class="input-field col s12">
+                        <br />
+                        <div id="generalReportResultsDiv"></div>
+                      </div>
+                      <!-- end .input-field .col .s12 -->
                     </div>
                     <!-- end .row-->
                   </form>
                   <!-- end form -->
                 </div>
                 <!-- end .row-->
+              </div>
+              <!-- end .card-content -->
+            </div>
+            <!-- end .card-content -->
+          </div>
+          <!-- end .col .s12 -->
+        </div>
+      </div>
+      <!-- end #consultas -->
+      <div class="sidebar-pane" id="reportes">
+        <div class="row">
+          <div class="col s12">
+            <div class="card teal lighten-5">
+              <div class="card-content">
+                <span class="card-title">Reportes (En desarrollo, NO funcional)</span>
+              </div>
+              <!-- end .card-content -->
+              <div class="card-content">
+                <div id="contenido-charts">
+                  <div id="select-chart">
+                    <select onchange="graficarPie(this.value);">
+                      <option value="" selected="selected" disabled="disabled">Seleccione una gráfica.</option>
+                      <option value="">Reportes de Ocupación de las Aulas y Laboratorios de la Universidad</option>
+                      <option value="">Reportes de asignación de los espacios de acuerdo a la Dependencia</option>
+                      <option value="">Reporte Histórico Recursos Invertidos por Sede</option>
+                      <option value="">Perfiles de Ocupación de las sedes según franjas horarias</option>
+                      <option value="">Lugar de procedencia de los Estudiantes (Localidad, sector catastral, CHIP predial)</option>
+                      <option value="">Localidad de procedencia de los docentes </option>
+                    </select>
+                  </div>
+                  <!-- end #select-chart -->
+                  <div id="canvas-holder" style="width:100%">
+                      <canvas id="chart-area" />
+                  </div>
+                  <!-- end #canvas-holder -->
+                  <div id="ver-en-mapa">
+                    <!-- Colored raised button -->
+                    <button type="button" class="btn waves-effect waves-light blue" type="submit" onclick="generalReport.validateData(event);">
+                      Ver en Mapa
+                    </button>
+                    <button type="button" class="btn waves-effect waves-light red" type="submit" onclick="generalReport.validateData(event);">
+                      Quitar
+                    </button>
+                  </div>
+                  <!-- end #mapa-agregar -->
+                </div>
+                <!-- end #contenido-charts -->
               </div>
               <!-- end .card-content -->
             </div>
@@ -378,9 +430,9 @@
   <script src="js/mapTools.js"></script>
   <script src="js/queries.js"></script>
   <script src="js/generalReport.js"></script>
+  <script src="js/reports.js"></script>
   <script src="js/init.js"></script>
-  <!-- <script src="js/reportes.js" async defer></script> -->
-  <script src="js/mustache-dojo.js" async defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js" async defer></script>
 </body>
 
 </html>

@@ -75,6 +75,7 @@
   }
 
   function consultarFeatures() {
+    loadingIcon(true, 'Consultando...');
     var layerId = $('#select_layers').val();
     var field = $('#select_fields').val();
     var operator = $('#select_operator').val();
@@ -95,6 +96,7 @@
       console.log('response', response);
       showResultFeaturesGeneralReport(response);
     }).fail(function(jqxhr, textStatus, error) {
+      loadingIcon(false, 'Terminado...');
       displayMessage('Error: ¿Está bien su conexión a internet?. Reporte al administrador con una captura: ' + error);
     });
   }
@@ -188,6 +190,8 @@
       var item = $('<span>No hay resultados.</span>');
       containerHTML.append(item);
     }
+
+    loadingIcon(false, 'Terminado...');
   }
 
   function parseGeometry(rawGeometry) {
@@ -205,4 +209,14 @@
     return geometries[rawGeometry.type];
   }
 
+  function loadingIcon(activate, message) {
+      document.getElementById('loading-report-message').innerHTML = message
+      setTimeout(function() {
+          if (activate) {
+              document.getElementById('loading-report').style.display = 'block'
+          } else {
+              document.getElementById('loading-report').style.display = 'none'
+          }
+      }, 200)
+  }
 })();
