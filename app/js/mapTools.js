@@ -82,16 +82,16 @@ window.mapTools = {
     var styles = {
       'Point': new ol.style.Style({image: image}),
       'LineString': new ol.style.Style({
-        stroke: new ol.style.Stroke({color: layerStrokeColor, width: 1}),
+        stroke: new ol.style.Stroke({color: layerStrokeColor, width: 2}),
         opacity: layerOpacity
       }),
       'MultiLineString': new ol.style.Style({
-        stroke: new ol.style.Stroke({color: layerStrokeColor, width: 1}),
+        stroke: new ol.style.Stroke({color: layerStrokeColor, width: 2}),
         opacity: layerOpacity
       }),
       'MultiPoint': new ol.style.Style({image: image}),
       'MultiPolygon': new ol.style.Style({
-        stroke: new ol.style.Stroke({color: layerStrokeColor, width: 1}),
+        stroke: new ol.style.Stroke({color: layerStrokeColor, width: 2}),
         fill: new ol.style.Fill({color: layerFillColor}),
         opacity: layerOpacity
       }),
@@ -158,6 +158,7 @@ window.mapTools = {
             var geometrySpan = $('<span><a href="#">Acercar a</a></span>');
             geometrySpan[0].geometry = properties['geometry'];
             geometrySpan.click(function() {
+              mapTools.cleanMap();
               mapTools.zoomToGeometry(this.geometry);
               consultas.addGeometryHighlight(this.geometry);
             });

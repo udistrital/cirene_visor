@@ -32,7 +32,7 @@
   "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typename=SIGUD:Localidades&outputFormat=application%2Fjson",
   "icon": "css/img/Localidades.jpg",
   "opacity": 1,
-  "strokeColor": "rgba(255, 255, 255, 1.0)",
+  "strokeColor": "rgba(255, 0, 0, 1.0)",
   "type": "",
   "groupId": "urbano",
   "visible": true,

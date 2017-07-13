@@ -1016,7 +1016,7 @@ function createIdentify() {
       }
     }
 
-    var geometrySpan = $('<span><a href="#">Acercar a</a></span>');
+    var geometrySpan = $('<span><a href="#">Acercar</a></span>');
     geometrySpan[0].geometry = properties['geometry'];
     geometrySpan.click(function() {
       mapTools.zoomToGeometry(this.geometry);

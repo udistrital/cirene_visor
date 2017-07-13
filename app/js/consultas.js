@@ -8,8 +8,8 @@ window.consultas = {
       source: source,
       style: function(feature) {
         var opt = {
-          'fillColor': 'rgba(40, 187, 21, 0.45)',
-          'strokeColor': 'rgb(0, 119, 255)',
+          'fillColor': 'rgba(255, 255, 255, 0.5)',
+          'strokeColor': '#0099ff',
           'opacity': '1',
           'iconImage': ''
         }
