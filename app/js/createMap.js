@@ -6,6 +6,8 @@ var grupoServicios;
 var navToolbar;
 var geometriaAnalisis;
 var jstsParser;
+var listOfNavigationsInteractions = new Array();
+var identifyInteraction = null;
 
 $(function() {
   console.log("Ready!");
@@ -956,10 +958,6 @@ function getFeatureLayerObjectById(id) {
     return featureLayerObject.id === id;
   });
 }
-
-var listOfNavigationsInteractions = new Array();
-
-var identifyInteraction = null;
 
 function createIdentify() {
 

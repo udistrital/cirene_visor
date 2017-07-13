@@ -121,7 +121,7 @@ window.mapTools = {
   },
   showResultFeatures: function(featuresByLayer) {
     var resultadosDiv = $('#resultadosDiv');
-    resultadosDiv.html('');
+    resultadosDiv.html(''); // Clean results
 
     var accordion = '<ul class="collapsible" data-collapsible="expandable"></ul>';
     accordion = $(accordion);
@@ -186,19 +186,28 @@ window.mapTools = {
     window.sidebar.open('resultados');
   },
   identifyInLayers: function() {
-    mapTools.turnOffPopup();
+    this.turnOffPopup();
+    //consultas.cleanHighlight();
     $('#map').css('cursor', 'crosshair');
     var clkEvent = function(evt) {
+      map.un('click', clkEvent);
       $('#map').css('cursor', 'default');
       $('#boton-resultados').removeClass('disabled');
-      map.un('click', clkEvent);
       var coordinate = evt.coordinate;
       var featuresByLayer = searchFeaturesLayersByCoordinate(coordinate);
       console.log('features', featuresByLayer);
       mapTools.showResultFeatures(featuresByLayer);
-      setTimeout(function() {
-        mapTools.turnOnPopup();
-      }, 2000);
+      // evt.stopPropagation();
+      // evt.preventDefault();
+      var handler = function () {
+        if (identifyInteraction.getMap() === null){
+          mapTools.turnOnPopup();
+        } else {
+          mapTools.turnOffPopup();
+          setTimeout(handler, 100);
+        }
+      }
+      setTimeout(handler, 1000);
     }
     map.on('click', clkEvent);
   },
@@ -226,7 +235,7 @@ window.mapTools = {
   },
   turnOffPopup: function() {
     window.identifyInteraction.getFeatures().clear();
-    mapTools.hideOverlays();
+    this.hideOverlays();
     map.removeInteraction(window.identifyInteraction);
   },
   turnOnPopup: function() {
