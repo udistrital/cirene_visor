@@ -56,13 +56,13 @@ html, body, #map {
 }
 
 .identify-icon {
-    text-transform: lowercase;
-    font-style: normal;
-    font-weight: 900;
+  text-transform: lowercase;
+  font-style: normal;
+  font-weight: 900;
 }
 
 .identify-icon:after {
-    content: "¡";
+  content: "¡";
 }
 
 #btnP1 {
@@ -438,3 +438,13 @@ html, body, #map {
 .tooltip-static:before {
   border-top-color: #ffcc33;
 }
+
+
+/* begin general report */
+
+.select_fields ul {
+  width: 290% !important;
+}
+
+
+/* end general report */

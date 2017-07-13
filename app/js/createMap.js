@@ -63,6 +63,7 @@ function createMap() {
   createIdentify();
   zoomToInitialExtent();
   consultas.addLayerHighlight();
+  generalReport.loadInterfaces();
 }
 
 function zoomToInitialExtent() {
@@ -885,19 +886,6 @@ function showBuffer(bufferedGeometries) {
     window.currentGeometry = bufferedGeometries[0];
     zoomToGeometry(window.currentGeometry);
   });
-}
-
-function applyBuffer(evt) {
-  if (!window.currentGeometry) {
-    displayMessage('Por favor dibujer primero una geometría.');
-  } else {
-    doBuffer({geometry: window.currentGeometry});
-  }
-}
-
-function displayMessage(msj) {
-  $('#message-modal1').html(msj);
-  $('#modal1').modal('open');
 }
 
 function changeNavpane(button, opt) {

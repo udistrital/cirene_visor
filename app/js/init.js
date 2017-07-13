@@ -4,4 +4,8 @@ $(document).ready(function() {
   $('.carousel').carousel();
   $('select').material_select();
   $('.modal').modal();
+  // $('select').on('contentChanged', function() {
+  //   // re-initialize (update)
+  //   $(this).material_select();
+  // });
 })

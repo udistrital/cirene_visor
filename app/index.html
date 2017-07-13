@@ -87,67 +87,73 @@
           <div class="col s12">
             <div class="card teal lighten-5">
               <div class="card-content">
-                <span class="card-title">Reportes (En desarrollo, NO funcional)</span>
+                <span class="card-title">Reportes (En desarrollo)</span>
               </div>
               <!-- end .card-content -->
               <div class="card-content">
-                <b>Dibuje sobre el mapa la geometría de influencia:</b>
                 <div class="row">
-                  <ul class="col s12">
-                    <li class="col s4">
-                      <div id="btnDrawPoint" class="btn-floating btn-large waves-effect waves-light tooltipped grey" data-position="right" data-delay="50" data-tooltip="Punto">
-                        <i class="large material-icons">location_on</i>
-                      </div>
-                    </li>
-                    <li class="col s4">
-                      <div id="btnDrawLine" class="btn-floating btn-large waves-effect waves-light tooltipped grey" data-position="right" data-delay="50" data-tooltip="Línea">
-                        <i class="large material-icons">share</i>
-                      </div>
-                    </li>
-                    <li class="col s4">
-                      <div id="btnDrawPoly" class="btn-floating btn-large waves-effect waves-light tooltipped grey" data-position="right" data-delay="50" data-tooltip="Polígono">
-                        <i class="large material-icons">signal_cellular_null</i>
-                      </div>
-                    </li>
-                  </ul>
-                  <!-- end .col .s12 -->
-                  <!-- <i class="material-icons prefix">settings_overscan</i> -->
-                  <b>Opcionalmente escoja una distacia y unidad de Buffer:</b>
+                  <b>Seleccione una capa:</b>
                   <form action="#" class="input-field col s12">
                     <div class="row">
-                      <div class="input-field col s6">
-                        <i class="material-icons prefix">select_all</i>
-                        <input id="buffer_distance" type="text" class="validate" value="0">
-                        <label for="buffer_distance">Buffer (distancia)</label>
-                      </div>
-                      <div class="input-field col s6">
-                        <select id="buffer_unit">
-                          <option value="" disabled>Seleccione la opción</option>
-                          <option value="UNIT_METER" selected>Metros</option>
-                          <option value="UNIT_KILOMETER">Kilometros</option>
-                          <option value="UNIT_STATUTE_MILE">Millas</option>
-                          <!-- <option value="UNIT_FOOT">Pies</option>
-                          <option value="UNIT_NAUTICAL_MILE">Millas Nauticas</option>
-                          <option value="UNIT_US_NAUTICAL_MILE">Millas Nauticas US</option> -->
-                          <!-- <option value="UNIT_DEGREE">Grados Sexagesimales</option> -->
+                      <div class="input-field col s12">
+                        <select id="select_layers">
+                          <option value="" selected>Seleccione la opción</option>
                         </select>
-                        <label>Unidades</label>
+                        <label>Capas disponibles</label>
                       </div>
+                      <!-- end .input-field .col .s12 -->
+                      <b>Forme el tipo de consulta <a href="http://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html" target="_blank">filtro cql</a>:</b>
+                      <br />
+                      <div class="row">
+                        <div class="input-field col s4">
+                          <select id="select_fields" class="select_fields">
+                            <option value="" disabled selected>Seleccione</option>
+                          </select>
+                          <label>Campo</label>
+                        </div>
+                        <!-- end .input-field .col .s4 -->
+                        <div class="input-field col s4">
+                          <select id="select_operator">
+                            <option value="" selected>Seleccione</option>
+                            <option value="equals">=</option>
+                            <option value="distinct">&lt;&gt;</option>
+                            <option value="mayor">&gt;</option>
+                            <option value="minor">&lt;</option>
+                            <option value="mayorequals">&gt;=</option>
+                            <option value="minorequals">&lt;=</option>
+                            <option value="minorequals">&lt;=</option>
+                            <option value="like">LIKE</option>
+                            <option value="between">BETWEEN</option>
+                            <option value="in">IN</option>
+                          </select>
+                          <label>Operador</label>
+                        </div>
+                        <!-- end .input-field .col .s4 -->
+                        <div class="input-field col s4">
+                          <!-- <i class="material-icons prefix">select_all</i> -->
+                          <input id="row_value" type="text" class="validate" value="0">
+                          <label for="row_value">Valor</label>
+                        </div>
+                        <!-- end .input-field .col .s4 -->
+                        <div class="input-field col s12">
+                          <span><b>CQL Filter generado.</b></span>
+                          <div id="cql_filter"></div>
+                        </div>
+                        <!-- end .input-field .col .s12 -->
+                      </div>
+                      <!-- end .row -->
                       <div class="input-field col s12">
-                        <button type="button" class="btn waves-effect waves-light grey" type="submit" onclick="applyBuffer(event)">Aplicar Buffer
-                                                      <i class="material-icons right">send</i>
-                                                    </button>
+                        <button type="button" class="btn waves-effect waves-light grey" type="submit" onclick="generalReport.validateData(event);">
+                          Consultar
+                          <i class="material-icons right">send</i>
+                        </button>
                       </div>
+                      <!-- end .input-field .col .s12 -->
                       <div class="input-field col s12">
-                        <button type="button" class="btn waves-effect waves-light grey" type="submit" onclick="generateReport1();">Generar Reporte
-                                                      <i class="material-icons right">print</i>
-                                                    </button>
+                        <br />
+                        <div id="generalReportResultsDiv"></div>
                       </div>
-                      <div class="input-field col s12">
-                        <button type="button" class="btn waves-effect waves-light grey" type="submit" onclick="generateReports(1, {});">Reporte Rápido
-                                                      <i class="material-icons right">flash_on</i>
-                                                    </button>
-                      </div>
+                      <!-- end .input-field .col .s12 -->
                       <div id="loading-report" class="input-field col s12" style="display: none;">
                         <div id="loading-report-message"><b></b></div>
                         <div class="preloader-wrapper big active">
@@ -263,21 +269,13 @@
               </div>
               <div class="card-action white-text">
                 <p>
-                  <b>Misión</b><br/>
-                  Diseñar y desarrollar un Sistema de Información Geográfica (GIS UD Cirene)
-                  para la Planta Física de la Universidad Distrital Francisco José de Caldas,
-                  el cual sea un apoyo para la toma de decisiones del Sistema de Administración
-                  de la Planta Física, con respecto a la administración de espacios e infraestructura.
+                  <b>Misión</b><br/> Diseñar y desarrollar un Sistema de Información Geográfica (GIS UD Cirene) para la Planta Física de la Universidad Distrital Francisco José de Caldas, el cual sea un apoyo para la toma de decisiones del Sistema de
+                  Administración de la Planta Física, con respecto a la administración de espacios e infraestructura.
                 </p>
                 <p>
-                  <b>Visión</b><br/>
-                  GIS UD Cirene es un Sistema de Información Geográfica para la Universidad Distrital
-                  Francisco José de Caldas, que posibilita la gestión y administración pertinente
-                  de la planta física de la Universidad,además de otros aspectos relacionados con
-                  la planeación y control de la infraestructura física tales como facilitar las
-                  intervenciones en la infraestructura, uso, ocupación y asignación de espacios,
-                  su relación con diferentes actores y demás aspectos que afectan y transforman el
-                  estado de conservación de la infraestructura física de la Universidad.
+                  <b>Visión</b><br/> GIS UD Cirene es un Sistema de Información Geográfica para la Universidad Distrital Francisco José de Caldas, que posibilita la gestión y administración pertinente de la planta física de la Universidad,además de otros
+                  aspectos relacionados con la planeación y control de la infraestructura física tales como facilitar las intervenciones en la infraestructura, uso, ocupación y asignación de espacios, su relación con diferentes actores y demás aspectos
+                  que afectan y transforman el estado de conservación de la infraestructura física de la Universidad.
                 </p>
               </div>
             </div>
@@ -323,7 +321,7 @@
       <i class="material-icons">gesture</i>
     </div>
     <div id="btnP2" title="Identificar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="mapTools.identifyInLayers();">
-        <i class="fa fa-info" aria-hidden="true"></i>
+      <i class="fa fa-info" aria-hidden="true"></i>
     </div>
     <div id="btnP3" title="Acercar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="mapTools.zoomInBox();">
       <i class="material-icons">zoom_in</i>
@@ -378,7 +376,8 @@
   <script src="//cdn.rawgit.com/bjornharrtell/jsts/gh-pages/1.2.0/jsts.min.js"></script>
   <script src="js/createMap.js"></script>
   <script src="js/mapTools.js"></script>
-  <script src="js/consultas.js"></script>
+  <script src="js/queries.js"></script>
+  <script src="js/generalReport.js"></script>
   <script src="js/init.js"></script>
   <!-- <script src="js/reportes.js" async defer></script> -->
   <script src="js/mustache-dojo.js" async defer></script>
