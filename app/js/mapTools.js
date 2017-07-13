@@ -137,6 +137,11 @@ window.mapTools = {
         var contentHTML = '';
         var features = layer.features;
         if (features.length > 0) {
+          var item = $('<li class="active"></li>');
+          var header = $('<div class="collapsible-header active"><i class="material-icons tiny">play_arrow</i>' + layerObject.name + '</div>');
+          var body = $('<div class="collapsible-body"></div>');
+          item.append(header);
+          item.append(body);
           for (var j = 0; j < features.length; j++) {
             var feature = features[j];
             var properties = feature.getProperties();
@@ -154,16 +159,11 @@ window.mapTools = {
             geometrySpan[0].geometry = properties['geometry'];
             geometrySpan.click(function() {
               mapTools.zoomToGeometry(this.geometry);
-              consultas.addGeometryHighlight(this.geometry)
+              consultas.addGeometryHighlight(this.geometry);
             });
             resultadoIdentificar.append(geometrySpan);
+            body.append(resultadoIdentificar);
           }
-          var header = $('<div class="collapsible-header active"><i class="material-icons tiny">play_arrow</i>' + layerObject.name + '</div>');
-          var body = $('<div class="collapsible-body"></div>');
-          body.append(resultadoIdentificar);
-          var item = $('<li class="active"></li>');
-          item.append(header);
-          item.append(body);
           accordion.append(item);
         } else {
           contentHTML += '<div class="resultadoIdentificar">\n' + '   <span>No hay resultados.</span>\n' + '<div>\n';
@@ -236,5 +236,36 @@ window.mapTools = {
     window.identifyInteraction.getFeatures().clear();
     this.hideOverlays();
     consultas.cleanHighlight();
+  },
+  cleanNavigationsInteractions: function() {
+    for (var i = 0; i < listOfNavigationsInteractions.length; i++) {
+      map.removeInteraction(listOfNavigationsInteractions[i]);
+    }
+    listOfNavigationsInteractions = new Array();
+  },
+  zoomInBox: function() {
+    this.cleanNavigationsInteractions();
+    //http://openlayers.org/en/latest/apidoc/ol.events.condition.html
+    var dragZoom = new ol.interaction.DragZoom({condition: ol.events.condition.mouseOnly, out: false});
+    map.addInteraction(dragZoom);
+    listOfNavigationsInteractions.push(dragZoom);
+  },
+  zoomOutBox: function() {
+    this.cleanNavigationsInteractions();
+    //http://openlayers.org/en/latest/apidoc/ol.events.condition.html
+    var dragZoom = new ol.interaction.DragZoom({condition: ol.events.condition.mouseOnly, out: true});
+    map.addInteraction(dragZoom);
+    listOfNavigationsInteractions.push(dragZoom);
+  },
+  panMap: function() {
+    this.cleanNavigationsInteractions();
+    // var dragPan = new ol.interaction.DragPan();
+    // map.addInteraction(dragPan);
+    // listOfNavigationsInteractions.push(dragPan);
+  },
+  getCenterOfExtent: function(Extent) {
+    var X = Extent[0] + (Extent[2] - Extent[0]) / 2;
+    var Y = Extent[1] + (Extent[3] - Extent[1]) / 2;
+    return [X, Y];
   }
 }

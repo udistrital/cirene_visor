@@ -40,9 +40,9 @@ function createMap() {
       center: [
         -74.06567902549436, 4.6281822385875655
       ],
-      extent: [
-        -74.18615000043059, 4.514284463291831, -73.92439112512187, 4.659751162274072
-      ],
+      // extent: [ //Esto limita el mapa a esta extension
+      //   -74.18615000043059, 4.514284463291831, -73.92439112512187, 4.659751162274072
+      // ],
       zoom: 18,
       maxZoom: 26
     }),
@@ -959,36 +959,6 @@ function getFeatureLayerObjectById(id) {
 
 var listOfNavigationsInteractions = new Array();
 
-function cleanNavigationsInteractions() {
-  for (var i = 0; i < listOfNavigationsInteractions.length; i++) {
-    map.removeInteraction(listOfNavigationsInteractions[i]);
-  }
-  listOfNavigationsInteractions = new Array();
-}
-
-function zoomInBox() {
-  window.cleanNavigationsInteractions();
-  //http://openlayers.org/en/latest/apidoc/ol.events.condition.html
-  var dragZoom = new ol.interaction.DragZoom({condition: ol.events.condition.mouseOnly, out: false});
-  map.addInteraction(dragZoom);
-  listOfNavigationsInteractions.push(dragZoom);
-}
-
-function zoomOutBox() {
-  window.cleanNavigationsInteractions();
-  //http://openlayers.org/en/latest/apidoc/ol.events.condition.html
-  var dragZoom = new ol.interaction.DragZoom({condition: ol.events.condition.mouseOnly, out: true});
-  map.addInteraction(dragZoom);
-  listOfNavigationsInteractions.push(dragZoom);
-}
-
-function panMap() {
-  window.cleanNavigationsInteractions();
-  // var dragPan = new ol.interaction.DragPan();
-  // map.addInteraction(dragPan);
-  // listOfNavigationsInteractions.push(dragPan);
-}
-
 var identifyInteraction = null;
 
 function createIdentify() {
@@ -1030,21 +1000,34 @@ function createIdentify() {
     var coordinate = evt.mapBrowserEvent.coordinate;
 
     var properties = lastFeature.getProperties();
-    var contentHTML = '';
+
+    $(content).html('');
+    var featureHTML = $('<div></div>');
 
     for (var property in properties) {
       if (properties.hasOwnProperty(property)) {
+        var span = null;
         if (['geometry'].indexOf(property) === -1) { //Si no esta
           if (property === 'imagen') {
-            contentHTML += '<span><b>' + property + ':</b> <img src="' + properties[property] + '" style="width:200px; height:200px;"/><span/><br/>';
+            span = $('<span><b>' + property + ':</b> <img src="' + properties[property] + '" style="width:200px; height:200px;"/><span/><br/>');
           } else {
-            contentHTML += '<span><b>' + property + ':</b> ' + properties[property] + '</span><br/>';
+            span = $('<span><b>' + property + ':</b> ' + properties[property] + '</span><br/>');
           }
+          featureHTML.append(span);
         }
       }
     }
 
-    content.innerHTML = contentHTML;
+    var geometrySpan = $('<span><a href="#">Acercar a</a></span>');
+    geometrySpan[0].geometry = properties['geometry'];
+    geometrySpan.click(function() {
+      mapTools.zoomToGeometry(this.geometry);
+      var newCoordinate = mapTools.getCenterOfExtent(this.geometry.getExtent());
+      overlay.setPosition(newCoordinate);
+    });
+    featureHTML.append(geometrySpan);
+
+    $(content).append(featureHTML);
     overlay.setPosition(coordinate);
     window.coordinate = coordinate;
   });
@@ -1084,6 +1067,13 @@ function searchFeaturesLayerByCoordinate(layerId, coordinate) {
   var layer = map.getLayer(layerId);
   var source = layer.getSource();
   var geometry = new ol.geom.Point(coordinate);
+  var newGeometry = getBufferedInMap(geometry);
+  consultas.addGeometryHighlight(newGeometry);
+  return source.getFeaturesInExtent(newGeometry.getExtent());
+  //return source.getFeaturesAtCoordinate(coordinate);
+}
+
+function getBufferedInMap(geometry) {
   // OJO puede cambiar por el dpi de la pantalla, hay que probar
   // https://gis.stackexchange.com/questions/242424/how-to-get-map-units-to-find-current-scale-in-openlayers
   function mapScale(dpi) {
@@ -1093,12 +1083,11 @@ function searchFeaturesLayerByCoordinate(layerId, coordinate) {
 
     return resolution * ol.proj.METERS_PER_UNIT[unit] * inchesPerMetre * dpi;
   }
-  var meters = mapScale(0.8);
+  var meters = mapScale(0.2);
   console.log('mapScale meters', meters);
   // end
   var newGeometry = mapTools.bufferGeometry(geometry, meters);
-  return source.getFeaturesInExtent(newGeometry.getExtent());
-  //return source.getFeaturesAtCoordinate(coordinate);
+  return newGeometry;
 }
 
 function addZoomSlider() {
