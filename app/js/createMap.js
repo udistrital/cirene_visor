@@ -119,6 +119,9 @@ function addLayers() {
     //'version=1.0.0&request=GetFeature&typename=parqueaderos:isla&' +
     //'outputFormat=application%2Fjson' +
     '&srsname=EPSG:4326&bbox=' + extent.join(',') + ',EPSG:4326';
+    if (url.toLowerCase().indexOf('maxfeatures') !== -1){
+      window.alert('Por favor, retire el parámetro maxFeatures de la url del servicio ' + servicios[indice].id + '.' );
+    }
     // use jsonp: false to prevent jQuery from adding the "callback"
     // parameter to the URL
     $.ajax({url: url, dataType: 'json', jsonp: false}).done(function(response) {
