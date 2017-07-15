@@ -1,0 +1,21 @@
+.lefted-div {
+  margin-left: -10px !important;
+  padding-bottom: 10px !important;
+  padding-top: 10px !important;
+}
+
+.tabs .tab a {
+  color: rgba(65, 226, 72, 0.7);
+}
+
+.tabs .tab a:hover {
+  color: rgba(65, 187, 226, 0.7);
+}
+
+.tabs .tab a.active {
+  color: rgb(0, 0, 0);
+}
+
+.tabs .indicator {
+    background-color: #4CAF50;
+}

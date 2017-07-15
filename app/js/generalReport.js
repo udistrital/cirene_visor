@@ -32,6 +32,11 @@
       loadFields(this.value);
     });
     layersSelect.material_select();
+
+    $('#quick_query').keyup(function() {
+      var valor = $(this).val();
+      consultarFeaturesRapido(valor);
+    });
   };
 
   function loadFields(layerId) {
@@ -67,8 +72,12 @@
   }
 
   function validateData(evt) {
-    if ($('#select_layers').val() === '' || $('#select_fields').val() === '') {
-      displayMessage('Por favor seleccione valores.');
+    if ($('#select_layers').val() === '') {
+      displayMessage('Por favor seleccione una capa.');
+    } else if ($('#custom_cql_filter').val() !== '') {
+      consultarFeatures();
+    } else if ($('#select_fields').val() === '' || $('#select_operator').val() === '') {
+      displayMessage('Por favor seleccione un campo y un operador.');
     } else {
       consultarFeatures();
     }
@@ -80,6 +89,7 @@
     var field = $('#select_fields').val();
     var operator = $('#select_operator').val();
     var value = $('#row_value').val();
+    var string_function = $('#select_string_function').val();
 
     var layer = map.getLayer(layerId);
     var source = layer.getSource();
@@ -87,7 +97,10 @@
 
     ///geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=SIGUD:Localidades
     //&outputFormat=application%2Fjson&cql_filter=NOMBRE=%27SANTA%20FE%27
-    var cql_filter = generateCQL_FILTER(field, operator, value);
+    var custom_cql_filter = $('#custom_cql_filter').val();
+    var cql_filter = (custom_cql_filter !== '')
+      ? custom_cql_filter
+      : generateCQL_FILTER(field, operator, value, string_function);
     $('#cql_filter').html(cql_filter);
     cql_filter = encodeURI(cql_filter);
     console.log(window.location.origin + config.url + '&cql_filter=' + cql_filter);
@@ -97,12 +110,15 @@
       showResultFeaturesGeneralReport(response);
     }).fail(function(jqxhr, textStatus, error) {
       loadingIcon(false, 'Terminado...');
-      displayMessage('Error: ¿Está bien su conexión a internet?. Reporte al administrador con una captura: ' + error);
+      displayMessage('La consulta ha fallado. Error: ' + error + '.');
     });
   }
 
-  function generateCQL_FILTER(field, operator, value) {
+  function generateCQL_FILTER(field, operator, value, string_function) {
     // please see http://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html
+    if (string_function !== '') {
+      field = string_function + '(' + field + ')';
+    }
     var op = '';
     switch (operator) {
       case 'equals':
@@ -139,7 +155,7 @@
     if (value == Number(value)) {
       value = value;
     } else {
-      if ( value.toUpperCase().indexOf('AND') > 0 || value.toUpperCase().indexOf('OR') > 0 ) { // si esta OR o AND
+      if (value.toUpperCase().indexOf('AND') > 0 || value.toUpperCase().indexOf('OR') > 0) { // si esta OR o AND
         // var regex = /[Aa][Nn][Dd]/g;
         // value = value.replace(regex, "AND");
       } else {
@@ -174,7 +190,7 @@
         }
         var geometrySpan = $('<span><a href="#">Acercar a</a></span>');
 
-        window.geometry = feature.geometry;
+        //window.geometry = feature.geometry;
         feature.geometry = parseGeometry(feature.geometry);
         geometrySpan[0].geometry = feature.geometry;
         geometrySpan.click(function() {
@@ -210,13 +226,117 @@
   }
 
   function loadingIcon(activate, message) {
-      document.getElementById('loading-report-message').innerHTML = message
-      setTimeout(function() {
-          if (activate) {
-              document.getElementById('loading-report').style.display = 'block'
-          } else {
-              document.getElementById('loading-report').style.display = 'none'
+    document.getElementById('loading-report-message').innerHTML = message;
+    setTimeout(function() {
+      if (activate) {
+        document.getElementById('loading-report').style.display = 'block';
+      } else {
+        document.getElementById('loading-report').style.display = 'none';
+      }
+    }, 200)
+  }
+
+  function loadingBar(activate) {
+    setTimeout(function() {
+      if (activate) {
+        document.getElementById('loading-bar').style.display = 'block'
+      } else {
+        document.getElementById('loading-bar').style.display = 'none'
+      }
+    }, 200)
+  }
+
+  function consultarFeaturesRapido(queryValue) {
+    loadingBar(true);
+    var containerHTML = $('#quickResultsDiv');
+    containerHTML.html('');
+
+    for (i = 0; i < window.mapFeatureLayerObjects.length; i++) {
+      var layer = window.mapFeatureLayerObjects[i];
+      var type = layer.serviceType;
+      //console.log(layer);
+      if (type === 'WFS') {
+        var layerId = mapFeatureLayerObjects[i].id;
+
+        var olLayer = map.getLayer(layerId);
+        var source = olLayer.getSource();
+        var config = source.config;
+
+        getFields(config.url, function(url, fields) {
+          for (var i = 0; i < fields.length; i++) {
+            var field = fields[i];
+            var cql_filter = 'strToUpperCase(' + field + ') LIKE \'%' + queryValue.toUpperCase() + '%\'';
+            cql_filter = encodeURI(cql_filter);
+            console.log('Consultados', window.location.origin + url + '&cql_filter=' + cql_filter);
+            $.getJSON(url + '&cql_filter=' + cql_filter, function(response) {
+              console.log('response', response);
+              loadingBar(false);
+              var features = response.features;
+              for (var i = 0; i < features.length; i++) {
+                var feature = features[i];
+                pushFeatureInQuickResults(feature);
+              }
+              //showResultFeaturesGeneralReport(response);
+            }).fail(function(jqxhr, textStatus, error) {
+              loadingBar(false);
+              console.log('cql_filter. Error: ' + error + '.');
+            });
           }
-      }, 200)
+        });
+      }
+    }
+  }
+
+  function getFields(url, listener) {
+    $.getJSON(url + '&maxFeatures=1', function(response) {
+      var textFields = [];
+      if (response.features.length > 0) {
+        var feature = response.features[0];
+        var properties = feature.properties;
+        for (var property in properties) {
+          console.log('quick_query', property);
+          if (properties.hasOwnProperty(property)) {
+            if (['geometry'].indexOf(property) === -1) { // Si no esta
+              var valor = properties[property];
+              if (valor == Number(valor)) { // es número
+                console.log('es Numero');
+              } else { // es texto?
+                textFields.push(property);
+              }
+            }
+          }
+        }
+      }
+      console.log('textFields', textFields);
+      listener(url, textFields);
+    }).fail(function(jqxhr, textStatus, error) {
+      console.log('Error: ' + error);
+    });
+  }
+
+  function pushFeatureInQuickResults(feature) {
+    var containerHTML = $('#quickResultsDiv');
+    var properties = feature.properties;
+    for (var property in properties) {
+      if (properties.hasOwnProperty(property)) {
+        if (['geometry'].indexOf(property) === -1) { //Si no esta
+          var propertySpan = $('<span><b>' + property + ':</b> ' + properties[property] + '</span>');
+          containerHTML.append(propertySpan);
+          containerHTML.append($('<br/>'));
+        }
+      }
+    }
+    var geometrySpan = $('<span><a href="#">Acercar a</a></span>');
+
+    feature.geometry = parseGeometry(feature.geometry);
+    geometrySpan[0].geometry = feature.geometry;
+    geometrySpan.click(function() {
+      mapTools.cleanMap();
+      mapTools.zoomToGeometry(this.geometry);
+      consultas.addGeometryHighlight(this.geometry);
+    });
+    containerHTML.append(geometrySpan);
+    containerHTML.append($('<br/>'));
+    containerHTML.append($('<br/>'));
   }
 })();
