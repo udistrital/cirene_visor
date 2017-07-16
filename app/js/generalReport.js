@@ -35,7 +35,7 @@
 
     var firstTime = true;
     var lastTime = null;
-    $('#quick_query').keyup(function() {
+    $('#quick_query_value').keyup(function() {
       lastTime = new Date().getTime() / 1000; // seconds
       if (firstTime === true) {
         var intervalQuery = setInterval(function() {
@@ -45,7 +45,7 @@
             clearInterval(intervalQuery);
             firstTime = true;
             console.log('diffTime', diffTime, 'Ejecutando consulta...');
-            var valueQuery = $('#quick_query').val();
+            var valueQuery = $('#quick_query_value').val();
             if (valueQuery !== '') {
               consultarFeaturesRapido(valueQuery);
             }
@@ -53,7 +53,13 @@
         }, 500);
         firstTime = false;
       }
+    });
 
+    $('#quick_query_button').click(function(){
+      var valueQuery = $('#quick_query_value').val();
+      if (valueQuery !== '') {
+        consultarFeaturesRapido(valueQuery);
+      }
     });
   };
 
