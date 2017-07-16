@@ -33,9 +33,28 @@
     });
     layersSelect.material_select();
 
+    var firstTime = true;
+    var lastTime = null;
     $('#quick_query').keyup(function() {
-      var valor = $(this).val();
-      consultarFeaturesRapido(valor);
+      lastTime = new Date().getTime() / 1000; // seconds
+      if (firstTime === true) {
+        var intervalQuery = setInterval(function() {
+          var secondsEntry = new Date().getTime() / 1000;
+          var diffTime = secondsEntry - lastTime;
+          console.log('diffTime', diffTime);
+          if (diffTime > 0.8) {
+            clearInterval(intervalQuery);
+            firstTime = true;
+            console.log('Ejecutando...');
+            var valor = $('#quick_query').val();
+            if (valor != '') {
+              consultarFeaturesRapido(valor);
+            }
+          }
+        }, 500);
+        firstTime = false;
+      }
+
     });
   };
 
@@ -103,9 +122,10 @@
       : generateCQL_FILTER(field, operator, value, string_function);
     $('#cql_filter').html(cql_filter);
     cql_filter = encodeURI(cql_filter);
-    console.log(window.location.origin + config.url + '&cql_filter=' + cql_filter);
+    var url = config.url + '&CQL_FILTER=' + cql_filter;
+    console.log(window.location.origin + url);
 
-    $.getJSON(config.url + '&cql_filter=' + cql_filter, function(response) {
+    $.getJSON(url, function(response) {
       console.log('response', response);
       showResultFeaturesGeneralReport(response);
     }).fail(function(jqxhr, textStatus, error) {
@@ -116,6 +136,7 @@
 
   function generateCQL_FILTER(field, operator, value, string_function) {
     // please see http://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html
+    field = '"' + field + '"'; //se agrega comillas dobles
     if (string_function !== '') {
       field = string_function + '(' + field + ')';
     }
@@ -239,9 +260,9 @@
   function loadingBar(activate) {
     setTimeout(function() {
       if (activate) {
-        document.getElementById('loading-bar').style.display = 'block'
+        document.getElementById('loading-bar-container').style.display = 'block';
       } else {
-        document.getElementById('loading-bar').style.display = 'none'
+        document.getElementById('loading-bar-container').style.display = 'none';
       }
     }, 200)
   }
@@ -250,6 +271,13 @@
     loadingBar(true);
     var containerHTML = $('#quickResultsDiv');
     containerHTML.html('');
+
+    var accordion = '<ul class="collapsible" data-collapsible="expandable"></ul>';
+    accordion = $(accordion);
+
+    containerHTML.append(accordion);
+
+    var promises = [];
 
     for (i = 0; i < window.mapFeatureLayerObjects.length; i++) {
       var layer = window.mapFeatureLayerObjects[i];
@@ -262,81 +290,92 @@
         var source = olLayer.getSource();
         var config = source.config;
 
-        getFields(config.url, function(url, fields) {
-          for (var i = 0; i < fields.length; i++) {
-            var field = fields[i];
-            var cql_filter = 'strToUpperCase(' + field + ') LIKE \'%' + queryValue.toUpperCase() + '%\'';
-            cql_filter = encodeURI(cql_filter);
-            console.log('Consultados', window.location.origin + url + '&cql_filter=' + cql_filter);
-            $.getJSON(url + '&cql_filter=' + cql_filter, function(response) {
-              console.log('response', response);
-              loadingBar(false);
-              var features = response.features;
-              for (var i = 0; i < features.length; i++) {
-                var feature = features[i];
-                pushFeatureInQuickResults(feature);
-              }
-              //showResultFeaturesGeneralReport(response);
-            }).fail(function(jqxhr, textStatus, error) {
-              loadingBar(false);
-              console.log('cql_filter. Error: ' + error + '.');
-            });
-          }
+        var promise = getCoincidenceFeatures(config, queryValue, function(features, config) {
+          pushFeatureInQuickResults(features, config, accordion);
+          $('#quickResultsDiv .collapsible').collapsible(); // refresh collapsible dom
         });
+        promises.push(promise);
       }
     }
+    $.when(promises).done(function(a, b, c, d, e, f, g, h) {
+      // do something
+      console.log('todo terminó results', a, b, c, d, e, f, g, h);
+      setTimeout(function() {
+        loadingBar(false);
+      }, 500);
+    });
   }
 
-  function getFields(url, listener) {
-    $.getJSON(url + '&maxFeatures=1', function(response) {
-      var textFields = [];
+  function getCoincidenceFeatures(config, queryValue, listener) {
+    var url = config.url;
+    console.log('getFieldsAndResults url', url);
+    return $.getJSON(url, function(response) {
+      console.log('getJSON url', url);
       if (response.features.length > 0) {
-        var feature = response.features[0];
-        var properties = feature.properties;
-        for (var property in properties) {
-          console.log('quick_query', property);
-          if (properties.hasOwnProperty(property)) {
-            if (['geometry'].indexOf(property) === -1) { // Si no esta
-              var valor = properties[property];
-              if (valor == Number(valor)) { // es número
-                console.log('es Numero');
-              } else { // es texto?
-                textFields.push(property);
+        function coincidences(feature) {
+          var properties = feature.properties;
+          for (var property in properties) {
+            if (properties.hasOwnProperty(property)) {
+              if (['geometry'].indexOf(property) === -1) { // Si no es geometry
+                // convierte los valores numericos a string para comparar
+                var valor = properties[property] + '';
+                //console.log('valor queryValue', valor, queryValue);
+                if (valor.toUpperCase().indexOf(queryValue.toUpperCase()) > -1) { // Hay coincidencia
+                  console.log('valor queryValue coincidence', valor, queryValue);
+                  return true;
+                }
               }
             }
           }
+          return false; // no coincide
         }
+        listener(response.features.filter(coincidences), config);
       }
-      console.log('textFields', textFields);
-      listener(url, textFields);
+      // Se deben eliminar duplicados?
     }).fail(function(jqxhr, textStatus, error) {
-      console.log('Error: ' + error);
+      console.log('Error: ' + error, url);
     });
   }
 
-  function pushFeatureInQuickResults(feature) {
-    var containerHTML = $('#quickResultsDiv');
-    var properties = feature.properties;
-    for (var property in properties) {
-      if (properties.hasOwnProperty(property)) {
-        if (['geometry'].indexOf(property) === -1) { //Si no esta
-          var propertySpan = $('<span><b>' + property + ':</b> ' + properties[property] + '</span>');
-          containerHTML.append(propertySpan);
-          containerHTML.append($('<br/>'));
+  function pushFeatureInQuickResults(features, configLayer, parentNode) {
+    if (features.length > 0) {
+      var item = $('<li class="active"></li>');
+      var header = $('<div class="collapsible-header active"><i class="material-icons tiny">play_arrow</i>' + configLayer.name + '</div>');
+      var body = $('<div class="collapsible-body"></div>');
+      var containerHTML = $('<div class="resultadoIdentificar"></div>');
+
+      body.append(containerHTML);
+
+      item.append(header);
+      item.append(body);
+
+      for (var i = 0; i < features.length; i++) {
+        var feature = features[i];
+        var properties = feature.properties;
+        for (var property in properties) {
+          if (properties.hasOwnProperty(property)) {
+            if (['geometry'].indexOf(property) === -1) { //Si no esta
+              var propertySpan = $('<span><b>' + property + ':</b> ' + properties[property] + '</span>');
+              containerHTML.append(propertySpan);
+              containerHTML.append($('<br/>'));
+            }
+          }
         }
-      }
-    }
-    var geometrySpan = $('<span><a href="#">Acercar a</a></span>');
+        var geometrySpan = $('<span><a href="#">Acercar a</a></span>');
 
-    feature.geometry = parseGeometry(feature.geometry);
-    geometrySpan[0].geometry = feature.geometry;
-    geometrySpan.click(function() {
-      mapTools.cleanMap();
-      mapTools.zoomToGeometry(this.geometry);
-      consultas.addGeometryHighlight(this.geometry);
-    });
-    containerHTML.append(geometrySpan);
-    containerHTML.append($('<br/>'));
-    containerHTML.append($('<br/>'));
+        feature.geometry = parseGeometry(feature.geometry);
+        geometrySpan[0].geometry = feature.geometry;
+        geometrySpan.click(function() {
+          mapTools.cleanMap();
+          mapTools.zoomToGeometry(this.geometry);
+          consultas.addGeometryHighlight(this.geometry);
+        });
+        containerHTML.append(geometrySpan);
+        containerHTML.append($('<br/>'));
+        containerHTML.append($('<br/>'));
+      }
+      parentNode.append(item);
+    }
   }
+
 })();

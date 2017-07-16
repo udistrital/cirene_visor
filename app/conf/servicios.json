@@ -120,7 +120,7 @@
   "serviceType": "WFS",
   "name": "Puntos Sede",
   "id": "sede_punto",
-  "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=SIGUD:sede_punto&outputFormat=application%2Fjson",
+  "url": "/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=SIGUD:sede&outputFormat=application%2Fjson",
   "icon": "css/img/Punto-sede.jpg",
   "opacity": 1,
   "strokeColor": "",
