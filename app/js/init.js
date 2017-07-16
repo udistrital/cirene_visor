@@ -8,4 +8,5 @@ $(document).ready(function() {
   //   // re-initialize (update)
   //   $(this).material_select();
   // });
+  //$('ul.tabs').tabs();
 })
