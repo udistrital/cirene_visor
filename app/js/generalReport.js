@@ -41,14 +41,13 @@
         var intervalQuery = setInterval(function() {
           var secondsEntry = new Date().getTime() / 1000;
           var diffTime = secondsEntry - lastTime;
-          console.log('diffTime', diffTime);
           if (diffTime > 0.8) {
             clearInterval(intervalQuery);
             firstTime = true;
-            console.log('Ejecutando...');
-            var valor = $('#quick_query').val();
-            if (valor != '') {
-              consultarFeaturesRapido(valor);
+            console.log('diffTime', diffTime, 'Ejecutando consulta...');
+            var valueQuery = $('#quick_query').val();
+            if (valueQuery !== '') {
+              consultarFeaturesRapido(valueQuery);
             }
           }
         }, 500);
@@ -297,9 +296,9 @@
         promises.push(promise);
       }
     }
-    $.when(promises).done(function(a, b, c, d, e, f, g, h) {
+    $.when(promises).done(function(results) {
       // do something
-      console.log('todo terminó results', a, b, c, d, e, f, g, h);
+      console.log('all promises results', results);
       setTimeout(function() {
         loadingBar(false);
       }, 500);
@@ -308,9 +307,7 @@
 
   function getCoincidenceFeatures(config, queryValue, listener) {
     var url = config.url;
-    console.log('getFieldsAndResults url', url);
     return $.getJSON(url, function(response) {
-      console.log('getJSON url', url);
       if (response.features.length > 0) {
         function coincidences(feature) {
           var properties = feature.properties;
@@ -321,7 +318,6 @@
                 var valor = properties[property] + '';
                 //console.log('valor queryValue', valor, queryValue);
                 if (valor.toUpperCase().indexOf(queryValue.toUpperCase()) > -1) { // Hay coincidencia
-                  console.log('valor queryValue coincidence', valor, queryValue);
                   return true;
                 }
               }
