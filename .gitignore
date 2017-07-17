@@ -1,9 +1,8 @@
-node_modules
-npm-debug.log
-app/vendor
-dist
-arcgis
-vendor
+/node_modules
+/npm-debug.log
+/app/vendor
+/dist
+/vendor
 =======
 # Logs
 logs

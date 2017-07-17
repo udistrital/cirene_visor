@@ -318,7 +318,7 @@
             containerHTML.html('No hay resultados');
           }
         }
-      }, 1000);
+      }, 200);
     });
   }
 
