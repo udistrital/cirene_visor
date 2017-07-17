@@ -73,6 +73,7 @@
   "filter": "",
   "select": "",
   "filters": [{
+    "_comment": "Probar con https://regex101.com/ debe retornar true, false",
     "name": "Piso 8",
     "filter": "feature.get('Piso') === '08'"
   }, {
@@ -141,43 +142,43 @@
   "filters": [{
     "_comment": "Probar con https://regex101.com/ debe retornar true, false",
     "name": "Piso 8",
-    "filter": "/08$/.test(feature.get('Código'))"
+    "filter": "/^.{6}(08).*/.test(feature.get('Código'))"
   }, {
     "name": "Piso 7",
-    "filter": "/07$/.test(feature.get('Código'))"
+    "filter": "/^.{6}(07).*/.test(feature.get('Código'))"
   }, {
     "name": "Piso 6",
-    "filter": "/06$/.test(feature.get('Código'))"
+    "filter": "/^.{6}(06).*/.test(feature.get('Código'))"
   }, {
     "name": "Piso 5",
-    "filter": "/05$/.test(feature.get('Código'))"
+    "filter": "/^.{6}(05).*/.test(feature.get('Código'))"
   }, {
     "name": "Piso 4",
-    "filter": "/04$/.test(feature.get('Código'))"
+    "filter": "/^.{6}(04).*/.test(feature.get('Código'))"
   }, {
     "name": "Piso 3",
-    "filter": "/03$/.test(feature.get('Código'))"
+    "filter": "/^.{6}(03).*/.test(feature.get('Código'))"
   }, {
     "name": "Piso 2",
-    "filter": "/02$/.test(feature.get('Código'))"
+    "filter": "/^.{6}(02).*/.test(feature.get('Código'))"
   }, {
     "name": "Piso 1",
-    "filter": "/01$/.test(feature.get('Código'))"
+    "filter": "/^.{6}(01).*/.test(feature.get('Código'))"
   }, {
     "name": "Piso SS",
-    "filter": "/SS$/.test(feature.get('Código'))"
+    "filter": "/^.{6}(SS).*/.test(feature.get('Código'))"
   }, {
     "name": "Piso S1",
-    "filter": "/S1$/.test(feature.get('Código'))"
+    "filter": "/^.{6}(S1).*/.test(feature.get('Código'))"
   }, {
     "name": "Piso S2",
-    "filter": "/S2$/.test(feature.get('Código'))"
+    "filter": "/^.{6}(S2).*/.test(feature.get('Código'))"
   }, {
     "name": "Piso S3",
-    "filter": "/S3$/.test(feature.get('Código'))"
+    "filter": "/^.{6}(S3).*/.test(feature.get('Código'))"
   }, {
     "name": "Piso ME",
-    "filter": "/ME$/.test(feature.get('Código'))"
+    "filter": "/^.{6}(S4).*/.test(feature.get('Código'))"
   }],
   "opacity": 1,
   "strokeColor": "rgba(90, 196, 63, 1)",
