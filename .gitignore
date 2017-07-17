@@ -3,6 +3,7 @@
 /app/vendor
 /dist
 /vendor
+/build
 =======
 # Logs
 logs

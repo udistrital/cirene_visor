@@ -7,15 +7,8 @@ function printc {
   echo -e '>>> '${RED}"$1"${NC}
 }
 
-printc "$SUDO npm install --global bower"
-$SUDO npm install --global bower
+printc "npm install"
+npm install
 
-printc "$SUDO npm install --global gulp-cli"
-$SUDO npm install --global gulp-cli
-
-printc "npm install --save"
-npm install --save
-
-printc 'bower install --save'
-bower install --save
-
+printc 'npm run bower:install'
+npm run bower:install

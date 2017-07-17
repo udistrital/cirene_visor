@@ -1,9 +1,15 @@
 {
-  "name": "parqueaderos",
+  "name": "openlayers-material",
   "version": "0.0.1",
-  "description": "Aplicación de Acueducto",
+  "description": "Aplicación de Cirene UD",
   "main": "gulpfile.js",
   "scripts": {
+    "start": "gulp webserver",
+    "bower:install": "bower install",
+    "dist": "gulp minify",
+    "pack": "gulp pack",
+    "clean": "gulp clean",
+    "build": "gulp clean && gulp minify && gulp pack",
     "test": "tape 'test/**/*.js'"
   },
   "repository": {
@@ -11,16 +17,19 @@
     "url": "https://github.com/juusechec/arcgis-javascript-materialize"
   },
   "keywords": [
-    "acueducto",
     "sistema",
     "gestion",
-    "redes"
+    "geográfica",
+    "sig"
   ],
   "author": "Jorge Ulises Useche Cuellar <naturalmenterjorge@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "gulp": "^3.9.1",
+    "gulp-gzip": "^1.4.0",
     "gulp-minifier": "^0.1.4",
+    "gulp-rm": "^1.0.4",
+    "gulp-tar": "^2.0.0",
     "gulp-webserver": "^0.9.1",
     "merge-stream": "^1.0.1"
   },
