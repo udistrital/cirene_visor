@@ -29,25 +29,24 @@ window.mapTools = {
     source.clear(true);
   },
   changeMeasure: function(ele) {
-    console.log('ele.state', ele.state);
-    ele.state = (typeof ele.state !== 'undefined')
-      ? ele.state
-      : false;
-    console.log(ele.state);
-    if (ele.state) {
-      mapTools.turnOffMeasure();
+    if (typeof eraseMeasurement === 'undefined') {
+      mapTools.turnOnMeasure();
     } else {
-      mapTools.turnOnMeasure();      
+      mapTools.turnOffMeasure();
     }
-    ele.state = !ele.state;
   },
   turnOnMeasure: function() {
     mapTools.turnOffPopup();
+    if (typeof eraseMeasurement !== 'undefined') {
+      eraseMeasurement();
+    }
     createMeasurement();
   },
   turnOffMeasure: function() {
-    eraseMeasurement();
-    mapTools.turnOnPopup();
+    if (typeof eraseMeasurement !== 'undefined') {
+      eraseMeasurement();
+      mapTools.turnOnPopup();
+    }
   },
   searchLayerRecursive: function(layers, listenFunction) {
     for (var i = 0; i < layers.length; i++) {
@@ -270,6 +269,7 @@ window.mapTools = {
       map.removeInteraction(listOfNavigationsInteractions[i]);
     }
     listOfNavigationsInteractions = new Array();
+    mapTools.turnOffMeasure();
   },
   zoomInBox: function() {
     this.cleanNavigationsInteractions();
@@ -571,6 +571,7 @@ function createMeasurement() {
       map.removeOverlay(measureTooltipArray[i]);
     }
     map.removeOverlay(helpTooltip);
+    window.eraseMeasurement = undefined;
   }
 
 }
