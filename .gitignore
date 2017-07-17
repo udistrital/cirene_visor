@@ -3,6 +3,7 @@ npm-debug.log
 app/vendor
 dist
 arcgis
+vendor
 =======
 # Logs
 logs
