@@ -36,7 +36,7 @@ gulp.task('watch', ['sass'], function (){
 });
 */
 gulp.task('minify', function() {
-    var allfiles = gulp.src(['app/**/*', '!app/vendor/**/*'])
+    var allfiles = gulp.src(['app/**/*'])
         .pipe(minify({
             minify: true,
             collapseWhitespace: true,
@@ -67,14 +67,15 @@ gulp.task('minify', function() {
     //     }))
     //     .pipe(gulp.dest('dist/app'))
 
-    var vendorfiles = gulp.src(['app/vendor/**/*'])
-        .pipe(gulp.dest('dist/app/vendor'))
+    // var vendorfiles = gulp.src(['app/vendor/**/*'])
+    //     .pipe(gulp.dest('dist/app/vendor'))
 
     // var exeptionfiles = gulp.src(['app/js/mustache-dojo.js'])
     //     .pipe(gulp.dest('dist/app/js'))
 
     // https://github.com/gulpjs/gulp/blob/master/docs/recipes/using-multiple-sources-in-one-task.md
-    return merge(allfiles, vendorfiles)
+    //return merge(allfiles, vendorfiles)
+    return allfiles
 })
 
 //https://github.com/andresvia/go-angular-drone/blob/master/.drone.yml
