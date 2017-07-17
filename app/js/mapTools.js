@@ -28,19 +28,21 @@ window.mapTools = {
     //source.refresh();
     source.clear(true);
   },
-  changeMeasure: function(ele) {
+  changeMeasure: function(type) {
+    console.log('changeMeasure type', type);
     if (typeof eraseMeasurement === 'undefined') {
-      mapTools.turnOnMeasure();
+      mapTools.turnOnMeasure(type);
     } else {
       mapTools.turnOffMeasure();
     }
   },
-  turnOnMeasure: function() {
+  turnOnMeasure: function(type) {
     mapTools.turnOffPopup();
+    mapTools.panMap();
     if (typeof eraseMeasurement !== 'undefined') {
       eraseMeasurement();
     }
-    createMeasurement();
+    createMeasurement(type);
   },
   turnOffMeasure: function() {
     if (typeof eraseMeasurement !== 'undefined') {
@@ -298,9 +300,22 @@ window.mapTools = {
   }
 }
 
-function createMeasurement() {
-  window.eraseMeasurement = eraseMeasurement;
+function createMeasurement(type) {
+  window.eraseMeasurement = eraseMeasurement; // expose erase function
   // based on http://openlayers.org/en/latest/examples/measure.html
+
+  // emule select control
+  // value may be set in some of ['length', 'area']
+  var typeSelect = {
+    value: type// linea o polígono
+  };
+  // [14:16, 17/7/2017] Andrés Mauricio Uribe: Una medición que se hace con técnicas de geodesia
+  // [14:16, 17/7/2017] Andrés Mauricio Uribe: Mayor precisión
+  // emule checkbox control
+  var geodesicCheckbox = {
+    'checked': false
+  };
+
   var wgs84Sphere = new ol.Sphere(6378137);
 
   var source = new ol.source.Vector();
@@ -352,13 +367,13 @@ function createMeasurement() {
    * Message to show when the user is drawing a polygon.
    * @type {string}
    */
-  var continuePolygonMsg = 'Click to continue drawing the polygon';
+  var continuePolygonMsg = 'Clic para continuar dibujando el polígono, doble clic para terminar.';
 
   /**
    * Message to show when the user is drawing a line.
    * @type {string}
    */
-  var continueLineMsg = 'Click to continue drawing the line';
+  var continueLineMsg = 'Clic para continuar dibujando la línea, doble clic para terminar.';
 
   /**
    * Handle pointer move.
@@ -369,7 +384,7 @@ function createMeasurement() {
       return;
     }
     /** @type {string} */
-    var helpMsg = 'Click to start drawing';
+    var helpMsg = 'Clic para comenzar a dibujar.';
 
     if (sketch) {
       var geom = (sketch.getGeometry());
@@ -393,9 +408,6 @@ function createMeasurement() {
   map.getViewport().addEventListener('mouseout', function() {
     helpTooltipElement.classList.add('hidden');
   });
-
-  var typeSelect = document.getElementById('type');
-  var geodesicCheckbox = document.getElementById('geodesic');
 
   var draw; // global so we can remove it later
 

@@ -114,7 +114,7 @@
                   </div>
                   <!-- end .input-field .col .s10 -->
                   <div class="input-field col s2">
-                    <button  id="quick_query_button" class="btn-floating waves-effect waves-light" type="submit" name="action">
+                    <button id="quick_query_button" class="btn-floating waves-effect waves-light" type="submit" name="action">
                       <i class="material-icons right">send</i>
                     </button>
                   </div>
@@ -405,26 +405,17 @@
   </div>
   <!-- end #popup -->
 
-  <form id="form-measurement" class="form-inline" style="display: none;">
-    <label>Measurement type &nbsp;</label>
-    <select id="type">
-      <option value="length">Length (LineString)</option>
-      <option value="area">Area (Polygon)</option>
-    </select>
-    <label class="checkbox">
-      <input type="checkbox" id="geodesic">
-      use geodesic measures
-    </label>
-  </form>
-  <!-- end #form-measurement -->
-
   <!-- Menu -->
   <div id="menu">
     <!-- https://design.google.com/icons -->
-    <div id="btnP1" title="Medición" class="btn-nav-pane btn-floating btn-small /*btn-large*/ teal dropdown-button btn" onclick="mapTools.changeMeasure(this);">
-      <i class="material-icons">gesture</i>
+    <div id="btnP1" title="Medición" class="btn-nav-pane fixed-action-btn horizontal click-to-toggle customBtnMedicion">
+      <a class="btn-floating btn-small teal"><i class="material-icons">gesture</i></a>
+      <ul class="btnHorizontal">
+        <li><a title="Longitud (Linea)" class="btn-floating yellow darken-1" onclick="mapTools.changeMeasure('length');"><i class="material-icons">share</i></a></li>
+        <li><a title="Area (Polígono)" class="btn-floating green" onclick="mapTools.changeMeasure('area');"><i class="material-icons">signal_cellular_null</i></a></li>
+      </ul>
     </div>
-    <div id="btnP2" title="Identificar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="mapTools.identifyInLayers();">
+    <div id="btnP2" title="Identificar" class="btn-nav-pane btn-floating btn-small  /*btn-large*/ teal dropdown-button btn" onclick="mapTools.identifyInLayers();">
       <i class="fa fa-info" aria-hidden="true"></i>
     </div>
     <div id="btnP3" title="Acercar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="mapTools.zoomInBox();">
@@ -443,14 +434,6 @@
       <i class="material-icons">delete</i>
     </div>
   </div>
-
-  <div id="navpane" class="card-panel teal lighten-5" style="display:none;">
-    <div id="pane-medicion">
-      <div id="measurementDiv"></div>
-      <span style="font-size:smaller;padding:5px 5px;">Presione <b>CTRL</b> para habilitar previsualizacion de área (snapping).</span>
-    </div>
-  </div>
-  <!-- end #navpane -->
 
   <div id="extentpane" style="display: none;">
     Escala: <span>1:noInf</span>

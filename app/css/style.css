@@ -65,6 +65,38 @@ html, body, #map {
   content: "¡";
 }
 
+.customBtnMedicion {
+  z-index: 1;
+  height: 45px;
+}
+
+ul.btnHorizontal {
+  right: 50px;
+}
+
+ul.btnHorizontal>li {
+  margin: 0 !important;
+}
+
+@media (max-width: 768px) {
+  /*movil*/
+  .btn-nav-pane {
+    right: 2px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  /*todos?*/
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  /*tablet*/
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  /*desktop*/
+}
+
 #btnP1 {
   position: absolute;
   top: 10px;
@@ -438,6 +470,8 @@ html, body, #map {
 .tooltip-static:before {
   border-top-color: #ffcc33;
 }
+
+
 /* end Measure styles */
 
 

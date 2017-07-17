@@ -64,7 +64,6 @@ function createMap() {
   zoomToInitialExtent();
   consultas.addLayerHighlight();
   generalReport.loadInterfaces();
-  //createMeasurement();
 }
 
 function zoomToInitialExtent() {
