@@ -313,7 +313,7 @@ function createMeasurement(type) {
   // [14:16, 17/7/2017] Andrés Mauricio Uribe: Mayor precisión
   // emule checkbox control
   var geodesicCheckbox = {
-    'checked': false
+    'checked': true
   };
 
   var wgs84Sphere = new ol.Sphere(6378137);
@@ -367,13 +367,13 @@ function createMeasurement(type) {
    * Message to show when the user is drawing a polygon.
    * @type {string}
    */
-  var continuePolygonMsg = 'Clic para continuar dibujando el polígono, doble clic para terminar.';
+  var continuePolygonMsg = 'Clic para continuar dibujando el polígono,<br /> doble clic para terminar.';
 
   /**
    * Message to show when the user is drawing a line.
    * @type {string}
    */
-  var continueLineMsg = 'Clic para continuar dibujando la línea, doble clic para terminar.';
+  var continueLineMsg = 'Clic para continuar dibujando la línea,<br/> doble clic para terminar.';
 
   /**
    * Handle pointer move.
