@@ -324,7 +324,7 @@
 
   // http://www.etnassoft.com/2011/03/03/eliminar-tildes-con-javascript/
   function getCoincidenceFeatures(config, queryValue, listener) {
-    var url = config.url;
+    var url = config.url + '&srsname=EPSG:3857';
     return $.getJSON(url, function(response) {
       if (response.features.length > 0) {
         function coincidences(feature) {

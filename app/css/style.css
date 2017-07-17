@@ -401,7 +401,7 @@ html, body, #map {
 }
 
 
-/*Measure styles*/
+/* begin Measure styles */
 
 .tooltip {
   position: relative;
@@ -438,6 +438,7 @@ html, body, #map {
 .tooltip-static:before {
   border-top-color: #ffcc33;
 }
+/* end Measure styles */
 
 
 /* begin general report */

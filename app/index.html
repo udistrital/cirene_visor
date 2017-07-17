@@ -12,12 +12,12 @@
   <link href="css/img/faviconcolombia.png" rel="icon" type="image/png">
 
   <link href="lib/openlayers/css/ol.css" type="text/css" rel="stylesheet">
-  <link href="lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
-  <link href="lib/material-design-icons/iconfont/material-icons.css" rel="stylesheet" />
-  <link href="lib/materialize/dist/css/materialize.css" rel="stylesheet" />
-  <link href="lib/sidebar-v2/css/ol3-sidebar.css" rel="stylesheet" />
-  <link href="css/style.css" rel="stylesheet" />
-  <link href="css/generalReport.css" rel="stylesheet" />
+  <link href="lib/font-awesome/css/font-awesome.css" type="text/css" rel="stylesheet" />
+  <link href="lib/material-design-icons/iconfont/material-icons.css" type="text/css" rel="stylesheet" />
+  <link href="lib/materialize/dist/css/materialize.css" type="text/css" rel="stylesheet" />
+  <link href="lib/sidebar-v2/css/ol3-sidebar.css" type="text/css" rel="stylesheet" />
+  <link href="css/style.css" type="text/css" rel="stylesheet" />
+  <link href="css/generalReport.css" type="text/css" rel="stylesheet" />
 </head>
 
 <body>
@@ -405,7 +405,7 @@
   </div>
   <!-- end #popup -->
 
-  <form id="form-measurement" class="form-inline">
+  <form id="form-measurement" class="form-inline" style="display: none;">
     <label>Measurement type &nbsp;</label>
     <select id="type">
       <option value="length">Length (LineString)</option>
@@ -421,7 +421,7 @@
   <!-- Menu -->
   <div id="menu">
     <!-- https://design.google.com/icons -->
-    <div id="btnP1" title="Medición (En desarrollo)" class="btn-nav-pane btn-floating btn-small /*btn-large*/ teal dropdown-button btn" onclick="mapTools.measureInMap();">
+    <div id="btnP1" title="Medición (En desarrollo)" class="btn-nav-pane btn-floating btn-small /*btn-large*/ teal dropdown-button btn" onclick="mapTools.changeMeasure(this);">
       <i class="material-icons">gesture</i>
     </div>
     <div id="btnP2" title="Identificar" class="btn-nav-pane btn-floating btn-small teal dropdown-button btn" onclick="mapTools.identifyInLayers();">
@@ -476,15 +476,15 @@
   <script src="lib/jquery/dist/jquery.js" type="text/javascript"></script>
   <script src="lib/materialize/dist/js/materialize.js" type="text/javascript"></script>
   <script src="lib/sidebar-v2/js/jquery-sidebar.js" type="text/javascript"></script>
-  <script src="lib/openlayers/js/ol.js"></script>
-  <script src="lib/jsts/jsts.min.js"></script>
-  <script src="lib/chart.js/js/Chart.bundle.js"></script>
-  <script src="js/createMap.js"></script>
-  <script src="js/mapTools.js"></script>
-  <script src="js/queries.js"></script>
-  <script src="js/generalReport.js"></script>
-  <script src="js/reports.js"></script>
-  <script src="js/init.js"></script>
+  <script src="lib/openlayers/js/ol.js" type="text/javascript"></script>
+  <script src="lib/jsts/jsts.min.js" type="text/javascript"></script>
+  <script src="lib/chart.js/js/Chart.bundle.js" type="text/javascript"></script>
+  <script src="js/createMap.js" type="text/javascript"></script>
+  <script src="js/mapTools.js" type="text/javascript"></script>
+  <script src="js/queries.js" type="text/javascript"></script>
+  <script src="js/generalReport.js" type="text/javascript"></script>
+  <script src="js/reports.js" type="text/javascript"></script>
+  <script src="js/init.js" type="text/javascript"></script>
 </body>
 
 </html>

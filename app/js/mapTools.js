@@ -28,8 +28,26 @@ window.mapTools = {
     //source.refresh();
     source.clear(true);
   },
-  measureInMap: function() {
+  changeMeasure: function(ele) {
+    console.log('ele.state', ele.state);
+    ele.state = (typeof ele.state !== 'undefined')
+      ? ele.state
+      : false;
+    console.log(ele.state);
+    if (ele.state) {
+      mapTools.turnOffMeasure();
+    } else {
+      mapTools.turnOnMeasure();      
+    }
+    ele.state = !ele.state;
+  },
+  turnOnMeasure: function() {
+    mapTools.turnOffPopup();
     createMeasurement();
+  },
+  turnOffMeasure: function() {
+    eraseMeasurement();
+    mapTools.turnOnPopup();
   },
   searchLayerRecursive: function(layers, listenFunction) {
     for (var i = 0; i < layers.length; i++) {
@@ -167,10 +185,10 @@ window.mapTools = {
           }
           accordion.append(item);
         } else {
-          contentHTML += '<div class="resultadoIdentificar">\n' + '   <span>No hay resultados.</span>\n' + '<div>\n';
-          var item = '<li class="active">\n' +
-          '  <div class="collapsible-header active"><i class="material-icons tiny">play_arrow</i>' + layerObject.name + '</div>\n' + '  <div class="collapsible-body">' + contentHTML + '</div>\n' + '</li>\n';
-          item = $(item);
+          contentHTML += '<div class="resultadoIdentificar"><span>No hay resultados.</span><div>';
+          var item = $('<li class="active"></li>');
+          var header = '<div class="collapsible-header active"><i class="material-icons tiny">play_arrow</i>' + layerObject.name + '</div>';
+          var body = '<div class="collapsible-body">' + contentHTML + '</div>';
           accordion.append(item);
         }
       }
@@ -200,8 +218,8 @@ window.mapTools = {
       mapTools.showResultFeatures(featuresByLayer);
       // evt.stopPropagation();
       // evt.preventDefault();
-      var handler = function () {
-        if (identifyInteraction.getMap() === null){
+      var handler = function() {
+        if (identifyInteraction.getMap() === null) {
           mapTools.turnOnPopup();
         } else {
           mapTools.turnOffPopup();
@@ -280,13 +298,24 @@ window.mapTools = {
   }
 }
 
-
 function createMeasurement() {
-  mapTools.turnOffPopup();
+  window.eraseMeasurement = eraseMeasurement;
   // based on http://openlayers.org/en/latest/examples/measure.html
   var wgs84Sphere = new ol.Sphere(6378137);
 
   var source = new ol.source.Vector();
+
+  var vector = new ol.layer.Vector({
+    source: source,
+    style: new ol.style.Style({
+      fill: new ol.style.Fill({color: 'rgba(255, 255, 255, 0.2)'}),
+      stroke: new ol.style.Stroke({color: '#ffcc33', width: 2}),
+      image: new ol.style.Circle({
+        radius: 7,
+        fill: new ol.style.Fill({color: '#ffcc33'})
+      })
+    })
+  });
 
   /**
    * Currently drawn feature.
@@ -317,6 +346,7 @@ function createMeasurement() {
    * @type {ol.Overlay}
    */
   var measureTooltip;
+  var measureTooltipArray = [];
 
   /**
    * Message to show when the user is drawing a polygon.
@@ -356,6 +386,8 @@ function createMeasurement() {
     helpTooltipElement.classList.remove('hidden');
   };
 
+  map.addLayer(vector);
+
   map.on('pointermove', pointerMoveHandler);
 
   map.getViewport().addEventListener('mouseout', function() {
@@ -368,10 +400,10 @@ function createMeasurement() {
   var draw; // global so we can remove it later
 
   /**
-    * Format length output.
-    * @param {ol.geom.LineString} line The line.
-    * @return {string} The formatted length.
-    */
+      * Format length output.
+      * @param {ol.geom.LineString} line The line.
+      * @return {string} The formatted length.
+      */
   var formatLength = function(line) {
     var length;
     if (geodesicCheckbox.checked) {
@@ -379,8 +411,8 @@ function createMeasurement() {
       length = 0;
       var sourceProj = map.getView().getProjection();
       for (var i = 0, ii = coordinates.length - 1; i < ii; ++i) {
-        var c1 = ol.proj.transform(coordinates[i], sourceProj, 'EPSG:3857');
-        var c2 = ol.proj.transform(coordinates[i + 1], sourceProj, 'EPSG:3857');
+        var c1 = ol.proj.transform(coordinates[i], sourceProj, 'EPSG:4326');
+        var c2 = ol.proj.transform(coordinates[i + 1], sourceProj, 'EPSG:4326');
         length += wgs84Sphere.haversineDistance(c1, c2);
       }
     } else {
@@ -405,7 +437,7 @@ function createMeasurement() {
     if (geodesicCheckbox.checked) {
       var sourceProj = map.getView().getProjection();
       var geom =/** @type {ol.geom.Polygon} */
-      (polygon.clone().transform(sourceProj, 'EPSG:3857'));
+      (polygon.clone().transform(sourceProj, 'EPSG:4326'));
       var coordinates = geom.getLinearRing(0).getCoordinates();
       area = Math.abs(wgs84Sphere.geodesicArea(coordinates));
     } else {
@@ -447,6 +479,7 @@ function createMeasurement() {
 
     createMeasureTooltip();
     createHelpTooltip();
+
     var listener;
     draw.on('drawstart', function(evt) {
       // set sketch
@@ -483,8 +516,8 @@ function createMeasurement() {
   }
 
   /**
-   * Creates a new help tooltip
-   */
+    * Creates a new help tooltip
+    */
   function createHelpTooltip() {
     if (helpTooltipElement) {
       helpTooltipElement.parentNode.removeChild(helpTooltipElement);
@@ -502,8 +535,8 @@ function createMeasurement() {
   }
 
   /**
-   * Creates a new measure tooltip
-   */
+    * Creates a new measure tooltip
+    */
   function createMeasureTooltip() {
     if (measureTooltipElement) {
       measureTooltipElement.parentNode.removeChild(measureTooltipElement);
@@ -518,15 +551,26 @@ function createMeasurement() {
       positioning: 'bottom-center'
     });
     map.addOverlay(measureTooltip);
+    measureTooltipArray.push(measureTooltip);
   }
 
   /**
-   * Let user change the geometry type.
-   */
+    * Let user change the geometry type.
+    */
   typeSelect.onchange = function() {
     map.removeInteraction(draw);
     addInteraction();
   };
 
   addInteraction();
+
+  function eraseMeasurement() {
+    map.removeInteraction(draw);
+    map.removeLayer(vector);
+    for (var i = 0; i < measureTooltipArray.length; i++) {
+      map.removeOverlay(measureTooltipArray[i]);
+    }
+    map.removeOverlay(helpTooltip);
+  }
+
 }

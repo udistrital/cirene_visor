@@ -6,7 +6,7 @@ var grupoServicios;
 var navToolbar;
 var geometriaAnalisis;
 var jstsParser;
-var listOfNavigationsInteractions = new Array();
+var listOfNavigationsInteractions = [];
 var identifyInteraction = null;
 
 $(function() {
@@ -39,11 +39,13 @@ function createMap() {
     target: document.getElementById('map'),
     view: new ol.View({
       //projection: projection,
-      center: [-8137299.525920639, 429394.90147937275],
+      center: [
+        -8248199.896347591, 510943.79974994034
+      ],
       // extent: [ //Esto limita el mapa a esta extension
       //   -74.18615000043059, 4.514284463291831, -73.92439112512187, 4.659751162274072
       // ],
-      zoom: 7,
+      zoom: 12,
       maxZoom: 26
     }),
     controls: ol.control.defaults().extend([new ol.control.ScaleLine()])
@@ -62,29 +64,16 @@ function createMap() {
   zoomToInitialExtent();
   consultas.addLayerHighlight();
   generalReport.loadInterfaces();
+  //createMeasurement();
 }
 
 function zoomToInitialExtent() {
-  setTimeout(function() {
-    var initialExtent = map.getLayer('sede_punto').getSource().getExtent();
-    map.getView().fit(initialExtent, map.getSize());
-  }, 1000);
+  // var initialExtent = map.getLayer('sede_punto').getSource().getExtent();
+  var initialExtent = [-8258364.441961344, 503048.5820093646, -8229225.577251358, 520654.68434993026];
+  map.getView().fit(initialExtent, map.getSize());
 }
 
 function addLayers() {
-  // The URL referenced in the constructor may point to a style url JSON (as in this sample)
-  // or directly to a vector tile service
-  // NOT SUPPORT IN CHROME
-  // var vtlayer = new VectorTileLayer('https://www.arcgis.com/sharing/rest/content/items/bf79e422e9454565ae0cbe9553cf6471/resources/styles/root.json')
-  // map.addLayer(vtlayer)
-
-  //configBufferTool()
-
-  //map.on('load', createDrawToolbar)
-
-  // https://developers.arcgis.com/javascript/3/jssamples/fl_ondemand.html
-  //map.infoWindow.resize(400, 200)
-
   // Base map
   var osmLayer = new ol.layer.Tile({source: new ol.source.OSM()});
 
@@ -93,32 +82,16 @@ function addLayers() {
   // format used to parse WFS GetFeature responses
   var geojsonFormat = new ol.format.GeoJSON();
 
-  // var scalebar = new Scalebar({
-  //     map: map,
-  //     // 'dual' displays both miles and kilometers
-  //     // 'english' is the default, which displays miles
-  //     // use 'metric' for kilometers
-  //     scalebarUnit: 'dual'
-  // })
-
   window.mapFeatureLayerObjects = [];
-  // map.on('zoom-end', function() {
-  //     checkVisibilityAtScale()
-  //     showScale()
-  // })
-  // showScale()
 
   var servicios = window.servicios;
 
   var wfsLoader = function(extent, resolution, projection) {
     var indice = this.indice;
     var wfsSource = this;
-    var url = servicios[indice].url + //'/geoserver/parqueaderos/ows?service=WFS&' +
-    //'version=1.0.0&request=GetFeature&typename=parqueaderos:isla&' +
-    //'outputFormat=application%2Fjson' +
-    '&srsname=EPSG:3857&bbox=' + extent.join(',') + ',EPSG:3857';
-    if (url.toLowerCase().indexOf('maxfeatures') !== -1){
-      window.alert('Por favor, retire el parámetro maxFeatures de la url del servicio ' + servicios[indice].id + '.' );
+    var url = servicios[indice].url + '&srsname=EPSG:3857&bbox=' + extent.join(',') + ',EPSG:3857';
+    if (url.toLowerCase().indexOf('maxfeatures') !== -1) {
+      window.alert('Por favor, retire el parámetro maxFeatures de la url del servicio ' + servicios[indice].id + '.');
     }
     // use jsonp: false to prevent jQuery from adding the "callback"
     // parameter to the URL
@@ -241,59 +214,6 @@ function addLayers() {
       }
     }
   }
-}
-
-function showScale() {
-  $('#extentpane>span').html('1:' + String(window.map.getScale()));
-}
-
-//https://geonet.esri.com/docs/DOC-8721-coded-domains-in-infotemplate
-//https://developers.arcgis.com/javascript/3/jshelp/intro_formatinfowindow.html
-function getSubtypeDomain(fieldVal, fieldName, feature, injectObject) {
-  if (fieldVal === null) {
-    return fieldVal;
-  }
-
-  var codedValues = servicios[injectObject.SERVICE_NUM].layers[injectObject.LAYER_NUM].fields[injectObject.FIELD_NUM].domain.codedValues;
-  //console.log('codedValues', codedValues)
-  for (var i in codedValues) {
-    //console.log('codedValues[i], fieldVal', codedValues[i], fieldVal)
-    if (codedValues[i].code === fieldVal) {
-      return codedValues[i].name;
-    }
-  }
-  //console.log('fieldVal, fieldName', fieldVal, fieldName, feature, injectObject)
-  return 'Error.';
-}
-
-function generateTemplateContent(layer, SERVICE_NUM, LAYER_NUM) {
-  var content = '';
-  //console.log('layer', layer)
-  //console.log(typeof(layer.fields), layer.fields.length)
-  if (typeof(layer.fields) === 'undefined' || layer.fields.length === 0) {
-    // var capa = map.getLayer(layer.id)
-    // var fields = capa.fields
-    // for (var i = 0; i < fields.length; i++) {
-    //     var field = fields[i]
-    //     //if(typeof(noFields) === "undefined" || noFields.indexof(field.alias) < 0 ){
-    //       content += '<b>' + field.alias + ':<b> ${' + field.alias + '}'
-    //     //}
-    // }
-  } else {
-    for (var i = 0; i < layer.fields.length; i++) {
-      var field = layer.fields[i];
-      if (field.domain === undefined) {
-        content += '<b>' + field.alias + ':</b> ${' + field.name + '} <br/>';
-      } else {
-        var codedValues = field.domain.codedValues;
-        //var codedValue = codedValues[ Number(field.name) - 1 ]
-        //console.log(codedValues, field.name, Number(field.name), Number(field.name) - 1, '<b>' + field.alias + ':</b> ${' + codedValue + ':getSubtypeDomain} <br/>')
-        content += '<b>' + field.alias + ':</b> ${' + field.name + ':getSubtypeDomain(SERVICE_NUM: "' + SERVICE_NUM + '", LAYER_NUM: "' + LAYER_NUM + '" , FIELD_NUM: "' + i + '")} <br/>';
-      }
-    }
-    //console.log('content', content)
-  }
-  return content;
 }
 
 function createLegend() {
@@ -488,48 +408,6 @@ function onClickButtonToolbar(signal, Draw, type) {
   // remove listener after first event
   //signal.remove()
   // do something else...
-}
-
-function changeNavpane(button, opt) {
-  map.infoWindow.unsetMap();
-
-  var btnFloatings = $('.btn-nav-pane');
-  btnFloatings.each(function(index) {
-    $(this).removeClass('red');
-    $(this).addClass('teal');
-  });
-
-  button = $(button);
-  button.removeClass('teal');
-  button.addClass('red');
-
-  // console.log('button', button)
-  // if (button.hasClass('teal')) {
-  //     button.removeClass('teal')
-  //     button.addClass('red')
-  // } else {
-  //     button.removeClass('red')
-  //     button.addClass('teal')
-  // }
-
-  var navpane = $('#navpane');
-  if (navpane.css('display') === 'none') {
-    navpane.css('display', 'block');
-  } else {
-    navpane.css('display', 'none');
-    button.removeClass('red');
-    button.addClass('teal');
-    return;
-  }
-
-  var divs = $('#navpane > div');
-  divs.each(function(index) {
-    $(this).css('display', 'none');
-  });
-  var ele = $('#' + opt);
-  if (opt === 'pane-medicion') {
-    ele.css('display', 'block');
-  }
 }
 
 function _getLayerById(id) {
