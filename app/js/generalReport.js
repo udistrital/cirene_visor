@@ -72,7 +72,7 @@
     var source = layer.getSource();
     var config = source.config;
 
-    $.getJSON(config.url + '&maxFeatures=1', function(response) {
+    $.getJSON(config.url + '&maxFeatures=1&srsname=EPSG:3857', function(response) {
       console.log('response', response);
       if (response.features.length > 0) {
         var feature = response.features[0];
@@ -127,7 +127,7 @@
       : generateCQL_FILTER(field, operator, value, string_function);
     $('#cql_filter').html(cql_filter);
     cql_filter = encodeURI(cql_filter);
-    var url = config.url + '&CQL_FILTER=' + cql_filter;
+    var url = config.url + '&srsname=EPSG:3857&CQL_FILTER=' + cql_filter;
     console.log(window.location.origin + url);
 
     $.getJSON(url, function(response) {

@@ -15,7 +15,7 @@
 
 .tabs .tab a.active {
   color: rgb(0, 0, 0);
-  background-color: rgba(38, 166, 154, 0.5);
+  background-color: #fff;
 }
 
 .tabs .indicator {

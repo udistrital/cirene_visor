@@ -31,21 +31,19 @@ function createMap() {
 
   window.jstsParser = new jsts.io.OL3Parser();
 
-  var projection = new ol.proj.Projection({code: 'EPSG:4326', units: 'degrees', axisOrientation: 'neu'});
+  //var projection = new ol.proj.Projection({code: 'EPSG:4326', units: 'degrees', axisOrientation: 'neu'});
 
   var map = new ol.Map({
     //layers: [osmLayer, wmsLayer, grupoislaLayer, islaLayer],
     //overlays: [overlay],
     target: document.getElementById('map'),
     view: new ol.View({
-      projection: projection,
-      center: [
-        -74.06567902549436, 4.6281822385875655
-      ],
+      //projection: projection,
+      center: [-8137299.525920639, 429394.90147937275],
       // extent: [ //Esto limita el mapa a esta extension
       //   -74.18615000043059, 4.514284463291831, -73.92439112512187, 4.659751162274072
       // ],
-      zoom: 18,
+      zoom: 7,
       maxZoom: 26
     }),
     controls: ol.control.defaults().extend([new ol.control.ScaleLine()])
@@ -118,7 +116,7 @@ function addLayers() {
     var url = servicios[indice].url + //'/geoserver/parqueaderos/ows?service=WFS&' +
     //'version=1.0.0&request=GetFeature&typename=parqueaderos:isla&' +
     //'outputFormat=application%2Fjson' +
-    '&srsname=EPSG:4326&bbox=' + extent.join(',') + ',EPSG:4326';
+    '&srsname=EPSG:3857&bbox=' + extent.join(',') + ',EPSG:3857';
     if (url.toLowerCase().indexOf('maxfeatures') !== -1){
       window.alert('Por favor, retire el parámetro maxFeatures de la url del servicio ' + servicios[indice].id + '.' );
     }
@@ -298,17 +296,6 @@ function generateTemplateContent(layer, SERVICE_NUM, LAYER_NUM) {
   return content;
 }
 
-function configBufferTool() {
-  require([
-    'esri/config', 'esri/tasks/GeometryService'
-  ], function(esriConfig, GeometryService) {
-    window.esriConfig = esriConfig;
-    esriConfig.defaults.geometryService = new GeometryService('https://utility.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer');
-    esriConfig.defaults.io.proxyUrl = '/arcgis/proxy.php';
-    esriConfig.defaults.io.alwaysUseProxy = false;
-  });
-}
-
 function createLegend() {
   // link: http://docs.geoserver.org/stable/en/user/services/wms/reference.html
   // link: https://openlayers.org/en/latest/examples/wms-capabilities.html
@@ -372,255 +359,6 @@ function generateHTMLLegendWFS(config) {
   var item = '<li class="collection-header collection-item">\n' +
   '     <h5>' + layer.name + '</h5>\n' + '     <span class="leyenda-icon" style="' + style + '"></span>\n' + '</li>\n';
   legendDiv.append(item);
-}
-
-function createMeasurement() {
-  // based on http://openlayers.org/en/latest/examples/measure.html
-  var wgs84Sphere = new ol.Sphere(6378137);
-
-  var source = new ol.source.Vector();
-
-  /**
-   * Currently drawn feature.
-   * @type {ol.Feature}
-   */
-  var sketch;
-
-  /**
-   * The help tooltip element.
-   * @type {Element}
-   */
-  var helpTooltipElement;
-
-  /**
-   * Overlay to show the help messages.
-   * @type {ol.Overlay}
-   */
-  var helpTooltip;
-
-  /**
-   * The measure tooltip element.
-   * @type {Element}
-   */
-  var measureTooltipElement;
-
-  /**
-   * Overlay to show the measurement.
-   * @type {ol.Overlay}
-   */
-  var measureTooltip;
-
-  /**
-   * Message to show when the user is drawing a polygon.
-   * @type {string}
-   */
-  var continuePolygonMsg = 'Click to continue drawing the polygon';
-
-  /**
-   * Message to show when the user is drawing a line.
-   * @type {string}
-   */
-  var continueLineMsg = 'Click to continue drawing the line';
-
-  /**
-   * Handle pointer move.
-   * @param {ol.MapBrowserEvent} evt The event.
-   */
-  var pointerMoveHandler = function(evt) {
-    if (evt.dragging) {
-      return;
-    }
-    /** @type {string} */
-    var helpMsg = 'Click to start drawing';
-
-    if (sketch) {
-      var geom = (sketch.getGeometry());
-      if (geom instanceof ol.geom.Polygon) {
-        helpMsg = continuePolygonMsg;
-      } else if (geom instanceof ol.geom.LineString) {
-        helpMsg = continueLineMsg;
-      }
-    }
-
-    helpTooltipElement.innerHTML = helpMsg;
-    helpTooltip.setPosition(evt.coordinate);
-
-    helpTooltipElement.classList.remove('hidden');
-  };
-
-  map.on('pointermove', pointerMoveHandler);
-
-  map.getViewport().addEventListener('mouseout', function() {
-    helpTooltipElement.classList.add('hidden');
-  });
-
-  var typeSelect = document.getElementById('type');
-  var geodesicCheckbox = document.getElementById('geodesic');
-
-  var draw; // global so we can remove it later
-
-  /**
-    * Format length output.
-    * @param {ol.geom.LineString} line The line.
-    * @return {string} The formatted length.
-    */
-  var formatLength = function(line) {
-    var length;
-    if (geodesicCheckbox.checked) {
-      var coordinates = line.getCoordinates();
-      length = 0;
-      var sourceProj = map.getView().getProjection();
-      for (var i = 0, ii = coordinates.length - 1; i < ii; ++i) {
-        var c1 = ol.proj.transform(coordinates[i], sourceProj, 'EPSG:4326');
-        var c2 = ol.proj.transform(coordinates[i + 1], sourceProj, 'EPSG:4326');
-        length += wgs84Sphere.haversineDistance(c1, c2);
-      }
-    } else {
-      length = Math.round(line.getLength() * 100) / 100;
-    }
-    var output;
-    if (length > 100) {
-      output = (Math.round(length / 1000 * 100) / 100) + ' ' + 'km';
-    } else {
-      output = (Math.round(length * 100) / 100) + ' ' + 'm';
-    }
-    return output;
-  };
-
-  /**
-    * Format area output.
-    * @param {ol.geom.Polygon} polygon The polygon.
-    * @return {string} Formatted area.
-    */
-  var formatArea = function(polygon) {
-    var area;
-    if (geodesicCheckbox.checked) {
-      var sourceProj = map.getView().getProjection();
-      var geom =/** @type {ol.geom.Polygon} */
-      (polygon.clone().transform(sourceProj, 'EPSG:4326'));
-      var coordinates = geom.getLinearRing(0).getCoordinates();
-      area = Math.abs(wgs84Sphere.geodesicArea(coordinates));
-    } else {
-      area = polygon.getArea();
-    }
-    var output;
-    if (area > 10000) {
-      output = (Math.round(area / 1000000 * 100) / 100) + ' ' + 'km<sup>2</sup>';
-    } else {
-      output = (Math.round(area * 100) / 100) + ' ' + 'm<sup>2</sup>';
-    }
-    return output;
-  };
-
-  function addInteraction() {
-    var type = (typeSelect.value == 'area'
-      ? 'Polygon'
-      : 'LineString');
-    draw = new ol.interaction.Draw({
-      source: source, type:/** @type {ol.geom.GeometryType} */
-      (type),
-      style: new ol.style.Style({
-        fill: new ol.style.Fill({color: 'rgba(255, 255, 255, 0.2)'}),
-        stroke: new ol.style.Stroke({
-          color: 'rgba(0, 0, 0, 0.5)',
-          lineDash: [
-            10, 10
-          ],
-          width: 2
-        }),
-        image: new ol.style.Circle({
-          radius: 5,
-          stroke: new ol.style.Stroke({color: 'rgba(0, 0, 0, 0.7)'}),
-          fill: new ol.style.Fill({color: 'rgba(255, 255, 255, 0.2)'})
-        })
-      })
-    });
-    map.addInteraction(draw);
-
-    createMeasureTooltip();
-    createHelpTooltip();
-    var listener;
-    draw.on('drawstart', function(evt) {
-      // set sketch
-      sketch = evt.feature;
-
-      /** @type {ol.Coordinate|undefined} */
-      var tooltipCoord = evt.coordinate;
-
-      listener = sketch.getGeometry().on('change', function(evt) {
-        var geom = evt.target;
-        var output;
-        if (geom instanceof ol.geom.Polygon) {
-          output = formatArea(geom);
-          tooltipCoord = geom.getInteriorPoint().getCoordinates();
-        } else if (geom instanceof ol.geom.LineString) {
-          output = formatLength(geom);
-          tooltipCoord = geom.getLastCoordinate();
-        }
-        measureTooltipElement.innerHTML = output;
-        measureTooltip.setPosition(tooltipCoord);
-      });
-    }, this);
-
-    draw.on('drawend', function() {
-      measureTooltipElement.className = 'tooltip tooltip-static';
-      measureTooltip.setOffset([0, -7]);
-      // unset sketch
-      sketch = null;
-      // unset tooltip so that a new one can be created
-      measureTooltipElement = null;
-      createMeasureTooltip();
-      ol.Observable.unByKey(listener);
-    }, this);
-  }
-
-  /**
-   * Creates a new help tooltip
-   */
-  function createHelpTooltip() {
-    if (helpTooltipElement) {
-      helpTooltipElement.parentNode.removeChild(helpTooltipElement);
-    }
-    helpTooltipElement = document.createElement('div');
-    helpTooltipElement.className = 'tooltip hidden';
-    helpTooltip = new ol.Overlay({
-      element: helpTooltipElement,
-      offset: [
-        15, 0
-      ],
-      positioning: 'center-left'
-    });
-    map.addOverlay(helpTooltip);
-  }
-
-  /**
-   * Creates a new measure tooltip
-   */
-  function createMeasureTooltip() {
-    if (measureTooltipElement) {
-      measureTooltipElement.parentNode.removeChild(measureTooltipElement);
-    }
-    measureTooltipElement = document.createElement('div');
-    measureTooltipElement.className = 'tooltip tooltip-measure';
-    measureTooltip = new ol.Overlay({
-      element: measureTooltipElement,
-      offset: [
-        0, -15
-      ],
-      positioning: 'bottom-center'
-    });
-    map.addOverlay(measureTooltip);
-  }
-
-  /**
-   * Let user change the geometry type.
-   */
-  typeSelect.onchange = function() {
-    map.removeInteraction(draw);
-    addInteraction();
-  };
-
-  addInteraction();
 }
 
 function createTOC() {
@@ -717,65 +455,6 @@ function changeVisibilityGroup(evt, groupId, visibility) {
   }
 }
 
-function createDrawToolbar(themap) {
-  require([
-    'esri/toolbars/draw', 'dojo/dom', 'dojo/on'
-  ], function(Draw, dom, on) {
-    window.toolbar = new Draw(map);
-    toolbar.on('draw-end', addToMap);
-
-    var boton,
-      signal;
-
-    boton = dom.byId('btnDrawPoint');
-    signal = on(boton, 'click', function() {
-      onClickButtonToolbar(signal, Draw, 'POINT');
-    });
-    boton = dom.byId('btnDrawLine');
-    signal = on(boton, 'click', function() {
-      onClickButtonToolbar(signal, Draw, 'POLYLINE');
-    });
-    boton = dom.byId('btnDrawPoly');
-    signal = on(boton, 'click', function() {
-      onClickButtonToolbar(signal, Draw, 'POLYGON');
-    });
-  });
-}
-
-function addToMap(evt) {
-  require([
-    'esri/graphic', 'esri/symbols/SimpleMarkerSymbol', 'esri/symbols/SimpleLineSymbol', 'esri/symbols/SimpleFillSymbol'
-  ], function(Graphic, SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol) {
-    var symbol;
-    toolbar.deactivate();
-    map.showZoomSlider();
-    var geometry = evt.geometry;
-    switch (geometry.type) {
-      case 'point':
-      case 'multipoint':
-        symbol = new SimpleMarkerSymbol();
-        break;
-      case 'polyline':
-        symbol = new SimpleLineSymbol();
-        break;
-      default:
-        symbol = new SimpleFillSymbol();
-        break;
-    }
-    var graphic = new Graphic(geometry, symbol);
-    map.graphics.add(graphic);
-    window.currentGeometry = geometry;
-    zoomToGeometry(window.currentGeometry);
-  });
-}
-
-// Because this is such a useful idea, it is done automatically for Feature Layers hosted by ArcGIS online.
-// function calcOffset() {
-//     //https://developers.arcgis.com/javascript/3/jsapi/featurelayer.html#maxallowableoffset
-//     console.log('map.extent.getWidth() / map.width', map.extent.getWidth() / map.width)
-//     return (map.extent.getWidth() / map.width)
-// }
-
 // https://developers.arcgis.com/javascript/3/jssamples/fl_performance.html
 function checkVisibilityAtScale() {
   for (var i = 0; i < window.mapFeatureLayerObjects.length; i++) {
@@ -809,86 +488,6 @@ function onClickButtonToolbar(signal, Draw, type) {
   // remove listener after first event
   //signal.remove()
   // do something else...
-}
-
-function doBuffer(evtObj) {
-  require([
-    'esri/tasks/GeometryService',
-    'esri/graphic',
-    'esri/symbols/SimpleMarkerSymbol',
-    'esri/symbols/SimpleLineSymbol',
-    'esri/symbols/SimpleFillSymbol',
-    'esri/Color',
-    'esri/tasks/BufferParameters',
-    'esri/geometry/normalizeUtils',
-    'dojo/dom'
-  ], function(GeometryService, Graphic, SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol, Color, BufferParameters, normalizeUtils, dom) {
-    //toolbar.deactivate()
-    // valida parámetros
-    var distance = dom.byId('buffer_distance').value;
-    var unit = dom.byId('buffer_unit').value;
-    if (distance === '') {
-      displayMessage('Especifique una distancia de buffer.');
-      return;
-    }
-    if (unit === '') {
-      displayMessage('Especifique una unidad de buffer.');
-      return;
-    }
-
-    var geometry = evtObj.geometry;
-    var symbol;
-    switch (geometry.type) {
-      case 'point':
-        symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_SQUARE, 10, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([255, 0, 0]), 1), new Color([0, 255, 0, 0.25]));
-        break;
-      case 'polyline':
-        symbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_DASH, new Color([255, 0, 0]), 1);
-        break;
-      case 'polygon':
-        symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_NONE, new SimpleLineSymbol(SimpleLineSymbol.STYLE_DASHDOT, new Color([255, 0, 0]), 2), new Color([255, 255, 0, 0.25]));
-        break;
-    }
-
-    var graphic = new Graphic(geometry, symbol);
-    map.graphics.add(graphic);
-
-    //setup the buffer parameters
-    var params = new BufferParameters();
-    params.distances = [distance];
-    params.outSpatialReference = map.spatialReference;
-    params.unit = GeometryService[unit];
-    //normalize the geometry
-
-    normalizeUtils.normalizeCentralMeridian([geometry]).then(function(normalizedGeometries) {
-      var normalizedGeometry = normalizedGeometries[0];
-      if (normalizedGeometry.type === 'polygon') {
-        //if geometry is a polygon then simplify polygon.  This will make the user drawn polygon topologically correct.
-        esriConfig.defaults.geometryService.simplify([normalizedGeometry], function(geometries) {
-          params.geometries = geometries;
-          esriConfig.defaults.geometryService.buffer(params, showBuffer);
-        });
-      } else {
-        params.geometries = [normalizedGeometry];
-        esriConfig.defaults.geometryService.buffer(params, showBuffer);
-      }
-    });
-  });
-}
-
-function showBuffer(bufferedGeometries) {
-  require([
-    'esri/graphic', 'esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol', 'esri/Color', 'dojo/_base/array'
-  ], function(Graphic, SimpleFillSymbol, SimpleLineSymbol, Color, array) {
-    var symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([255, 0, 0, 0.65]), 2), new Color([255, 0, 0, 0.35]));
-    array.forEach(bufferedGeometries, function(geometry) {
-      var graphic = new Graphic(geometry, symbol);
-      map.graphics.add(graphic);
-    });
-    //OJO: solo se selecciona el primero porque es punto, linea o polígono unido
-    window.currentGeometry = bufferedGeometries[0];
-    zoomToGeometry(window.currentGeometry);
-  });
 }
 
 function changeNavpane(button, opt) {
