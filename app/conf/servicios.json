@@ -74,40 +74,40 @@
   "select": "",
   "filters": [{
     "name": "Piso 8",
-    "filter": "feature.get('nivel') === '08'"
+    "filter": "feature.get('Piso') === '08'"
   }, {
     "name": "Piso 7",
-    "filter": "feature.get('nivel') === '07'"
+    "filter": "feature.get('Piso') === '07'"
   }, {
     "name": "Piso 6",
-    "filter": "feature.get('nivel') === '06'"
+    "filter": "feature.get('Piso') === '06'"
   }, {
     "name": "Piso 5",
-    "filter": "feature.get('nivel') === '05'"
+    "filter": "feature.get('Piso') === '05'"
   }, {
     "name": "Piso 4",
-    "filter": "feature.get('nivel') === '04'"
+    "filter": "feature.get('Piso') === '04'"
   }, {
     "name": "Piso 3",
-    "filter": "feature.get('nivel') === '03'"
+    "filter": "feature.get('Piso') === '03'"
   }, {
     "name": "Piso 2",
-    "filter": "feature.get('nivel') === '02'"
+    "filter": "feature.get('Piso') === '02'"
   }, {
     "name": "Piso 1",
-    "filter": "feature.get('nivel') === '01'"
+    "filter": "feature.get('Piso') === '01'"
   }, {
     "name": "Semisótano",
-    "filter": "feature.get('nivel') === 'SS'"
+    "filter": "feature.get('Piso') === 'SS'"
   }, {
     "name": "Sótano 1",
-    "filter": "feature.get('nivel') === 'S1'"
+    "filter": "feature.get('Piso') === 'S1'"
   }, {
     "name": "Sótano 2",
-    "filter": "feature.get('nivel') === 'S2'"
+    "filter": "feature.get('Piso') === 'S2'"
   }, {
     "name": "Sótano 3",
-    "filter": "feature.get('nivel') === 'S3'"
+    "filter": "feature.get('Piso') === 'S3'"
   }],
   "opacity": 1,
   "strokeColor": "rgba(59, 255, 0, 1)",
@@ -141,43 +141,43 @@
   "filters": [{
     "_comment": "Probar con https://regex101.com/ debe retornar true, false",
     "name": "Piso 8",
-    "filter": "/08$/.test(feature.get('id_nivel'))"
+    "filter": "/08$/.test(feature.get('Código'))"
   }, {
     "name": "Piso 7",
-    "filter": "/07$/.test(feature.get('id_nivel'))"
+    "filter": "/07$/.test(feature.get('Código'))"
   }, {
     "name": "Piso 6",
-    "filter": "/06$/.test(feature.get('id_nivel'))"
+    "filter": "/06$/.test(feature.get('Código'))"
   }, {
     "name": "Piso 5",
-    "filter": "/05$/.test(feature.get('id_nivel'))"
+    "filter": "/05$/.test(feature.get('Código'))"
   }, {
     "name": "Piso 4",
-    "filter": "/04$/.test(feature.get('id_nivel'))"
+    "filter": "/04$/.test(feature.get('Código'))"
   }, {
     "name": "Piso 3",
-    "filter": "/03$/.test(feature.get('id_nivel'))"
+    "filter": "/03$/.test(feature.get('Código'))"
   }, {
     "name": "Piso 2",
-    "filter": "/02$/.test(feature.get('id_nivel'))"
+    "filter": "/02$/.test(feature.get('Código'))"
   }, {
     "name": "Piso 1",
-    "filter": "/01$/.test(feature.get('id_nivel'))"
+    "filter": "/01$/.test(feature.get('Código'))"
   }, {
     "name": "Piso SS",
-    "filter": "/SS$/.test(feature.get('id_nivel'))"
+    "filter": "/SS$/.test(feature.get('Código'))"
   }, {
     "name": "Piso S1",
-    "filter": "/S1$/.test(feature.get('id_nivel'))"
+    "filter": "/S1$/.test(feature.get('Código'))"
   }, {
     "name": "Piso S2",
-    "filter": "/S2$/.test(feature.get('id_nivel'))"
+    "filter": "/S2$/.test(feature.get('Código'))"
   }, {
     "name": "Piso S3",
-    "filter": "/S3$/.test(feature.get('id_nivel'))"
+    "filter": "/S3$/.test(feature.get('Código'))"
   }, {
     "name": "Piso ME",
-    "filter": "/ME$/.test(feature.get('id_nivel'))"
+    "filter": "/ME$/.test(feature.get('Código'))"
   }],
   "opacity": 1,
   "strokeColor": "rgba(90, 196, 63, 1)",

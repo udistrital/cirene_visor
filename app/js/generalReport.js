@@ -55,7 +55,7 @@
       }
     });
 
-    $('#quick_query_button').click(function(){
+    $('#quick_query_button').click(function() {
       var valueQuery = $('#quick_query_value').val();
       if (valueQuery !== '') {
         consultarFeaturesRapido(valueQuery);
@@ -283,6 +283,8 @@
     containerHTML.append(accordion);
 
     var promises = [];
+    var endPromises = 0;
+    var numberOfResults = 0;
 
     for (i = 0; i < window.mapFeatureLayerObjects.length; i++) {
       var layer = window.mapFeatureLayerObjects[i];
@@ -295,22 +297,32 @@
         var source = olLayer.getSource();
         var config = source.config;
 
-        var promise = getCoincidenceFeatures(config, queryValue, function(features, config) {
-          pushFeatureInQuickResults(features, config, accordion);
+        var promise = getCoincidenceFeatures(config, queryValue, function(coincidenceFeatures, config) {
+          numberOfResults += coincidenceFeatures.length;
+          pushFeatureInQuickResults(coincidenceFeatures, config, accordion);
           $('#quickResultsDiv .collapsible').collapsible(); // refresh collapsible dom
+          endPromises += 1;
         });
         promises.push(promise);
       }
     }
+
     $.when(promises).done(function(results) {
       // do something
       console.log('all promises results', results);
-      setTimeout(function() {
-        loadingBar(false);
-      }, 500);
+      var intervalEnd = setInterval(function() {
+        if(endPromises === promises.length){
+          loadingBar(false);
+          clearInterval(intervalEnd);
+          if (numberOfResults === 0){
+            containerHTML.html('No hay resultados');
+          }
+        }
+      }, 1000);
     });
   }
 
+  // http://www.etnassoft.com/2011/03/03/eliminar-tildes-con-javascript/
   function getCoincidenceFeatures(config, queryValue, listener) {
     var url = config.url;
     return $.getJSON(url, function(response) {
@@ -322,8 +334,8 @@
               if (['geometry'].indexOf(property) === -1) { // Si no es geometry
                 // convierte los valores numericos a string para comparar
                 var valor = properties[property] + '';
-                //console.log('valor queryValue', valor, queryValue);
-                if (valor.toUpperCase().indexOf(queryValue.toUpperCase()) > -1) { // Hay coincidencia
+                // console.log('valor queryValue', valor, queryValue);
+                if (normalize(valor).toUpperCase().indexOf(normalize(queryValue).toUpperCase()) > -1) { // Hay coincidencia
                   return true;
                 }
               }
@@ -379,5 +391,27 @@
       parentNode.append(item);
     }
   }
+
+  var normalize = (function() {
+    var from = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç",
+      to = "AAAAAEEEEIIIIOOOOUUUUaaaaaeeeeiiiioooouuuunncc",
+      mapping = {};
+
+    for (var i = 0, j = from.length; i < j; i++)
+      mapping[from.charAt(i)] = to.charAt(i);
+
+    return function(str) {
+      var ret = [];
+      for (var i = 0, j = str.length; i < j; i++) {
+        var c = str.charAt(i);
+        if (mapping.hasOwnProperty(str.charAt(i)))
+          ret.push(mapping[c]);
+        else
+          ret.push(c);
+        }
+      return ret.join('');
+    }
+
+  })();
 
 })();
