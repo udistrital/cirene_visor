@@ -74,9 +74,18 @@ function zoomToInitialExtent() {
 
 function addLayers() {
   // Base map
-  var osmLayer = new ol.layer.Tile({source: new ol.source.OSM()});
+  // var osmLayer = new ol.layer.Tile({source: new ol.source.OSM()});
+  //
+  // map.addLayer(osmLayer);
 
-  map.addLayer(osmLayer);
+  // IDECA Base Map
+  var idecaLayer = new ol.layer.Tile({
+      source: new ol.source.XYZ({
+           url: 'http://serviciosgis.catastrobogota.gov.co/arcgis/rest/services/Mapa_Referencia/mapa_base_3857/MapServer/tile/{z}/{y}/{x}'
+      })
+  });
+
+  map.addLayer(idecaLayer);
 
   // format used to parse WFS GetFeature responses
   var geojsonFormat = new ol.format.GeoJSON();

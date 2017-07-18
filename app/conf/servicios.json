@@ -1,7 +1,7 @@
 [{
   "serviceId": 0,
   "serviceType": "WMSServer",
-  "name": "Mapa Referencia IDECA",
+  "name": "Mapa Referencia IDECA Calles",
   "id": "ideca2",
   "url": "http://serviciosgis.catastrobogota.gov.co/arcgis/services/Mapa_Referencia/Mapa_Referencia/MapServer/WMSServer",
   "icon": "css/img/Ideca.jpg",
@@ -9,12 +9,12 @@
   "opacity": 1,
   "type": "",
   "groupId": "urbano",
-  "visible": true,
+  "visible": false,
   "enable": true
 }, {
   "serviceId": 1,
   "serviceType": "WMSServer",
-  "name": "Mapa Referencia IDECA Alternativa",
+  "name": "Mapa Referencia IDECA Predios",
   "id": "ideca",
   "url": "http://serviciosgis.catastrobogota.gov.co/arcgis/services/Mapa_Referencia/Mapa_Referencia/MapServer/WMSServer",
   "icon": "css/img/Ideca.jpg",
