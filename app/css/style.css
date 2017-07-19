@@ -157,6 +157,9 @@ ul.btnHorizontal>li {
 
 #btnDrawPoly {}
 
+
+/* begin popup */
+
 .ol-popup {
   display: inline-block;
   white-space: nowrap;
@@ -209,6 +212,20 @@ ul.btnHorizontal>li {
 .ol-popup-closer:after {
   content: "✖";
 }
+
+.ol-popup-content {
+  -webkit-user-select: text;
+  /* Chrome all / Safari all */
+  -moz-user-select: text;
+  /* Firefox all */
+  -ms-user-select: text;
+  /* IE 10+ */
+  user-select: text;
+  /* Likely future */
+}
+
+
+/* end popup */
 
 #map_zoom_slider {
   left: 66px;
