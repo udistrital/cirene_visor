@@ -27,6 +27,14 @@ gulp.task('webserver', function() {
           'DEVELOPER': 'juusechec'
         }
       }
+    },{
+      source: '/proxy',
+      target: 'http://localhost:12345/',
+      options: {
+        headers: {
+          'WebSite': 'https://github.com/juusechec/goresource-proxy'
+        }
+      }
     }]
   }))
 })

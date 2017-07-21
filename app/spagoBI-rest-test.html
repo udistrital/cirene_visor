@@ -1,0 +1,99 @@
+<html>
+<html>
+
+<head>
+	<title>SpagoBI's REST Test Page</title>
+	<meta charset="UTF-8">
+</head>
+
+<body>
+
+	<script src="lib/jquery/dist/jquery.js" type="text/javascript"></script>
+
+	<script type="text/javascript">
+		this.iniciar = function() {
+			var _dc = new Date().getTime();
+			var url = 'https://intelligentia.udistrital.edu.co:8443/SpagoBI/servlet/AdapterHTTP?Page=LoginPage&NEW_SESSION=TRUE&userId=bicirene&password=bicirene';
+			//url = 'http://sig.udistrital.edu.co/proxy?url=' + escape(url);
+			url = '/proxy?url=' + escape(url) + '&renameheaders';
+
+			$.ajax({
+					type: 'GET',
+					url: url,
+					beforeSend: function(xhr) {
+						//xhr.setRequestHeader('Cookie', '');
+					},
+					success: function(output, status, xhr) {
+						//console.log('success', output, status, xhr);
+						console.log('coookie', xhr.getResponseHeader('_Set-Cookie'));
+						cargarDatos(xhr.getResponseHeader('_Set-Cookie'));
+					},
+					error: function(err) {
+						console.log("error", err);
+					},
+				})
+				.always(function() {
+					console.log("complete");
+				});
+		}
+
+		iniciar();
+
+
+		this.cargarDatos = function(cookie) {
+
+			var url = "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/DSEspFis/data";
+
+			var parameters = {
+				facultad: 33,
+				semestre: 1,
+				anno: 2016
+			}
+			var data = {
+				parameters: encodeURI(JSON.stringify(parameters))
+			}
+
+			headers = 'Cookie:' + cookie;
+
+			url = 'https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/DSEspFis/data?parameters=%7B%22facultad%22%3A%2233%22%2C%22semestre%22%3A%221%22%2C%22anno%22%3A%222016%22%7D';
+			url = '/proxy/?headers=' + escape(headers) + '&url=' + escape(url);
+
+			$.ajax({
+					url: url,
+					method: 'GET',
+					dataType: 'json',
+				}).done(function(result) {
+					console.log("second success");
+					console.log(result);
+					window.result = result;
+				})
+				.fail(function(e) {
+					console.log("error", e);
+				})
+				.always(function() {
+					console.log("complete");
+				});
+		}
+
+
+		function getCookie(cname) {
+			var name = cname + "=";
+			var decodedCookie = decodeURIComponent(document.cookie);
+			var ca = decodedCookie.split(';');
+			for (var i = 0; i < ca.length; i++) {
+				var c = ca[i];
+				while (c.charAt(0) == ' ') {
+					c = c.substring(1);
+				}
+				if (c.indexOf(name) == 0) {
+					return c.substring(name.length, c.length);
+				}
+			}
+			return "";
+		}
+	</script>
+
+
+</body>
+
+</html>
