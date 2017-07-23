@@ -32,7 +32,7 @@
 					},
 					error: function(err) {
 						console.log('error', err);
-					},
+					}
 				})
 				.always(function() {
 					console.log('complete');
@@ -51,16 +51,14 @@
 				anno: 2015
 			}
 			parameters = escape(JSON.stringify(parameters));
-
-			headers = 'Cookie:' + cookie;
-
-			url = 'https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/DSEspFis/data?parameters=' + parameters;
+			url = url + '?parameters=' + parameters;
 			url = '/proxy/?headers=' + escape(headers) + '&url=' + escape(url);
+			headers = 'Cookie:' + cookie;
 
 			$.ajax({
 					url: url,
 					method: 'GET',
-					dataType: 'json',
+					dataType: 'json'
 				}).done(function(result) {
 					console.log('second success');
 					mostarEnTabla(result);
@@ -79,7 +77,8 @@
 			var fields = spagoBIresponse.metaData.fields;
 			for (var i = 0; i < fields.length; i++) {
 				var field = fields[i];
-				var th = $('<th>' + field.header + '</th>');
+				var fieldName = (typeof field.header != 'undefined') ? field.header : field;
+				var th = $('<th>' + fieldName + '</th>');
 				thead.append(th);
 			}
 			var tbody = $('<tbody></tbody>');
@@ -91,7 +90,7 @@
 				for (var variable in row) {
 					if (row.hasOwnProperty(variable)) {
 						var columnValue = row[variable];
-						var td = $('<td>'+columnValue+'</td>');
+						var td = $('<td>' + columnValue + '</td>');
 						tr.append(td);
 					}
 				}
