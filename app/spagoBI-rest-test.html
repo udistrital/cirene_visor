@@ -54,7 +54,7 @@
 			url = url + '?parameters=' + parameters;
 
 			var headers = 'Cookie:' + cookie;
-			url = '/proxy/?headers=' + escape(headers) + '&url=' + escape(url);
+			url = '/proxy?headers=' + escape(headers) + '&url=' + escape(url);
 
 
 			$.ajax({
