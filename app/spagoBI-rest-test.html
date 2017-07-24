@@ -8,7 +8,7 @@
 
 <body>
 
-	<div id="myTable"></div>
+	<div id="myTable">Cargando...</div>
 
 	<script src="lib/jquery/dist/jquery.js" type="text/javascript"></script>
 
@@ -52,8 +52,10 @@
 			}
 			parameters = escape(JSON.stringify(parameters));
 			url = url + '?parameters=' + parameters;
+
+			var headers = 'Cookie:' + cookie;
 			url = '/proxy/?headers=' + escape(headers) + '&url=' + escape(url);
-			headers = 'Cookie:' + cookie;
+
 
 			$.ajax({
 					url: url,
@@ -98,6 +100,7 @@
 			}
 
 			var table = $('#myTable');
+			table.html(''); // Clean Table
 			table.append(thead);
 			table.append(tbody);
 		}
