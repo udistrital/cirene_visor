@@ -43,6 +43,9 @@
 
 		this.cargarDatos = function(cookie) {
 
+			// Please see REST controller for more options
+			// https://github.com/SpagoBILabs/SpagoBI/blob/SpagoBI-5.1/SpagoBIProject/src/it/eng/spagobi/api/DataSetResource.java
+
 			var url = 'https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/DSEspFis/data';
 
 			var parameters = {
@@ -52,6 +55,23 @@
 			}
 			parameters = escape(JSON.stringify(parameters));
 			url = url + '?parameters=' + parameters;
+
+			var selections = {
+				"DSEspFis": {
+					"capacidad_fisica": ["160"]
+				}
+			}
+			selections = escape(JSON.stringify(selections));
+			url = url + '&selections=' + selections;
+
+			// var aggregations = {
+			// 	categories: null,
+			// 	measures: null,
+			// 	start: 50,
+			// 	limit: 30
+			// }
+			// aggregations = escape(JSON.stringify(aggregations));
+			// url = url + '&aggregations=' + aggregations;
 
 			var headers = 'Cookie:' + cookie;
 			url = '/proxy?headers=' + escape(headers) + '&url=' + escape(url);
