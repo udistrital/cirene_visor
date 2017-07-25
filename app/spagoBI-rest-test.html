@@ -59,9 +59,10 @@
 			var selections = {
 				"DSEspFis": {
 					//"capacidad_fisica": ["160"],
-					"codigo_facultad": ["33"],
-					//"codigo_espacio_fisico": ["FICC02S208"]
-					"id": ["111370"]
+					//"codigo_facultad": ["33"],
+					//"codigo_espacio_fisico": ["FICC02S208"],
+					//"id": ["111370"],
+					//"seq": ["1"]
 				}
 			}
 			selections = escape(JSON.stringify(selections));
@@ -103,6 +104,12 @@
 		this.mostarEnTabla = function(spagoBIresponse) {
 			console.log(spagoBIresponse);
 			var thead = $('<thead><tr></tr></thead>');
+			var tbody = $('<tbody></tbody>');
+			var table = $('#myTable');
+			table.html(''); // Clean Table
+			table.append(thead);
+			table.append(tbody);
+
 			var fields = spagoBIresponse.metaData.fields;
 			for (var i = 0; i < fields.length; i++) {
 				var field = fields[i];
@@ -110,10 +117,27 @@
 				var th = $('<th>' + fieldName + '</th>');
 				thead.append(th);
 			}
-			var tbody = $('<tbody></tbody>');
-			var rows = spagoBIresponse.rows;
 
-			for (var i = 0; i < rows.length; i++) {
+			paintSlow(0, spagoBIresponse, tbody)
+		}
+
+		this.paintSlow = function(beginNum, spagoBIresponse, tbody) {
+			var pageSize = 1000;
+			endNum = beginNum + pageSize;
+
+			console.log('beginNum', beginNum, 'endNum', endNum);
+
+			var rows = spagoBIresponse.rows;
+			if (beginNum > rows.length) {
+				return;
+			}
+
+			if (endNum > rows.length) {
+				endNum = rows.length;
+			}
+
+			var elements = [];
+			for (var i = beginNum; i < endNum; i++) {
 				var row = rows[i];
 				var tr = $('<tr></tr>');
 				for (var variable in row) {
@@ -123,13 +147,17 @@
 						tr.append(td);
 					}
 				}
-				tbody.append(tr);
+				//tbody.append(tr);
+				elements.push(tr);
 			}
 
-			var table = $('#myTable');
-			table.html(''); // Clean Table
-			table.append(thead);
-			table.append(tbody);
+			tbody.append(elements);
+
+			setTimeout(function() {
+				var nextNum = beginNum + pageSize;
+				console.log('nextNum', nextNum);
+				paintSlow(nextNum, spagoBIresponse, tbody);
+			}, 1000);
 		}
 	</script>
 
