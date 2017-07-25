@@ -7,10 +7,11 @@
 </head>
 
 <body>
-
+	<button type="button" class="btn waves-effect waves-light blue" type="submit" onclick="openLink();">Ver tabla</button>
 	<div id="myTable">Cargando...</div>
 
 	<script src="lib/jquery/dist/jquery.js" type="text/javascript"></script>
+	<script src="lib/SpagoBI-SDK/sbisdk-all-production.js" type="text/javascript"></script>
 
 	<script type="text/javascript">
 		this.iniciar = function() {
@@ -158,6 +159,60 @@
 				console.log('nextNum', nextNum);
 				paintSlow(nextNum, spagoBIresponse, tbody);
 			}, 1000);
+		}
+	</script>
+
+
+	<script type="text/javascript">
+		this.iniciar2 = function() {
+			Sbi.sdk.services.setBaseUrl({
+				protocol: 'https',
+				host: 'intelligentia.udistrital.edu.co',
+				port: '8443',
+				contextPath: 'SpagoBI',
+				controllerPath: 'servlet/AdapterHTTP'
+			});
+
+			Sbi.sdk.api.authenticate({
+				params: {
+					user: 'bicirene',
+					password: 'bicirene'
+				},
+				callback: {
+					fn: function(result, args, success) {
+						if (success === true) {
+							exec();
+						} else {
+							alert('ERROR: Usuario o Clave incorrecta.');
+						}
+					}
+					//, scope: this
+					//, args: {arg1: 'A', arg2: 'B', ...}
+				}
+			});
+
+			var exec = function() {
+				var url = Sbi.sdk.api.getDocumentUrl({
+					documentLabel: 'RteEspFis',
+					executionRole: '/spagobi/user/bicirene',
+					displayToolbar: false,
+					displaySliders: false,
+					height: '500px',
+					width: '800px',
+					iframe: {
+						style: 'border: 0px;'
+					},
+					useExtUI: true
+				});
+				console.log('url', url);
+				window.url = url;
+			};
+		}
+
+		this.iniciar2();
+
+		window.openLink = function () {
+			window.open(window.url, "_blank");
 		}
 	</script>
 
