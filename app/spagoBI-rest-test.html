@@ -58,17 +58,24 @@
 
 			var selections = {
 				"DSEspFis": {
-					"capacidad_fisica": ["160"]
+					//"capacidad_fisica": ["160"],
+					"codigo_facultad": ["33"],
+					//"codigo_espacio_fisico": ["FICC02S208"]
+					"id": ["111370"]
 				}
 			}
 			selections = escape(JSON.stringify(selections));
 			url = url + '&selections=' + selections;
 
+			// the aggregation to apply to the joined dataset
 			// var aggregations = {
-			// 	categories: null,
-			// 	measures: null,
-			// 	start: 50,
-			// 	limit: 30
+			// 	categories: [{
+			// 		"alias": ""
+			// 	}],
+			// 	measures: [{
+			// 		"alias": "",
+			// 		"funct": ""
+			// 	}]
 			// }
 			// aggregations = escape(JSON.stringify(aggregations));
 			// url = url + '&aggregations=' + aggregations;
