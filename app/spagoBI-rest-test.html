@@ -164,7 +164,7 @@
 
 
 	<script type="text/javascript">
-		this.iniciar2 = function() {
+		this.openLink = function() {
 			Sbi.sdk.services.setBaseUrl({
 				protocol: 'https',
 				host: 'intelligentia.udistrital.edu.co',
@@ -205,15 +205,10 @@
 					useExtUI: true
 				});
 				console.log('url', url);
-				window.url = url;
+				window.open(url, "_blank");
 			};
 		}
 
-		this.iniciar2();
-
-		window.openLink = function () {
-			window.open(window.url, "_blank");
-		}
 	</script>
 
 </body>
