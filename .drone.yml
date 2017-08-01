@@ -1,6 +1,3 @@
-clone:
-  path: github.com/udistrital/cancelacion_semestre_api
-
 build:
   pruebas_unitarias:
     image: node:7.10.1
