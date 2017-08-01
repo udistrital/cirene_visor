@@ -1,4 +1,4 @@
-(function holaaa() {
+(function() {
 
   var global = {
     map: {},
@@ -39,9 +39,7 @@
       target: document.getElementById('map'),
       view: new ol.View({
         //projection: projection,
-        center: [
-          -8248199.896347591, 510943.79974994034
-        ],
+        center: [-8248199.896347591, 510943.79974994034],
         // extent: [ //Esto limita el mapa a esta extension
         //   -74.18615000043059, 4.514284463291831, -73.92439112512187, 4.659751162274072
         // ],
@@ -60,7 +58,7 @@
     createTOC();
     createIdentify();
     zoomToInitialExtent();
-    exposeGlobals();// Before load others components
+    exposeGlobals(); // Before load others components
     consultas.addLayerHighlight(global.map);
     generalReport.loadInterfaces(global.map);
   }
@@ -83,7 +81,9 @@
 
     // IDECA Base Map
     var idecaLayer = new ol.layer.Tile({
-      source: new ol.source.XYZ({url: 'http://serviciosgis.catastrobogota.gov.co/arcgis/rest/services/Mapa_Referencia/mapa_base_3857/MapServer/tile/{z}/{y}/{x}'})
+      source: new ol.source.XYZ({
+        url: 'http://serviciosgis.catastrobogota.gov.co/arcgis/rest/services/Mapa_Referencia/mapa_base_3857/MapServer/tile/{z}/{y}/{x}'
+      })
     });
 
     global.map.addLayer(idecaLayer);
@@ -104,7 +104,11 @@
       }
       // use jsonp: false to prevent jQuery from adding the "callback"
       // parameter to the URL
-      $.ajax({url: url, dataType: 'json', jsonp: false}).done(function(response) {
+      $.ajax({
+        url: url,
+        dataType: 'json',
+        jsonp: false
+      }).done(function(response) {
         var features = geojsonFormat.readFeatures(response);
         var filter = wfsSource.config.filter;
         if (typeof filter !== 'undefined' && filter !== '') {
@@ -125,7 +129,9 @@
           global.mapFeatureLayerObjects.push(servicio);
           var wfsSource = new ol.source.Vector({
             loader: wfsLoader,
-            strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({maxZoom: 19}))
+            strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+              maxZoom: 19
+            }))
           });
           wfsSource.indice = i;
           wfsSource.config = servicio;
@@ -136,9 +142,9 @@
               var ctxServicio = this;
               return mapTools.getLayerStyle(feature, ctxServicio);
             }).bind(servicio),
-            visible: (typeof servicio.visible === 'undefined')
-              ? true
-              : servicio.visible
+            visible: (typeof servicio.visible === 'undefined') ?
+              true :
+              servicio.visible
           });
           wfsLayer.indice = i;
 
@@ -160,12 +166,12 @@
 
           var wmsLayer = new ol.layer.Tile({
             source: wmsSource,
-            opacity: (typeof servicio.opacity === 'undefined')
-              ? 1
-              : servicio.opacity,
-            visible: (typeof servicio.visible === 'undefined')
-              ? true
-              : servicio.visible
+            opacity: (typeof servicio.opacity === 'undefined') ?
+              1 :
+              servicio.opacity,
+            visible: (typeof servicio.visible === 'undefined') ?
+              true :
+              servicio.visible
           });
           global.map.addLayer(wmsLayer);
 
@@ -184,12 +190,12 @@
 
           var wmsServerLayer = new ol.layer.Tile({
             source: wmsServerSource,
-            opacity: (typeof servicio.opacity === 'undefined')
-              ? 1
-              : servicio.opacity,
-            visible: (typeof servicio.visible === 'undefined')
-              ? true
-              : servicio.visible
+            opacity: (typeof servicio.opacity === 'undefined') ?
+              1 :
+              servicio.opacity,
+            visible: (typeof servicio.visible === 'undefined') ?
+              true :
+              servicio.visible
           });
           global.map.addLayer(wmsServerLayer);
 
@@ -252,11 +258,11 @@
     var layer = result.Capability.Layer;
     var layers = layer.Layer;
     var item = '<li class="collection-header">\n' +
-    '     <h5>' + layer.Title + '</h5>\n' + '</li>\n';
+      '     <h5>' + layer.Title + '</h5>\n' + '</li>\n';
     legendDiv.append(item);
 
     var collapsible = '<ul class="collapsible" data-collapsible="expandable">\n' +
-    '</ul>\n';
+      '</ul>\n';
     collapsible = $(collapsible);
     legendDiv.append(collapsible);
 
@@ -265,7 +271,7 @@
       var title = layer.Title;
       if (url) {
         var item = '<li>\n' +
-        '  <div class="collapsible-header item-leyenda-wms-title"><i class="material-icons tiny">play_arrow</i>' + title + '</div>\n' + '  <div class="collapsible-body item-leyenda-wms-content"><span><img src="' + url + '" /></span></div>\n' + '</li>\n';
+          '  <div class="collapsible-header item-leyenda-wms-title"><i class="material-icons tiny">play_arrow</i>' + title + '</div>\n' + '  <div class="collapsible-body item-leyenda-wms-content"><span><img src="' + url + '" /></span></div>\n' + '</li>\n';
         collapsible.append(item);
       }
     });
@@ -284,7 +290,7 @@
     }
 
     var item = '<li class="collection-header collection-item">\n' +
-    '     <h5>' + layer.name + '</h5>\n' + '     <span class="leyenda-icon" style="' + style + '"></span>\n' + '</li>\n';
+      '     <h5>' + layer.name + '</h5>\n' + '     <span class="leyenda-icon" style="' + style + '"></span>\n' + '</li>\n';
     legendDiv.append(item);
   }
 
@@ -296,9 +302,9 @@
     var grupoServicios = global.grupoServicios;
     for (i = 0; i < grupoServicios.length; i++) {
       var grupo = grupoServicios[i];
-      var active = (i === 0)
-        ? 'active'
-        : '';
+      var active = (i === 0) ?
+        'active' :
+        '';
       li = '<li> ' +
         '     <div class="collapsible-header ' + active + '">\n' + '        <i class="material-icons">layers</i>\n' + '        ' + grupo.name + '\n' + '        <a href="#!" onclick="changeVisibilityGroup(event, \'' + grupo.id + '\', false)">\n' + '            <i class="material-icons btnEyeGroup">visibility_off</i>\n' + '        </a>\n' + '        <a href="#!" onclick="changeVisibilityGroup(event, \'' + grupo.id + '\', true)">\n' + '            <i class="material-icons btnEyeGroup">visibility</i>\n' + '        </a>\n' + '        </div>\n' + '    <div class="collapsible-body"><ul class="collection" data-group="' + grupo.id + '"></ul></div>\n' + '</li>\n';
       collapsible += li;
@@ -314,12 +320,12 @@
       if (layer.visible === false) {
         classVisible = 'visibility_off';
       }
-      var imageUrl = (typeof(layer.icon) === 'undefined' || layer.icon === '')
-        ? 'css/img/oas.jpg'
-        : layer.icon;
-      var layerMaxScale = (typeof(layer.maxScale) === 'undefined')
-        ? 'Inf'
-        : layer.maxScale;
+      var imageUrl = (typeof(layer.icon) === 'undefined' || layer.icon === '') ?
+        'css/img/oas.jpg' :
+        layer.icon;
+      var layerMaxScale = (typeof(layer.maxScale) === 'undefined') ?
+        'Inf' :
+        layer.maxScale;
       var filters = '';
       var filterClass = '';
       var selectParams = '';
@@ -336,13 +342,13 @@
         }
 
         filters += '  </select>\n' +
-        // '  <label>Seleccione el Filtro</label>\n' +
-        '</div>\n';
+          // '  <label>Seleccione el Filtro</label>\n' +
+          '</div>\n';
       }
 
       li = '<li class="collection-item avatar' + filterClass + '">\n' + '    <img src="' + imageUrl + '" alt="" class="circle">\n' + '    <span class="title" style="padding-right: 22px; display: block;">' + layer.name + '</span>\n' +
-      //'    <p>Desde escala 1:' + layerMaxScale + '</p>\n' +
-      '    <a href="#!" onclick="changeVisibilityLayer(\'' + layer.id + '\')" class="secondary-content">\n' + '        <i class="material-icons btnEye" data-layer-icon="' + layer.id + '">' + classVisible + '</i>\n' + '    </a>\n' + filters + '</li>\n';
+        //'    <p>Desde escala 1:' + layerMaxScale + '</p>\n' +
+        '    <a href="#!" onclick="changeVisibilityLayer(\'' + layer.id + '\')" class="secondary-content">\n' + '        <i class="material-icons btnEye" data-layer-icon="' + layer.id + '">' + classVisible + '</i>\n' + '    </a>\n' + filters + '</li>\n';
       var group = $('[data-group="' + layer.groupId + '"]')[0];
       group.innerHTML += li;
     }
@@ -424,23 +430,23 @@
   function createIdentify() {
 
     /**
-   * Elements that make up the popup.
-   */
+     * Elements that make up the popup.
+     */
     var container = document.getElementById('popup');
     var content = document.getElementById('popup-content');
     var closer = document.getElementById('popup-closer');
 
     /**
-   * Create an overlay to anchor the popup to the map.
-   */
-    var overlay = new ol.Overlay(/** @type {olx.OverlayOptions} */
-    ({
-      element: container,
-      autoPan: true,
-      autoPanAnimation: {
-        duration: 250
-      }
-    }));
+     * Create an overlay to anchor the popup to the map.
+     */
+    var overlay = new ol.Overlay( /** @type {olx.OverlayOptions} */
+      ({
+        element: container,
+        autoPan: true,
+        autoPanAnimation: {
+          duration: 250
+        }
+      }));
 
     global.map.addOverlay(overlay);
     /**
@@ -508,22 +514,36 @@
     global.map.addControl(zoomslider);
   }
 
-  function exposeForTests(){
-    if (typeof describe !== 'undefined'){
+  function exposeForTests() {
+    if (typeof describe !== 'undefined') {
       // for tests
       window._scopeCreateMap = {};
       window._scopeCreateMap.global = global;
-      window._scopeCreateMap.createMap = createMap;
+      window._scopeCreateMap.loadData = loadData; //
+      window._scopeCreateMap.createMap = createMap; //
+      //window._scopeCreateMap.addMapProperties = addMapProperties;//esta en createMap
+      window._scopeCreateMap.zoomToInitialExtent = zoomToInitialExtent;
+      window._scopeCreateMap.addLayers = addLayers;
+      window._scopeCreateMap.createLegend = createLegend;
+      window._scopeCreateMap.generateHTMLLegendWMS = generateHTMLLegendWMS;
+      window._scopeCreateMap.generateHTMLLegendWFS = generateHTMLLegendWFS;
+      window._scopeCreateMap.createTOC = createTOC;
+      window._scopeCreateMap.changeVisibilityLayer = changeVisibilityLayer;
+      window._scopeCreateMap.changeVisibilityGroup = changeVisibilityGroup;
+      window._scopeCreateMap.checkVisibilityAtScale = checkVisibilityAtScale;
+      window._scopeCreateMap._getLayerById = _getLayerById;
+      window._scopeCreateMap.createIdentify = createIdentify;
+      window._scopeCreateMap.addZoomSlider = addZoomSlider;
+      window._scopeCreateMap.exposeGlobals = exposeGlobals;
     }
   }
 
   function exposeGlobals() {
-    if (typeof window !== 'undefined'){
+    if (typeof window !== 'undefined') {
       window.map = global.map;
       window.mapFeatureLayerObjects = global.mapFeatureLayerObjects;
       window.jstsParser = global.jstsParser;
       window.changeVisibilityLayer = changeVisibilityLayer;
-
     }
   }
 
