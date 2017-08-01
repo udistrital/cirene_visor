@@ -414,7 +414,6 @@
   function _getLayerById(id) {
     var layers = global.map.getLayers().getArray();
     window.layers = layers;
-    console.log('layers', layers.length);
     return layers.find(function(layer) {
       var source = layer.getSource();
       if (typeof(source.config) !== 'undefined') {
