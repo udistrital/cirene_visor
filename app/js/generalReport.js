@@ -10,7 +10,7 @@
     $('#modal1').modal('open');
   }
 
-  function loadInterfaces() {
+  function loadInterfaces(map) {
     var layersSelect = $('#select_layers');
     layersSelect.html('');
     layersSelect.append($('<option value="" selected>Seleccione la opción</option>'));

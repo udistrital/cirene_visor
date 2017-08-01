@@ -57,3 +57,4 @@ Para entornos de producción puede buscar la aplicación "comprimida" o
 # Enlaces de interés
 - http://openlayers.org/en/latest/examples/
 - http://www.acuriousanimal.com/thebookofopenlayers3/
+- http://www.matteoagosti.com/blog/2013/02/24/writing-javascript-modules-for-both-browser-and-node/

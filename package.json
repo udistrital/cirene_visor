@@ -10,7 +10,8 @@
     "pack": "gulp pack",
     "clean": "gulp clean",
     "build": "gulp clean && gulp minify && gulp pack",
-    "test": "tape 'test/**/*.js'"
+    "test": "gulp jasmine",
+    "jejeje": "qunit"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,12 @@
     "gulp-rm": "^1.0.4",
     "gulp-tar": "^2.0.0",
     "gulp-webserver": "^0.9.1",
+    "jasmine-core": "^2.7.0",
+    "karma": "^1.7.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-firefox-launcher": "^1.0.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-phantomjs-launcher": "^1.0.4",
     "merge-stream": "^1.0.1"
   },
   "dependencies": {}

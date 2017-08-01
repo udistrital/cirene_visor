@@ -1,5 +1,5 @@
 window.consultas = {
-  addLayerHighlight: function() {
+  addLayerHighlight: function(map) {
     var source = new ol.source.Vector();
     source.config = {
       'id': 'highlight'
@@ -16,7 +16,7 @@ window.consultas = {
         return mapTools.getLayerStyle(feature, opt);
       }
     });
-    window.map.addLayer(featureOverlay);
+    map.addLayer(featureOverlay);
   },
   addGeometryHighlight: function(geometry) {
     var feature = new ol.Feature({geometry: geometry, name: 'Geometría resaltada.'});
