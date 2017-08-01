@@ -1,0 +1,37 @@
+clone:
+  path: github.com/udistrital/cancelacion_semestre_api
+
+build:
+  pruebas_unitarias:
+    image: node:7.10.1
+    debug: true
+    commands:
+      - echo testing
+    when:
+      branch: develop
+  construccion:
+    image: node:7.10.1
+    commands:
+      - echo building
+    when:
+      branch: master
+
+package:
+  image: alpine
+  commands:
+    - echo packaging
+    - echo tar cf package-$$BRANCH-$${COMMIT:0:7}-$$BUILD_NUMBER.tar index.html bundle.js
+    - echo gzip package-$$BRANCH-$${COMMIT:0:7}-$$BUILD_NUMBER.tar
+    - echo ver el proyecto update_tuleap en github.com/udistrital
+
+notify:
+  webhook:
+    urls:
+      - https://api.telegram.org/bot$$DRONE_TELEGRAM_TOKEN/sendMessage
+    content_type: application/json
+    template: >
+      {
+        "chat_id": "-129350403",
+        "parse_mode": "Markdown",
+        "text": "`{{repo.full_name}}` [{{uppercase build.status}}]({{build.link_url}}) `{{build.branch}}`@{{truncate build.commit 7}}"
+      }

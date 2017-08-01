@@ -1,3 +1,5 @@
+[![Build Status Travis CI](https://travis-ci.org/udistrital/cirene_pruebas.svg?branch=master)](https://travis-ci.org/udistrital/cirene_pruebas)
+
 # openlayers-material
 Openlayers con Material Design Lite
 
