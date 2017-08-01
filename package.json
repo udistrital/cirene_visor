@@ -39,7 +39,8 @@
     "karma-html2js-preprocessor": "^1.1.0",
     "karma-jasmine": "^1.1.0",
     "karma-phantomjs-launcher": "^1.0.4",
-    "merge-stream": "^1.0.1"
+    "merge-stream": "^1.0.1",
+    "phantomjs-polyfill-find": "github:ptim/phantomjs-polyfill-find"
   },
   "dependencies": {}
 }

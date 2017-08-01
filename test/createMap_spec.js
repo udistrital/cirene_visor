@@ -11,7 +11,7 @@ describe("Validar createMap.js", function() {
         "serviceId": 0,
         "serviceType": "WMSServer",
         "name": "Mapa Referencia IDECA Calles",
-        "id": "ideca2",
+        "id": "ideca",
         "url": "http://serviciosgis.catastrobogota.gov.co/arcgis/services/Mapa_Referencia/Mapa_Referencia/MapServer/WMSServer",
         "icon": "css/img/Ideca.jpg",
         "layers": "49,46,38,40,39,25,23,14,12,15,8,4",
@@ -49,13 +49,25 @@ describe("Validar createMap.js", function() {
       }
     ];
 
-    this.createMap();
-    $("#popup-closer")[0].click();
+    var result = this.createMap();
+    expect(result).toBe(undefined);
+
+    var result = $("#popup-closer")[0].click();
+    expect(result).toBe(undefined);
+
   }).bind(window._scopeCreateMap));
 
   it("Se ejecutan las funciones del mapa.", (function() {
-    //
-    this.zoomToInitialExtent();
+
+    var result = this.zoomToInitialExtent();
+    expect(result).toBe(undefined);
+
+    var result = this.changeVisibilityLayer('lote');
+    expect(result).toBe(undefined);
+
+    var result = this.changeVisibilityLayer('ideca');
+    expect(result).toBe(undefined);
+
   }).bind(window._scopeCreateMap));
 
 });

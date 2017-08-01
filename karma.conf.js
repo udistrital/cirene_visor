@@ -14,7 +14,9 @@ module.exports = function(config) {
 
 
     // list of files / patterns to load in the browser
+    // phantomjs error ! https://github.com/ariya/phantomjs/issues/14054
     files: [
+      './node_modules/phantomjs-polyfill-find/find-polyfill.js',
       'app/lib/jquery/dist/jquery.js',
       'app/lib/materialize/dist/js/materialize.js',
       'app/lib/sidebar-v2/js/jquery-sidebar.js',

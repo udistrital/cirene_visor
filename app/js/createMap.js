@@ -143,8 +143,7 @@
               return mapTools.getLayerStyle(feature, ctxServicio);
             }).bind(servicio),
             visible: (typeof servicio.visible === 'undefined') ?
-              true :
-              servicio.visible
+              true : servicio.visible
           });
           wfsLayer.indice = i;
 
@@ -167,11 +166,9 @@
           var wmsLayer = new ol.layer.Tile({
             source: wmsSource,
             opacity: (typeof servicio.opacity === 'undefined') ?
-              1 :
-              servicio.opacity,
+              1 : servicio.opacity,
             visible: (typeof servicio.visible === 'undefined') ?
-              true :
-              servicio.visible
+              true : servicio.visible
           });
           global.map.addLayer(wmsLayer);
 
@@ -191,11 +188,9 @@
           var wmsServerLayer = new ol.layer.Tile({
             source: wmsServerSource,
             opacity: (typeof servicio.opacity === 'undefined') ?
-              1 :
-              servicio.opacity,
+              1 : servicio.opacity,
             visible: (typeof servicio.visible === 'undefined') ?
-              true :
-              servicio.visible
+              true : servicio.visible
           });
           global.map.addLayer(wmsServerLayer);
 
@@ -257,21 +252,22 @@
     var result = parser.read(response);
     var layer = result.Capability.Layer;
     var layers = layer.Layer;
-    var item = '<li class="collection-header">\n' +
-      '     <h5>' + layer.Title + '</h5>\n' + '</li>\n';
+    var item = '<li class="collection-header"><h5>' + layer.Title + '</h5></li>';
     legendDiv.append(item);
 
-    var collapsible = '<ul class="collapsible" data-collapsible="expandable">\n' +
-      '</ul>\n';
+    var collapsible = '<ul class="collapsible" data-collapsible="expandable"></ul>';
     collapsible = $(collapsible);
     legendDiv.append(collapsible);
-
     mapTools.searchLayerRecursive(layers, function(layer) {
       var url = layer.Style[0].LegendURL[0].OnlineResource;
       var title = layer.Title;
       if (url) {
-        var item = '<li>\n' +
-          '  <div class="collapsible-header item-leyenda-wms-title"><i class="material-icons tiny">play_arrow</i>' + title + '</div>\n' + '  <div class="collapsible-body item-leyenda-wms-content"><span><img src="' + url + '" /></span></div>\n' + '</li>\n';
+        var item = $('<li></li>');
+        var div = $('<div class="collapsible-header item-leyenda-wms-title"><i class="material-icons tiny">play_arrow</i>' +
+          title + '</div>');
+        var div2 = $('<div class="collapsible-body item-leyenda-wms-content"><span><img src="' + url + '"/></span></div>');
+        item.append(div);
+        item.append(div2);
         collapsible.append(item);
       }
     });
@@ -289,8 +285,7 @@
       style = 'border-color:' + layer.strokeColor + ';border-style: dashed;';
     }
 
-    var item = '<li class="collection-header collection-item">\n' +
-      '     <h5>' + layer.name + '</h5>\n' + '     <span class="leyenda-icon" style="' + style + '"></span>\n' + '</li>\n';
+    var item = '<li class="collection-header collection-item"><h5>' + layer.name + '</h5><span class="leyenda-icon" style="' + style + '"></span></li>';
     legendDiv.append(item);
   }
 
@@ -417,7 +412,9 @@
   }
 
   function _getLayerById(id) {
-    var layers = map.getLayers().getArray();
+    var layers = global.map.getLayers().getArray();
+    window.layers = layers;
+    console.log('layers', layers.length);
     return layers.find(function(layer) {
       var source = layer.getSource();
       if (typeof(source.config) !== 'undefined') {
@@ -521,13 +518,13 @@
       window._scopeCreateMap.global = global;
       window._scopeCreateMap.loadData = loadData; //
       window._scopeCreateMap.createMap = createMap; //
-      //window._scopeCreateMap.addMapProperties = addMapProperties;//esta en createMap
+      // window._scopeCreateMap.addMapProperties = addMapProperties;//testeada en createMap
       window._scopeCreateMap.zoomToInitialExtent = zoomToInitialExtent;
-      window._scopeCreateMap.addLayers = addLayers;
-      window._scopeCreateMap.createLegend = createLegend;
-      window._scopeCreateMap.generateHTMLLegendWMS = generateHTMLLegendWMS;
-      window._scopeCreateMap.generateHTMLLegendWFS = generateHTMLLegendWFS;
-      window._scopeCreateMap.createTOC = createTOC;
+      // window._scopeCreateMap.addLayers = addLayers;//testeada en createMap
+      // window._scopeCreateMap.createLegend = createLegend;//testeada en createMap
+      // window._scopeCreateMap.generateHTMLLegendWMS = generateHTMLLegendWMS;//testeada en createMap
+      // window._scopeCreateMap.generateHTMLLegendWFS = generateHTMLLegendWFS;//testeada en createMap
+      // window._scopeCreateMap.createTOC = createTOC;//testeada en createMap//testeada en createMap
       window._scopeCreateMap.changeVisibilityLayer = changeVisibilityLayer;
       window._scopeCreateMap.changeVisibilityGroup = changeVisibilityGroup;
       window._scopeCreateMap.checkVisibilityAtScale = checkVisibilityAtScale;
