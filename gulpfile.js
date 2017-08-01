@@ -6,37 +6,46 @@
 var gulp = require('gulp')
 var webserver = require('gulp-webserver')
 var minify = require('gulp-minifier')
-//var babel = require('gulp-babel');
-//var merge = require('merge-stream');
+//var babel = require('gulp-babel')
+//var merge = require('merge-stream')
 const tar = require('gulp-tar')
 const gzip = require('gulp-gzip')
 var rm = require('gulp-rm')
 
+var jshint = require('gulp-jshint')
+const jshintConfig = require('./jshitn.conf.json')
+
+var webserverConfig = {
+  host: 'localhost',
+  port: 3000,
+  livereload: true,
+  directoryListing: false,
+  open: true,
+  proxies: [{
+    source: '/geoserver',
+    target: 'http://sig.udistrital.edu.co:8080/geoserver',
+    options: {
+      headers: {
+        'DEVELOPER': 'juusechec'
+      }
+    }
+  },{
+    source: '/proxy',
+    target: 'http://localhost:12345/',
+    options: {
+      headers: {
+        'WebSite': 'https://github.com/juusechec/goresource-proxy'
+      }
+    }
+  }]
+};
+
 gulp.task('webserver', function() {
-  gulp.src('app').pipe(webserver({
-    host: 'localhost',
-    port: 3000,
-    livereload: true,
-    directoryListing: false,
-    open: true,
-    proxies: [{
-      source: '/geoserver',
-      target: 'http://sig.udistrital.edu.co:8080/geoserver',
-      options: {
-        headers: {
-          'DEVELOPER': 'juusechec'
-        }
-      }
-    },{
-      source: '/proxy',
-      target: 'http://localhost:12345/',
-      options: {
-        headers: {
-          'WebSite': 'https://github.com/juusechec/goresource-proxy'
-        }
-      }
-    }]
-  }))
+  gulp.src('app').pipe(webserver(webserverConfig))
+})
+
+gulp.task('webserver:dist', function() {
+  gulp.src('dist/app').pipe(webserver(webserverConfig))
 })
 
 /*
@@ -109,6 +118,14 @@ gulp.task('clean:build', function() {
       read: false
     })
     .pipe(rm())
+})
+
+// configure the jshint task
+gulp.task('jshint', function() {
+  console.log('jshintConfig', jshintConfig);
+  return gulp.src(['app/**/*.js', '!app/lib/**/*'])
+    .pipe(jshint(jshintConfig))
+    .pipe(jshint.reporter('default'))
 })
 
 //https://github.com/andresvia/go-angular-drone/blob/master/.drone.yml
