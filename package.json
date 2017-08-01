@@ -11,7 +11,7 @@
     "clean": "gulp clean",
     "build": "npm run clean && npm run dist && npm run pack",
     "test": "karma start karma.conf.js --log-level debug --single-run",
-    "test:build": "npm run build && karma start karma_dist.conf.js --log-level debug --single-run"
+    "build:test": "npm run build && karma start karma_dist.conf.js --log-level debug --single-run"
   },
   "repository": {
     "type": "git",

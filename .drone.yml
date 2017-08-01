@@ -4,12 +4,16 @@ build:
     debug: true
     commands:
       - echo testing
+      - npm install
+      - npm test
     when:
       branch: develop
   construccion:
     image: node:7.10.1
     commands:
       - echo building
+      - npm install
+      - npm run build:test
     when:
       branch: master
 
@@ -20,6 +24,7 @@ package:
     - echo tar cf package-$$BRANCH-$${COMMIT:0:7}-$$BUILD_NUMBER.tar index.html bundle.js
     - echo gzip package-$$BRANCH-$${COMMIT:0:7}-$$BUILD_NUMBER.tar
     - echo ver el proyecto update_tuleap en github.com/udistrital
+    - echo hacer algo con el tar...
 
 notify:
   webhook:

@@ -14,19 +14,21 @@ module.exports = function(config) {
 
 
     // list of files / patterns to load in the browser
+    // phantomjs error ! https://github.com/ariya/phantomjs/issues/14054
     files: [
-      'app/lib/jquery/dist/jquery.js',
-      'app/lib/materialize/dist/js/materialize.js',
-      'app/lib/sidebar-v2/js/jquery-sidebar.js',
-      'app/lib/openlayers/js/ol.js',
-      'app/lib/jsts/jsts.min.js',
-      'app/lib/chart.js/js/Chart.bundle.js',
-      'app/js/createMap.js',
-      'app/js/mapTools.js',
-      'app/js/queries.js',
-      'app/js/generalReport.js',
-      'app/js/reports.js',
-      'app/js/init.js',
+      './node_modules/phantomjs-polyfill-find/find-polyfill.js',
+      'dist/lib/jquery/dist/jquery.js',
+      'dist/lib/materialize/dist/js/materialize.js',
+      'dist/lib/sidebar-v2/js/jquery-sidebar.js',
+      'dist/lib/openlayers/js/ol.js',
+      'dist/lib/jsts/jsts.min.js',
+      'dist/lib/chart.js/js/Chart.bundle.js',
+      'dist/js/createMap.js',
+      'dist/js/mapTools.js',
+      'dist/js/queries.js',
+      'dist/js/generalReport.js',
+      'dist/js/reports.js',
+      'dist/js/init.js',
       'test/**/*_spec.js'
     ],
 
