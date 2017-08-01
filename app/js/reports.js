@@ -32,17 +32,17 @@ window.graficarPie = function(value) {
   //console.log('response', response);
   var response = [
     {
-      "nombre": "femenino",
-      "alias": "Género Femenino",
-      "predios": ["034234", "234234", "334234", "734234"]
+      'nombre': 'femenino',
+      'alias': 'Género Femenino',
+      'predios': ['034234', '234234', '334234', '734234']
     }, {
-      "nombre": "masculino",
-      "alias": "Género Masculino",
-      "predios": ["034334", "22234", "334774", "730000"]
+      'nombre': 'masculino',
+      'alias': 'Género Masculino',
+      'predios': ['034334', '22234', '334774', '730000']
     }, {
-      "nombre": "desconocido",
-      "alias": "No Disponible",
-      "predios": ["0332224", "2232323", "3334723", "7333300"]
+      'nombre': 'desconocido',
+      'alias': 'No Disponible',
+      'predios': ['0332224', '2232323', '3334723', '7333300']
     }
   ];
 
@@ -112,13 +112,13 @@ window.graficarPie = function(value) {
             });
             var currentValue = dataset.data[tooltipItem.index];
             var precentage = Math.floor(((currentValue / total) * 100) + 0.5);
-            return label + ": " + value + " Predios " + precentage + "%";
+            return label + ': ' + value + ' Predios ' + precentage + '%';
           }
         }
       }
     }
   }
-  var ctx = document.getElementById("chart-area").getContext("2d");
+  var ctx = document.getElementById('chart-area').getContext('2d');
   window.myPie = new Chart(ctx, window.myPieConfig);
   //});
 }

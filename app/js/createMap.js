@@ -1,4 +1,4 @@
-(function() {
+(function holaaa() {
 
   var global = {
     map: {},
@@ -508,18 +508,31 @@
     global.map.addControl(zoomslider);
   }
 
+  function exposeForTests(){
+    if (typeof describe !== 'undefined'){
+      // for tests
+      window._scopeCreateMap = {};
+      window._scopeCreateMap.global = global;
+      window._scopeCreateMap.createMap = createMap;
+    }
+  }
+
   function exposeGlobals() {
     if (typeof window !== 'undefined'){
       window.map = global.map;
       window.mapFeatureLayerObjects = global.mapFeatureLayerObjects;
       window.jstsParser = global.jstsParser;
       window.changeVisibilityLayer = changeVisibilityLayer;
+
     }
   }
 
   if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     console.log('Load module for Node.js');
     module.exports.map = global.map;
+  } else {
+    exposeGlobals();
+    exposeForTests();
   }
 
 })();

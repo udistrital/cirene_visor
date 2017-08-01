@@ -9,9 +9,9 @@
     "dist": "gulp minify",
     "pack": "gulp pack",
     "clean": "gulp clean",
-    "build": "gulp clean && gulp minify && gulp pack",
-    "test": "gulp jasmine",
-    "jejeje": "qunit"
+    "build": "npm run clean && npm run dist && npm run pack",
+    "test": "karma start karma.conf.js --log-level debug --single-run",
+    "test:build": "npm run build && karma start karma_dist.conf.js --log-level debug --single-run"
   },
   "repository": {
     "type": "git",
@@ -36,6 +36,7 @@
     "karma": "^1.7.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-firefox-launcher": "^1.0.1",
+    "karma-html2js-preprocessor": "^1.1.0",
     "karma-jasmine": "^1.1.0",
     "karma-phantomjs-launcher": "^1.0.4",
     "merge-stream": "^1.0.1"
