@@ -13,14 +13,15 @@
   "undef": true,
   "strict": false,
   "globals": {
-    "window": false,
-    "$": false,
-    "ol": false,
+    "window": true,
+    "$": true,
+    "ol": true,
     "jsts": true,
     "document": true,
     "consultas": true,
     "mapTools": true,
-    "generalReport": true
+    "generalReport": true,
+    "Chart": true
   },
   "evil" : true,
   "loopfunc" : true

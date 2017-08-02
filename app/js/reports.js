@@ -13,9 +13,9 @@ window.chartColors = {
 };
 
 window.randomScalingFactor = function() {
-  return (Math.random() > 0.5
-    ? 1.0
-    : -1.0) * Math.round(Math.random() * 100);
+  return (Math.random() > 0.5 ?
+    1.0 :
+    -1.0) * Math.round(Math.random() * 100);
 };
 
 var randomScalingFactor = function() {
@@ -30,24 +30,22 @@ window.graficarPie = function(value) {
   // console.log(url);
   // $.ajax({url: url}).done(function(response) {
   //console.log('response', response);
-  var response = [
-    {
-      'nombre': 'femenino',
-      'alias': 'Género Femenino',
-      'predios': ['034234', '234234', '334234', '734234']
-    }, {
-      'nombre': 'masculino',
-      'alias': 'Género Masculino',
-      'predios': ['034334', '22234', '334774', '730000']
-    }, {
-      'nombre': 'desconocido',
-      'alias': 'No Disponible',
-      'predios': ['0332224', '2232323', '3334723', '7333300']
-    }
-  ];
+  var response = [{
+    'nombre': 'femenino',
+    'alias': 'Género Femenino',
+    'predios': ['034234', '234234', '334234', '734234']
+  }, {
+    'nombre': 'masculino',
+    'alias': 'Género Masculino',
+    'predios': ['034334', '22234', '334774', '730000']
+  }, {
+    'nombre': 'desconocido',
+    'alias': 'No Disponible',
+    'predios': ['0332224', '2232323', '3334723', '7333300']
+  }];
 
-  var data = new Array();
-  var labels = new Array();
+  var data = [];
+  var labels = [];
   var colorlist = [
     window.chartColors.red,
     window.chartColors.green,
@@ -87,13 +85,11 @@ window.graficarPie = function(value) {
   window.myPieConfig = {
     type: 'pie',
     data: {
-      datasets: [
-        {
-          data: data,
-          backgroundColor: colorlist,
-          label: 'Gráfica'
-        }
-      ],
+      datasets: [{
+        data: data,
+        backgroundColor: colorlist,
+        label: 'Gráfica'
+      }],
       labels: labels
     },
     options: {
@@ -117,21 +113,22 @@ window.graficarPie = function(value) {
         }
       }
     }
-  }
+  };
+
   var ctx = document.getElementById('chart-area').getContext('2d');
   window.myPie = new Chart(ctx, window.myPieConfig);
   //});
-}
+};
 
 $(document).ready(function() {
-  graficarPie();
+  window.graficarPie();
 });
 
 window.addChartDataToMap = function() {
-  var layer = createLayer(true, lastCharData);
-  window.map.addLayer(layer);
-}
+  // var layer = window.createLayer(true, lastCharData);
+  // window.map.addLayer(layer);
+};
 
 window.removeChartOfMap = function() {
-  map.removeLayer(map.getLayer('piloto-filtrado'));
-}
+  window.map.removeLayer(window.map.getLayer('piloto-filtrado'));
+};

@@ -3,7 +3,8 @@ window.consultas = {
     var source = new ol.source.Vector();
     source.config = {
       'id': 'highlight'
-    }
+    };
+
     var featureOverlay = new ol.layer.Vector({
       source: source,
       style: function(feature) {
@@ -12,14 +13,18 @@ window.consultas = {
           'strokeColor': '#0099ff',
           'opacity': '1',
           'iconImage': ''
-        }
+        };
+
         return mapTools.getLayerStyle(feature, opt);
       }
     });
     map.addLayer(featureOverlay);
   },
   addGeometryHighlight: function(geometry) {
-    var feature = new ol.Feature({geometry: geometry, name: 'Geometría resaltada.'});
+    var feature = new ol.Feature({
+      geometry: geometry,
+      name: 'Geometría resaltada.'
+    });
     this.addFeatureHighlight(feature);
   },
   addFeatureHighlight: function(feature) {
@@ -29,13 +34,14 @@ window.consultas = {
     source.clear();
     source.addFeature(feature);
     var clkEvent = function(evt) {
-      map.un('click', clkEvent);
+      window.map.un('click', clkEvent);
       consultas.cleanHighlight();
-    }
-    map.on('click', clkEvent);
+    };
+
+    window.map.on('click', clkEvent);
   },
   cleanHighlight: function() {
     var featureOverlay = window.map.getLayer('highlight');
     featureOverlay.getSource().clear();
   }
-}
+};

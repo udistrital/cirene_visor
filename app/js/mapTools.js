@@ -339,10 +339,10 @@
       var jstsGeom = window.jstsParser.read(transformedGeometry); //Only accept 3857
       console.log('jstsGeom', jstsGeom);
       // create a buffer of 1 meters around each line
-      var buffered = window.jstsGeom.buffer(meters);
+      var buffered = jstsGeom.buffer(meters);
 
       // convert back from JSTS and replace the geometry on the feature
-      var bufferedGeometry = jstsParser.write(buffered);
+      var bufferedGeometry = window.jstsParser.write(buffered);
       return bufferedGeometry.transform('EPSG:3857', sourceProj);
     },
     turnOffPopup: function() {
