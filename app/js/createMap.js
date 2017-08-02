@@ -530,6 +530,7 @@
       window.mapFeatureLayerObjects = global.mapFeatureLayerObjects;
       window.jstsParser = global.jstsParser;
       window.changeVisibilityLayer = changeVisibilityLayer;
+      window.identifyInteraction = global.identifyInteraction;
     }
   };
 
