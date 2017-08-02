@@ -28,7 +28,6 @@ Solo se necesita ejecutar:
 
 ```bash
 npm install
-npm run bower:install
 ```
 ## Ejecutar entorno de desarrollo:
 
@@ -44,6 +43,14 @@ Solo se necesita ejecutar:
 
 ```bash
 npm run build
+```
+
+## Hacer pruebas al fuente:
+
+Solo se necesita ejecutar:
+
+```bash
+npm test
 ```
 
 Esto crea un directorio ***dist*** con el código "minificado" y el paquete,
