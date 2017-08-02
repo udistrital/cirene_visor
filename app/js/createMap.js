@@ -9,12 +9,29 @@
     mapFeatureLayerObjects: []
   };
 
+  var loadData = function() {};
+  var createMap = function() {};
+  var addMapProperties = function() {};
+  var zoomToInitialExtent = function() {};
+  var addLayers = function() {};
+  var createLegend = function() {};
+  var generateHTMLLegendWMS = function() {};
+  var generateHTMLLegendWFS = function() {};
+  var createTOC = function() {};
+  var changeVisibilityLayer = function() {};
+  var changeVisibilityGroup = function() {};
+  var checkVisibilityAtScale = function() {};
+  var _getLayerById = function() {};
+  var createIdentify = function() {};
+  var addZoomSlider = function() {};
+  var exposeGlobals = function() {};
+
   $(function() {
     console.log("Ready!");
     loadData();
   });
 
-  function loadData() {
+  loadData = function() {
     var serviciosPromise = $.get('conf/servicios.json');
     var gruposPromise = $.get('conf/grupos.json');
 
@@ -25,9 +42,9 @@
       global.grupoServicios = grupos[0];
       createMap();
     });
-  }
+  };
 
-  function createMap() {
+  createMap = function() {
 
     global.jstsParser = new jsts.io.OL3Parser();
 
@@ -61,19 +78,19 @@
     exposeGlobals(); // Before load others components
     consultas.addLayerHighlight(global.map);
     generalReport.loadInterfaces(global.map);
-  }
+  };
 
-  function addMapProperties() {
+  addMapProperties = function() {
     global.map.getLayer = _getLayerById;
-  }
+  };
 
-  function zoomToInitialExtent() {
+  zoomToInitialExtent = function() {
     // var initialExtent = map.getLayer('sede_punto').getSource().getExtent();
     var initialExtent = [-8258364.441961344, 503048.5820093646, -8229225.577251358, 520654.68434993026];
     global.map.getView().fit(initialExtent, global.map.getSize());
-  }
+  };
 
-  function addLayers() {
+  addLayers = function() {
     // Base map
     // var osmLayer = new ol.layer.Tile({source: new ol.source.OSM()});
     //
@@ -194,38 +211,12 @@
           });
           global.map.addLayer(wmsServerLayer);
 
-        } else if (servicio.serviceType === 'FeatureServer') {
-          for (var j = 0; j < servicio.layers.length; j++) {
-            var layer = servicio.layers[j];
-            if (layer.enable) {
-              var url = servicio.url + '/' + layer.layerId;
-
-              var infoTemplate = new InfoTemplate();
-              infoTemplate.setTitle(layer.name);
-              var templateContent = generateTemplateContent(layer, i, j);
-              infoTemplate.setContent(templateContent);
-
-              var featureLayer = new FeatureLayer(url, {
-                id: layer.id,
-                mode: FeatureLayer[servicio.mode],
-                outFields: ['*'],
-                infoTemplate: infoTemplate,
-                visible: layer.visible
-                // maxAllowableOffset: calcOffset()
-              });
-
-              global.mapFeatureLayerObjects.push(layer);
-              // featureLayer.setMaxScale(layer.maxScale)
-              // featureLayer.setMinScale(layer.minScale)
-              global.map.addLayer(featureLayer);
-            }
-          }
         }
       }
     }
-  }
+  };
 
-  function createLegend() {
+  createLegend = function() {
     // link: http://docs.geoserver.org/stable/en/user/services/wms/reference.html
     // link: https://openlayers.org/en/latest/examples/wms-capabilities.html
     var legendDiv = $('#legendDiv');
@@ -244,9 +235,9 @@
         }
       }
     }
-  }
+  };
 
-  function generateHTMLLegendWMS(response) {
+  generateHTMLLegendWMS = function(response) {
     var legendDiv = $('#legendDiv');
     var parser = new ol.format.WMSCapabilities();
     var result = parser.read(response);
@@ -263,8 +254,7 @@
       var title = layer.Title;
       if (url) {
         var item = $('<li></li>');
-        var div = $('<div class="collapsible-header item-leyenda-wms-title"><i class="material-icons tiny">play_arrow</i>' +
-          title + '</div>');
+        var div = $('<div class="collapsible-header item-leyenda-wms-title"><i class="material-icons tiny">play_arrow</i>' + title + '</div>');
         var div2 = $('<div class="collapsible-body item-leyenda-wms-content"><span><img src="' + url + '"/></span></div>');
         item.append(div);
         item.append(div2);
@@ -272,9 +262,9 @@
       }
     });
     $('#legendDiv .collapsible').collapsible();
-  }
+  };
 
-  function generateHTMLLegendWFS(config) {
+  generateHTMLLegendWFS = function(config) {
     var legendDiv = $('#legendDiv');
     var layer = config;
 
@@ -287,9 +277,9 @@
 
     var item = '<li class="collection-header collection-item"><h5>' + layer.name + '</h5><span class="leyenda-icon" style="' + style + '"></span></li>';
     legendDiv.append(item);
-  }
+  };
 
-  function createTOC() {
+  createTOC = function() {
     var toc = $('#toc-div');
     var collapsible = '<ul class="collapsible" data-collapsible="accordion">';
     var i,
@@ -333,7 +323,7 @@
 
         for (var j = 0; j < layer.filters.length; j++) {
           var filter = layer.filters[j];
-          filters += '<option value="' + filter.filter + '">' + filter.name + '</option>\n'
+          filters += '<option value="' + filter.filter + '">' + filter.name + '</option>\n';
         }
 
         filters += '  </select>\n' +
@@ -352,9 +342,9 @@
     $('.collapsible').collapsible();
     $(toc).find('select').material_select();
     //checkVisibilityAtScale();
-  }
+  };
 
-  function changeVisibilityLayer(layerId) {
+  changeVisibilityLayer = function(layerId) {
     var layer = global.map.getLayer(layerId);
     var icon = $('[data-layer-icon="' + layerId + '"]')[0];
     //window.layer = layer;
@@ -365,16 +355,16 @@
       layer.setVisible(true);
       icon.innerHTML = 'visibility';
     }
-  }
+  };
 
-  function changeVisibilityGroup(evt, groupId, visibility) {
+  changeVisibilityGroup = function(evt, groupId, visibility) {
     //evt.preventDefault()
     evt.stopPropagation();
     var mapFeatureLayerObjects = global.mapFeatureLayerObjects;
     for (var i = 0; i < mapFeatureLayerObjects.length; i++) {
       var layer = mapFeatureLayerObjects[i];
       if (layer.groupId === groupId) {
-        var olLayer = map.getLayer(layer.id);
+        var olLayer = global.map.getLayer(layer.id);
         var icon = $('[data-layer-icon="' + layer.id + '"]')[0];
         if (visibility) {
           olLayer.setVisible(true);
@@ -385,13 +375,13 @@
         }
       }
     }
-  }
+  };
 
   // https://developers.arcgis.com/javascript/3/jssamples/fl_performance.html
-  function checkVisibilityAtScale() {
+  checkVisibilityAtScale = function() {
     var mapFeatureLayerObjects = global.mapFeatureLayerObjects;
     for (var i = 0; i < mapFeatureLayerObjects.length; i++) {
-      var scale = map.getScale();
+      var scale = global.map.getScale();
       var layer = mapFeatureLayerObjects[i];
       var icon;
       if (scale >= layer.minScale && scale <= layer.maxScale) {
@@ -409,9 +399,9 @@
         }
       }
     }
-  }
+  };
 
-  function _getLayerById(id) {
+  _getLayerById = function(id) {
     var layers = global.map.getLayers().getArray();
     window.layers = layers;
     return layers.find(function(layer) {
@@ -421,9 +411,9 @@
       }
       return false;
     });
-  }
+  };
 
-  function createIdentify() {
+  createIdentify = function() {
 
     /**
      * Elements that make up the popup.
@@ -455,6 +445,7 @@
       return false;
     };
 
+    var lastFeature = null;
     var selectInteraction = new ol.interaction.Select();
     selectInteraction.on('select', function(evt) {
       console.log('evt select', evt);
@@ -481,7 +472,7 @@
       }
 
       var geometrySpan = $('<span><a href="#">Acercar</a></span>');
-      geometrySpan[0].geometry = properties['geometry'];
+      geometrySpan[0].geometry = properties.geometry;
       geometrySpan.click(function() {
         mapTools.zoomToGeometry(this.geometry);
         var newCoordinate = mapTools.getCenterOfExtent(this.geometry.getExtent());
@@ -493,7 +484,6 @@
       overlay.setPosition(coordinate);
     });
 
-    var lastFeature = null;
     selectInteraction.getFeatures().on('add', function(evt) {
       console.log('evt add', evt);
       //window.evt2 = evt;
@@ -502,13 +492,13 @@
     });
 
     global.map.addInteraction(selectInteraction);
-    identifyInteraction = selectInteraction;
-  }
+    global.identifyInteraction = selectInteraction;
+  };
 
-  function addZoomSlider() {
+  addZoomSlider = function() {
     var zoomslider = new ol.control.ZoomSlider();
     global.map.addControl(zoomslider);
-  }
+  };
 
   function exposeForTests() {
     if (typeof describe !== 'undefined') {
@@ -534,14 +524,14 @@
     }
   }
 
-  function exposeGlobals() {
+  exposeGlobals = function() {
     if (typeof window !== 'undefined') {
       window.map = global.map;
       window.mapFeatureLayerObjects = global.mapFeatureLayerObjects;
       window.jstsParser = global.jstsParser;
       window.changeVisibilityLayer = changeVisibilityLayer;
     }
-  }
+  };
 
   if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     console.log('Load module for Node.js');

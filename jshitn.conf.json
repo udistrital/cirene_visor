@@ -1,5 +1,4 @@
 {
-  "_comment": "please see more params https://github.com/jshint/jshint/blob/master/examples/.jshintrc",
   "bitwise": true,
   "curly": true,
   "eqeqeq": true,
@@ -7,10 +6,22 @@
   "esnext": true,
   "globalstrict": true,
   "latedef": true,
-  "mocha" : true,
+  "mocha": true,
   "noarg": true,
   "node": true,
   "strict": true,
   "undef": true,
-  "strict" : false
+  "strict": false,
+  "globals": {
+    "window": false,
+    "$": false,
+    "ol": false,
+    "jsts": true,
+    "document": true,
+    "consultas": true,
+    "mapTools": true,
+    "generalReport": true
+  },
+  "evil" : true,
+  "loopfunc" : true
 }

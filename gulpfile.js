@@ -122,7 +122,6 @@ gulp.task('clean:build', function() {
 
 // configure the jshint task
 gulp.task('jshint', function() {
-  console.log('jshintConfig', jshintConfig);
   return gulp.src(['app/**/*.js', '!app/lib/**/*'])
     .pipe(jshint(jshintConfig))
     .pipe(jshint.reporter('default'))

@@ -1,5 +1,7 @@
 [![Build Status Travis CI](https://travis-ci.org/udistrital/cirene_pruebas.svg?branch=master)](https://travis-ci.org/udistrital/cirene_pruebas)
 
+[![Build Status Drone CD](https://drone.udistritaloas.edu.co/api/badges/cirene/cirene_visor/status.svg)](https://drone.udistritaloas.edu.co/cirene/cirene_visor)
+
 # openlayers-material
 Openlayers con Material Design Lite
 
@@ -17,7 +19,7 @@ Openlayers con Material Design Lite
 
 ## Utiliza recomendaciones de estilo estándar:
 
-- JSHint: http://jshint.com/docs (cambió)
+- JSHint: http://jshint.com/docs
 - JSDoc: http://usejsdoc.org/about-getting-started.html
 
 ## Instalación entorno de desarrollo:
@@ -60,3 +62,4 @@ Para entornos de producción puede buscar la aplicación "comprimida" o
 - http://openlayers.org/en/latest/examples/
 - http://www.acuriousanimal.com/thebookofopenlayers3/
 - http://www.matteoagosti.com/blog/2013/02/24/writing-javascript-modules-for-both-browser-and-node/
+- https://github.com/jshint/jshint/blob/master/examples/.jshintrc

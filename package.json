@@ -22,9 +22,10 @@
   },
   "keywords": [
     "sistema",
-    "gestion",
+    "información",
     "geográfica",
-    "sig"
+    "sig",
+    "gis"
   ],
   "author": "Jorge Ulises Useche Cuellar <naturalmenterjorge@gmail.com>",
   "license": "MIT",
