@@ -1,16 +1,28 @@
 (function() {
-  console.log('generalReport no window env');
-  window.generalReport = {
-    loadInterfaces: loadInterfaces,
-    validateData: validateData
-  }
 
-  function displayMessage(msj) {
+  var loadData = function() {};
+  var displayMessage = function() {};
+  var loadInterfaces = function() {};
+  var loadFields = function() {};
+  var validateData = function() {};
+  var consultarFeatures = function() {};
+  var generateCQL_FILTER = function() {};
+  var showResultFeaturesGeneralReport = function() {};
+  var parseGeometry = function() {};
+  var loadingIcon = function() {};
+  var loadingBar = function() {};
+  var consultarFeaturesRapido = function() {};
+  var getCoincidenceFeatures = function() {};
+  var pushFeatureInQuickResults = function() {};
+  var normalize = function() {};
+  var exposeGlobals = function() {};
+
+  displayMessage = function(msj) {
     $('#message-modal1').html(msj);
     $('#modal1').modal('open');
-  }
+  };
 
-  function loadInterfaces(map) {
+  loadInterfaces = function(map) {
     var layersSelect = $('#select_layers');
     layersSelect.html('');
     layersSelect.append($('<option value="" selected>Seleccione la opción</option>'));
@@ -63,12 +75,12 @@
     });
   };
 
-  function loadFields(layerId) {
+  loadFields = function(layerId) {
     var fieldsSelect = $('#select_fields');
     fieldsSelect.html('');
     fieldsSelect.append($('<option value="" selected>Seleccione</option>'));
 
-    var layer = map.getLayer(layerId);
+    var layer = window.map.getLayer(layerId);
     var source = layer.getSource();
     var config = source.config;
 
@@ -93,9 +105,9 @@
     }).fail(function(jqxhr, textStatus, error) {
       displayMessage('Error: ¿Está bien su conexión a internet?. Reporte al administrador con una captura: ' + error);
     });
-  }
+  };
 
-  function validateData(evt) {
+  validateData = function(evt) {
     if ($('#select_layers').val() === '') {
       displayMessage('Por favor seleccione una capa.');
     } else if ($('#custom_cql_filter').val() !== '') {
@@ -105,9 +117,9 @@
     } else {
       consultarFeatures();
     }
-  }
+  };
 
-  function consultarFeatures() {
+  consultarFeatures = function() {
     loadingIcon(true, 'Consultando...');
     var layerId = $('#select_layers').val();
     var field = $('#select_fields').val();
@@ -115,20 +127,19 @@
     var value = $('#row_value').val();
     var string_function = $('#select_string_function').val();
 
-    var layer = map.getLayer(layerId);
+    var layer = window.map.getLayer(layerId);
     var source = layer.getSource();
     var config = source.config;
 
     ///geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=SIGUD:Localidades
     //&outputFormat=application%2Fjson&cql_filter=NOMBRE=%27SANTA%20FE%27
     var custom_cql_filter = $('#custom_cql_filter').val();
-    var cql_filter = (custom_cql_filter !== '')
-      ? custom_cql_filter
-      : generateCQL_FILTER(field, operator, value, string_function);
+    var cql_filter = (custom_cql_filter !== '') ?
+      custom_cql_filter :
+      generateCQL_FILTER(field, operator, value, string_function);
     $('#cql_filter').html(cql_filter);
     cql_filter = encodeURI(cql_filter);
     var url = config.url + '&srsname=EPSG:3857&CQL_FILTER=' + cql_filter;
-    console.log(window.location.origin + url);
 
     $.getJSON(url, function(response) {
       console.log('response', response);
@@ -137,9 +148,9 @@
       loadingIcon(false, 'Terminado...');
       displayMessage('La consulta ha fallado. Error: ' + error + '.');
     });
-  }
+  };
 
-  function generateCQL_FILTER(field, operator, value, string_function) {
+  generateCQL_FILTER = function(field, operator, value, string_function) {
     // please see http://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html
     field = '"' + field + '"'; //se agrega comillas dobles
     if (string_function !== '') {
@@ -178,7 +189,7 @@
         op = '';
     }
 
-    if (value == Number(value)) {
+    if (value === Number(value) || value + '' === Number(value) + '') {
       value = value;
     } else {
       if (value.toUpperCase().indexOf('AND') > 0 || value.toUpperCase().indexOf('OR') > 0) { // si esta OR o AND
@@ -195,9 +206,9 @@
 
     var cql_filter = field + op + value;
     return cql_filter;
-  }
+  };
 
-  function showResultFeaturesGeneralReport(response) {
+  showResultFeaturesGeneralReport = function(response) {
     var containerHTML = $('#generalReportResultsDiv');
     containerHTML.html('');
     var features = response.features;
@@ -215,8 +226,6 @@
           }
         }
         var geometrySpan = $('<span><a href="#">Acercar a</a></span>');
-
-        //window.geometry = feature.geometry;
         feature.geometry = parseGeometry(feature.geometry);
         geometrySpan[0].geometry = feature.geometry;
         geometrySpan.click(function() {
@@ -234,9 +243,9 @@
     }
 
     loadingIcon(false, 'Terminado...');
-  }
+  };
 
-  function parseGeometry(rawGeometry) {
+  parseGeometry = function(rawGeometry) {
     var geometries = {
       'Point': new ol.geom.Point(rawGeometry.coordinates),
       'LineString': new ol.geom.LineString(rawGeometry.coordinates),
@@ -249,9 +258,9 @@
     };
 
     return geometries[rawGeometry.type];
-  }
+  };
 
-  function loadingIcon(activate, message) {
+  loadingIcon = function(activate, message) {
     document.getElementById('loading-report-message').innerHTML = message;
     setTimeout(function() {
       if (activate) {
@@ -259,20 +268,20 @@
       } else {
         document.getElementById('loading-report').style.display = 'none';
       }
-    }, 200)
-  }
+    }, 200);
+  };
 
-  function loadingBar(activate) {
+  loadingBar = function(activate) {
     setTimeout(function() {
       if (activate) {
         document.getElementById('loading-bar-container').style.display = 'block';
       } else {
         document.getElementById('loading-bar-container').style.display = 'none';
       }
-    }, 200)
-  }
+    }, 200);
+  };
 
-  function consultarFeaturesRapido(queryValue) {
+  consultarFeaturesRapido = function(queryValue) {
     loadingBar(true);
     var containerHTML = $('#quickResultsDiv');
     containerHTML.html('');
@@ -286,14 +295,15 @@
     var endPromises = 0;
     var numberOfResults = 0;
 
-    for (i = 0; i < window.mapFeatureLayerObjects.length; i++) {
-      var layer = window.mapFeatureLayerObjects[i];
+    var mapFeatureLayerObjects = window.mapFeatureLayerObjects;
+    for (var i = 0; i < mapFeatureLayerObjects.length; i++) {
+      var layer = mapFeatureLayerObjects[i];
       var type = layer.serviceType;
       //console.log(layer);
       if (type === 'WFS') {
         var layerId = mapFeatureLayerObjects[i].id;
 
-        var olLayer = map.getLayer(layerId);
+        var olLayer = window.map.getLayer(layerId);
         var source = olLayer.getSource();
         var config = source.config;
 
@@ -311,23 +321,23 @@
       // do something
       console.log('all promises results', results);
       var intervalEnd = setInterval(function() {
-        if(endPromises === promises.length){
+        if (endPromises === promises.length) {
           loadingBar(false);
           clearInterval(intervalEnd);
-          if (numberOfResults === 0){
+          if (numberOfResults === 0) {
             containerHTML.html('No hay resultados');
           }
         }
       }, 200);
     });
-  }
+  };
 
-  // http://www.etnassoft.com/2011/03/03/eliminar-tildes-con-javascript/
-  function getCoincidenceFeatures(config, queryValue, listener) {
+  getCoincidenceFeatures = function(config, queryValue, listener) {
+    // http://www.etnassoft.com/2011/03/03/eliminar-tildes-con-javascript/
     var url = config.url + '&srsname=EPSG:3857';
     return $.getJSON(url, function(response) {
       if (response.features.length > 0) {
-        function coincidences(feature) {
+        var coincidences = function(feature) {
           var properties = feature.properties;
           for (var property in properties) {
             if (properties.hasOwnProperty(property)) {
@@ -342,16 +352,16 @@
             }
           }
           return false; // no coincide
-        }
+        };
         listener(response.features.filter(coincidences), config);
       }
       // Se deben eliminar duplicados?
     }).fail(function(jqxhr, textStatus, error) {
       console.log('Error: ' + error, url);
     });
-  }
+  };
 
-  function pushFeatureInQuickResults(features, configLayer, parentNode) {
+  pushFeatureInQuickResults = function(features, configLayer, parentNode) {
     if (features.length > 0) {
       var item = $('<li class="active"></li>');
       var header = $('<div class="collapsible-header active"><i class="material-icons tiny">play_arrow</i>' + configLayer.name + '</div>');
@@ -390,28 +400,48 @@
       }
       parentNode.append(item);
     }
-  }
+  };
 
-  var normalize = (function() {
+  normalize = (function() {
     var from = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç",
       to = "AAAAAEEEEIIIIOOOOUUUUaaaaaeeeeiiiioooouuuunncc",
       mapping = {};
 
-    for (var i = 0, j = from.length; i < j; i++)
+    for (var i = 0, j = from.length; i < j; i++) {
       mapping[from.charAt(i)] = to.charAt(i);
+    }
 
     return function(str) {
       var ret = [];
       for (var i = 0, j = str.length; i < j; i++) {
         var c = str.charAt(i);
-        if (mapping.hasOwnProperty(str.charAt(i)))
+        if (mapping.hasOwnProperty(str.charAt(i))) {
           ret.push(mapping[c]);
-        else
+        } else {
           ret.push(c);
         }
+      }
       return ret.join('');
-    }
-
+    };
   })();
 
+  exposeGlobals = function() {
+    window.generalReport = {
+      loadInterfaces: loadInterfaces,
+      validateData: validateData
+    };
+  };
+
+  function exposeForTests() {
+    if (typeof describe !== 'undefined') {
+      // for tests
+      window._scopeGeneralRepor = {};
+      // window._scopeCreateMap.global = global;
+    }
+  }
+
+  if (typeof window !== 'undefined') {
+    exposeGlobals();
+    exposeForTests();
+  }
 })();

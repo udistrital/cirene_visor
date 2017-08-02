@@ -9,4 +9,4 @@ $(document).ready(function() {
   //   $(this).material_select();
   // });
   //$('ul.tabs').tabs();
-})
+});
