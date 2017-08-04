@@ -13,9 +13,9 @@ window.chartColors = {
 };
 
 window.randomScalingFactor = function() {
-  return (Math.random() > 0.5
-    ? 1.0
-    : -1.0) * Math.round(Math.random() * 100);
+  return (Math.random() > 0.5 ?
+    1.0 :
+    -1.0) * Math.round(Math.random() * 100);
 };
 
 var randomScalingFactor = function() {
@@ -73,13 +73,11 @@ window.graficarPie = function(response) {
   window.myPieConfig = {
     type: 'pie',
     data: {
-      datasets: [
-        {
-          data: data,
-          backgroundColor: colorlist,
-          label: 'Gráfica'
-        }
-      ],
+      datasets: [{
+        data: data,
+        backgroundColor: colorlist,
+        label: 'Gráfica'
+      }],
       labels: labels
     },
     options: {
@@ -98,7 +96,7 @@ window.graficarPie = function(response) {
             });
             var currentValue = dataset.data[tooltipItem.index];
             var precentage = Math.floor(((currentValue / total) * 100) + 0.5);
-            return label + ': ' + value + ' Predios ' + precentage + '%';
+            return label + ': ' + value + ' Espacios ' + precentage + '%';
           }
         }
       }
@@ -136,20 +134,24 @@ var cargarDatos = function(cookie) {
     facultad: 33,
     semestre: 1,
     anno: 2015
-  }
+  };
   parameters = escape(JSON.stringify(parameters));
   url = url + '?parameters=' + parameters;
 
   var selections = {
     "DSEspFis": {}
-  }
+  };
   selections = escape(JSON.stringify(selections));
   url = url + '&selections=' + selections;
 
   var headers = 'Cookie:' + cookie;
   url = '/proxy?headers=' + escape(headers) + '&url=' + escape(url);
 
-  $.ajax({url: url, method: 'GET', dataType: 'json'}).done(function(spagoBIresponse) {
+  $.ajax({
+    url: url,
+    method: 'GET',
+    dataType: 'json'
+  }).done(function(spagoBIresponse) {
     console.log('second success');
     //mostarEnTabla(result);
     var fields = spagoBIresponse.metaData.fields;
@@ -169,7 +171,7 @@ var cargarDatos = function(cookie) {
       var categoryValue = row.column_10; // codigo_facultad
       var categoryName = row.column_10; // facultad
       labels[categoryValue] = categoryName;
-      if (typeof elements[categoryValue] === 'undefined'){
+      if (typeof elements[categoryValue] === 'undefined') {
         elements[categoryValue] = [];
       }
       elements[categoryValue].push(columnValue);
@@ -205,7 +207,7 @@ var cargarDatos = function(cookie) {
     //     'predios': ['0332224', '2232323', '3334723', '7333300']
     //   }
     // ];
-    graficarPie(response);
+    window.graficarPie(response);
   }).fail(function(e) {
     console.log('error', e);
   }).always(function() {
@@ -238,3 +240,157 @@ window.autenticar = function() {
   });
 
 };
+
+
+//poligono styles
+function styleFunction(feature, lastCharData){
+  var codPredial = feature.get('Código').toString();
+  var grupoDatos = lastCharData.find(function(element) {
+    return element.predios.indexOf(codPredial) > -1;
+  });
+
+  if(typeof grupoDatos === 'undefined'){
+    return null;
+  }
+  var colorStroke = grupoDatos.color;
+
+  window.hola = Color(colorStroke);
+  var colorFill = Color(colorStroke);
+  colorFill.alpha(0.2);
+  colorFill = colorFill.rgbaString();
+
+  var image = new ol.style.Circle({
+    radius: 5,
+    fill: new ol.style.Fill({
+      color: 'rgba(223, 62, 62, 1)'
+    }),
+    stroke: new ol.style.Stroke({
+      color: 'rgba(116, 43, 8, 0.45)',
+      width: 1
+    })
+  });
+
+  var styles = {
+    'Point': new ol.style.Style({
+      image: image
+    }),
+    'LineString': new ol.style.Style({
+      stroke: new ol.style.Stroke({
+        color: 'green',
+        width: 1
+      })
+    }),
+    'MultiLineString': new ol.style.Style({
+      stroke: new ol.style.Stroke({
+        color: 'green',
+        width: 1
+      })
+    }),
+    'MultiPoint': new ol.style.Style({
+      image: image
+    }),
+    'MultiPolygon': new ol.style.Style({
+      stroke: new ol.style.Stroke({
+        color: colorStroke,
+        width: 1
+      }),
+      fill: new ol.style.Fill({
+        color: colorFill
+      })
+    }),
+    'Polygon': new ol.style.Style({
+      stroke: new ol.style.Stroke({
+        color: colorStroke,
+        lineDash: [4],
+        width: 3
+      }),
+      fill: new ol.style.Fill({
+        color: colorFill
+      })
+    }),
+    'GeometryCollection': new ol.style.Style({
+      stroke: new ol.style.Stroke({
+        color: 'magenta',
+        width: 2
+      }),
+      fill: new ol.style.Fill({
+        color: 'magenta'
+      }),
+      image: new ol.style.Circle({
+        radius: 10,
+        fill: null,
+        stroke: new ol.style.Stroke({
+          color: 'magenta'
+        })
+      })
+    }),
+    'Circle': new ol.style.Style({
+      stroke: new ol.style.Stroke({
+        color: 'red',
+        width: 2
+      }),
+      fill: new ol.style.Fill({
+        color: 'rgb(255,0,0)'
+      })
+    })
+  };
+
+  console.log('hi', feature.getGeometry().getType(), styles[feature.getGeometry().getType()]);
+
+  return styles[feature.getGeometry().getType()];
+}
+
+function createLayer (filter, lastCharData) {
+  var configLayer = {
+    id: 'piloto-filtrado',
+    filter: filter
+  };
+  window.map.removeLayer(window.map.getLayer(configLayer.id));
+
+  var geojsonFormat = new ol.format.GeoJSON();
+  var wfsLoader = function(extent, resolution, projection) {
+    // var newExtent = window.map.getView().calculateExtent(window.map.getSize());
+    // extent = newExtent;
+    var indice = this.indice;
+    var wfsSource = this;
+    var url = '/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=SIGUD:vista_espacios&outputFormat=application%2Fjson' + //'/geoserver/parqueaderos/ows?service=WFS&' +
+    //'version=1.0.0&request=GetFeature&typename=parqueaderos:isla&' +
+    //'outputFormat=application%2Fjson' +
+    '&srsname=EPSG:3857&bbox=' + extent.join(',') + ',EPSG:3857';
+    // use jsonp: false to prevent jQuery from adding the "callback"
+    // parameter to the URL
+    $.ajax({url: url, dataType: 'json', jsonp: false}).done(function(response) {
+      var features = geojsonFormat.readFeatures(response);
+      var filter = wfsSource.config.filter;
+      if (typeof filter !== 'undefined' && filter !== '') {
+        //window.features = features;
+        features = features.filter(function(feature) {
+          console.log('eval(filter)', eval(filter), wfsSource.config.id);
+          return eval(filter);
+        });
+      }
+      wfsSource.addFeatures(features);
+    });
+  };
+
+  var serviceSource = new ol.source.Vector({
+    loader: wfsLoader,
+    strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({maxZoom: 19}))
+  });
+
+  serviceSource.config = configLayer;
+
+  var serviceLayer = new ol.layer.Vector({
+    source: serviceSource,
+    style: function(feature) {
+      return styleFunction(feature, lastCharData);
+    }
+  });
+
+  return serviceLayer;
+}
+
+window.addChartDataToMap = function (){
+  var layer = createLayer(true, lastCharData);
+  window.map.addLayer(layer);
+}

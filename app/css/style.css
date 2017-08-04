@@ -213,7 +213,7 @@ ul.btnHorizontal>li {
   content: "✖";
 }
 
-.ol-popup-content {
+#popup-content, .ol-popup-content {
   -webkit-user-select: text;
   /* Chrome all / Safari all */
   -moz-user-select: text;

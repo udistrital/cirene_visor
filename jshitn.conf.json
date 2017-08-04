@@ -21,7 +21,8 @@
     "consultas": true,
     "mapTools": true,
     "generalReport": true,
-    "Chart": true
+    "Chart": true,
+    "Color": true
   },
   "evil" : true,
   "loopfunc" : true
