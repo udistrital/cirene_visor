@@ -135,17 +135,17 @@ var cargarDatos = function(cookie) {
     semestre: 1,
     anno: 2015
   };
-  parameters = escape(JSON.stringify(parameters));
+  parameters = window.escape(JSON.stringify(parameters));
   url = url + '?parameters=' + parameters;
 
   var selections = {
     "DSEspFis": {}
   };
-  selections = escape(JSON.stringify(selections));
+  selections = window.escape(JSON.stringify(selections));
   url = url + '&selections=' + selections;
 
   var headers = 'Cookie:' + cookie;
-  url = '/proxy?headers=' + escape(headers) + '&url=' + escape(url);
+  url = '/proxy?headers=' + window.escape(headers) + '&url=' + window.escape(url);
 
   $.ajax({
     url: url,
@@ -187,7 +187,7 @@ var cargarDatos = function(cookie) {
           'nombre': key,
           'alias': labels[key],
           'predios': elements[key]
-        })
+        });
       }
     }
 
@@ -213,13 +213,13 @@ var cargarDatos = function(cookie) {
   }).always(function() {
     console.log('complete');
   });
-}
+};
 
 window.autenticar = function() {
   var _dc = new Date().getTime();
   var url = 'https://intelligentia.udistrital.edu.co:8443/SpagoBI/servlet/AdapterHTTP?Page=LoginPage&NEW_SESSION=TRUE&userId=bicirene&password=bicirene';
   //url = 'http://sig.udistrital.edu.co/proxy?url=' + escape(url);
-  url = '/proxy?url=' + escape(url) + '&renameheaders';
+  url = '/proxy?url=' + window.escape(url) + '&renameheaders';
 
   $.ajax({
     type: 'GET',
@@ -393,4 +393,4 @@ function createLayer (filter, lastCharData) {
 window.addChartDataToMap = function (){
   var layer = createLayer(true, lastCharData);
   window.map.addLayer(layer);
-}
+};
