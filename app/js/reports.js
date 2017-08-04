@@ -46,7 +46,7 @@ window.graficarPie = function(response) {
     window.chartColors.cyan,
     window.chartColors.brown
   ];
-  
+
   for (var i = 0; i < response.length; i++) {
     response[i].color = colorlist[i];
     var alias = response[i].alias;
@@ -159,15 +159,20 @@ var cargarDatos = function(cookie) {
     // }
     var rows = spagoBIresponse.rows;
     var elements = {};
+    var labels = {};
     for (var i = 0; i < rows.length; i++) {
       var row = rows[i];
       var columnValue = row.column_25; // codigo_espacio_fisico
       // console.log('columnValue', columnValue, row);
-      var category = row.column_3; // codigo_facultad
-      if (typeof elements[category] === 'undefined'){
-        elements[category] = [];
+      // var categoryValue = row.column_2; // codigo_facultad
+      // var categoryName = row.column_3; // facultad
+      var categoryValue = row.column_10; // codigo_facultad
+      var categoryName = row.column_10; // facultad
+      labels[categoryValue] = categoryName;
+      if (typeof elements[categoryValue] === 'undefined'){
+        elements[categoryValue] = [];
       }
-      elements[category].push(columnValue);
+      elements[categoryValue].push(columnValue);
     }
 
     console.log('cargarDatos elements', elements);
@@ -178,7 +183,7 @@ var cargarDatos = function(cookie) {
       if (elements.hasOwnProperty(key)) {
         response.push({
           'nombre': key,
-          'alias': key,
+          'alias': labels[key],
           'predios': elements[key]
         })
       }
