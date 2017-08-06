@@ -6,6 +6,7 @@ describe("Validar createMap.js", function() {
     document.write('<div id="popup"></div>');
     document.write('<div id="popup-content"></div>');
     document.write('<div id="popup-closer"></div>');
+
     this.global.servicios = [{
       "serviceId": 0,
       "serviceType": "WMSServer",
@@ -67,6 +68,7 @@ describe("Validar createMap.js", function() {
   }).bind(window._scopeCreateMap));
 
   it("Se verifican funciones globales de window.", (function() {
+
     var result = window.changeVisibilityLayer('ideca');
     expect(result).toBe(undefined);
 
@@ -82,7 +84,11 @@ describe("Validar createMap.js", function() {
     expect(typeof result).toBe('object');
 
     var result = window.identifyInteraction.getMap();
-    expect(result === window.map).toBe(true);
+    expect(result === this.global.map).toBe(true);
+
+    var result = window.map;
+    expect(result === this.global.map).toBe(true);
+
   }).bind(window._scopeCreateMap));
 
 });

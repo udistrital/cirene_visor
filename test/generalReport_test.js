@@ -1,11 +1,11 @@
 describe("Validar generalReport.js", function() {
-  it("Se puede crear el mapa exitosamente.", (function() {
+  it("Se prueban funciones internas.", (function() {
     var result = undefined;
     expect(result).toBe(undefined);
 
   }).bind(window._scopeCreateMap));
 
-  it("Se ejecutan las funciones del mapa.", (function() {
+  it("Se prueban funciones globales de window.", (function() {
 
     var result = undefined;
     expect(result).toBe(undefined);
