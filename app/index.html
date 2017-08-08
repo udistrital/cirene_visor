@@ -289,7 +289,7 @@
               <div class="card-content">
                 <div id="contenido-charts">
                   <div id="select-chart">
-                    <select onchange="autenticar()">
+                    <select onchange="reports.autenticar();">
                       <option value="" selected="selected" disabled="disabled">Seleccione una gráfica.</option>
                       <option value="">Reportes de Ocupación de las Aulas y Laboratorios de la Universidad (En desarrollo)</option>
                       <option value="">Reportes de asignación de los espacios de acuerdo a la Dependencia (En desarrollo)</option>
@@ -306,10 +306,10 @@
                   <!-- end #canvas-holder -->
                   <div id="ver-en-mapa">
                     <!-- Colored raised button -->
-                    <button type="button" class="btn waves-effect waves-light blue" type="submit" onclick="window.addChartDataToMap();">
+                    <button type="button" class="btn waves-effect waves-light blue" type="submit" onclick="reports.addChartDataToMap();">
                       Ver en Mapa
                     </button>
-                    <button type="button" class="btn waves-effect waves-light red" type="submit" onclick="generalReport.validateData(event);">
+                    <button type="button" class="btn waves-effect waves-light red" type="submit" onclick="reports.removeChartOfMap();">
                       Quitar
                     </button>
                   </div>

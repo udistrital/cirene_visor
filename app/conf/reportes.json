@@ -1,14 +1,35 @@
 [{
   "serviceId": 1,
-  "name": "Mapa Referencia IDECA Calles",
-  "id": "ideca2",
-  "url": "http://serviciosgis.catastrobogota.gov.co/arcgis/services/Mapa_Referencia/Mapa_Referencia/MapServer/WMSServer",
-  "icon": "css/img/Ideca.jpg",
-  "layers": "49,46,38,40,39,25,23,14,12,15,8,4",
-  "opacity": 1,
+  "name": "Clasificación espacios físicos.",
+  "id": "espacios_fisicos",
   "type": "",
-  "groupId": "urbano",
-  "visible": false,
+  "authUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/servlet/AdapterHTTP?Page=LoginPage&NEW_SESSION=TRUE&userId=bicirene&password=bicirene",
+  "restUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/DSEspFis/data",
+  "query": {
+    "parameters": {
+      "facultad": {
+        "name": "Facultad",
+        "type": "dataset",
+        "datasetUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/carrera/data",
+        "datasetName": "CRA_NOMBRE",
+        "datasetValue": "CRA_COD"
+      },
+      "semestre": {
+        "name": "Semestre",
+        "type": "dataset",
+        "datasetUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/carrera/data",
+        "datasetName": "CRA_NOMBRE",
+        "datasetValue": "CRA_COD"
+      },
+      "anno": {
+        "name": "Año",
+        "type": "dataset",
+        "datasetUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/carrera/data",
+        "datasetName": "CRA_NOMBRE",
+        "datasetValue": "CRA_COD"
+      }
+    }
+  },
   "enable": true
 }, {
   "serviceId": 2,

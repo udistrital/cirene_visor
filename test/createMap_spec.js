@@ -7,7 +7,7 @@ describe("Validar createMap.js", function() {
     document.write('<div id="popup-content"></div>');
     document.write('<div id="popup-closer"></div>');
 
-    this.global.servicios = [{
+    this.setServicios([{
       "serviceId": 0,
       "serviceType": "WMSServer",
       "name": "Mapa Referencia IDECA Calles",
@@ -33,9 +33,9 @@ describe("Validar createMap.js", function() {
       "groupId": "urbano",
       "visible": true,
       "enable": true
-    }];
+    }]);
 
-    this.global.grupoServicios = [{
+    this.setGrupoServicios([{
       "id": "sedes",
       "name": "Capas Escala Sedes"
     }, {
@@ -44,7 +44,7 @@ describe("Validar createMap.js", function() {
     }, {
       "id": "urbano",
       "name": "Capas Escala Urbana"
-    }];
+    }]);
 
     var result = this.createMap();
     expect(result).toBe(undefined);
@@ -77,17 +77,20 @@ describe("Validar createMap.js", function() {
     var result = window.changeVisibilityGroup(event, 'sedes', false);
     expect(result).toBe(undefined);
 
-    var result = window.mapFeatureLayerObjects.length;
+    var result = window.getMapFeatureLayerObjects().length;
     expect(result).toBe(2);
 
-    var result = window.jstsParser.geometryFactory;
+    var result = window.getJstsParser().geometryFactory;
     expect(typeof result).toBe('object');
 
-    var result = window.identifyInteraction.getMap();
-    expect(result === this.global.map).toBe(true);
+    var result = window.getIdentifyInteraction();
+    expect(result === this.getIdentifyInteraction()).toBe(true);
 
-    var result = window.map;
-    expect(result === this.global.map).toBe(true);
+    var result = window.getIdentifyInteraction().getMap();
+    expect(result === this.getMap()).toBe(true);
+
+    var result = window.getMap();
+    expect(result === this.getMap()).toBe(true);
 
   }).bind(window._scopeCreateMap));
 

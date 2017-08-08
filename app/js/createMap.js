@@ -1,13 +1,10 @@
 (function() {
 
-  var global = {
-    map: {},
-    servicios: null,
-    grupoServicios: null,
-    jstsParser: null,
-    identifyInteraction: null,
-    mapFeatureLayerObjects: []
-  };
+  var map = null;
+  var servicios = null;
+  var grupoServicios = null;
+  var jstsParser = null;
+  var mapFeatureLayerObjects = [];
 
   var loadData = function() {};
   var createMap = function() {};
@@ -23,7 +20,14 @@
   var checkVisibilityAtScale = function() {};
   var _getLayerById = function() {};
   var createIdentify = function() {};
+  var identifyInteraction = function() {};
   var addZoomSlider = function() {};
+  var setServicios = function() {};
+  var setGrupoServicios = function() {};
+  var getMap = function() {};
+  var getMapFeatureLayerObjects = function() {};
+  var getJstsParser = function() {};
+  var getIdentifyInteraction = function() {};
   var exposeGlobals = function() {};
 
   $(function() {
@@ -35,22 +39,22 @@
     var serviciosPromise = $.get('conf/servicios.json');
     var gruposPromise = $.get('conf/grupos.json');
 
-    $.when(serviciosPromise, gruposPromise).done(function(servicios, grupos) {
+    $.when(serviciosPromise, gruposPromise).done(function(results1, results2) {
       // do something
-      console.log('results', servicios, grupos);
-      global.servicios = servicios[0];
-      global.grupoServicios = grupos[0];
+      console.log('results', results1, results2);
+      servicios = results1[0];
+      grupoServicios = results2[0];
       createMap();
     });
   };
 
   createMap = function() {
 
-    global.jstsParser = new jsts.io.OL3Parser();
+    jstsParser = new jsts.io.OL3Parser();
 
     //var projection = new ol.proj.Projection({code: 'EPSG:4326', units: 'degrees', axisOrientation: 'neu'});
 
-    global.map = new ol.Map({
+    map = new ol.Map({
       //layers: [osmLayer, wmsLayer, grupoislaLayer, islaLayer],
       //overlays: [overlay],
       target: document.getElementById('map'),
@@ -75,19 +79,18 @@
     createTOC();
     createIdentify();
     zoomToInitialExtent();
-    exposeGlobals(); // Before load others components
-    consultas.addLayerHighlight(global.map);
-    generalReport.loadInterfaces(global.map);
+    consultas.addLayerHighlight(map);
+    generalReport.loadInterfaces(map);
   };
 
   addMapProperties = function() {
-    global.map.getLayer = _getLayerById;
+    map.getLayer = _getLayerById;
   };
 
   zoomToInitialExtent = function() {
     // var initialExtent = map.getLayer('sede_punto').getSource().getExtent();
     var initialExtent = [-8258364.441961344, 503048.5820093646, -8229225.577251358, 520654.68434993026];
-    global.map.getView().fit(initialExtent, global.map.getSize());
+    map.getView().fit(initialExtent, map.getSize());
   };
 
   addLayers = function() {
@@ -103,14 +106,12 @@
       })
     });
 
-    global.map.addLayer(idecaLayer);
+    map.addLayer(idecaLayer);
 
     // format used to parse WFS GetFeature responses
     var geojsonFormat = new ol.format.GeoJSON();
 
-    global.mapFeatureLayerObjects = [];
-
-    var servicios = global.servicios;
+    mapFeatureLayerObjects = [];
 
     var wfsLoader = function(extent, resolution, projection) {
       var indice = this.indice;
@@ -143,7 +144,7 @@
       var servicio = servicios[i];
       if (typeof servicio.enable === 'undefined' || servicio.enable === true) {
         if (servicio.serviceType === 'WFS') {
-          global.mapFeatureLayerObjects.push(servicio);
+          mapFeatureLayerObjects.push(servicio);
           var wfsSource = new ol.source.Vector({
             loader: wfsLoader,
             strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
@@ -164,9 +165,9 @@
           });
           wfsLayer.indice = i;
 
-          global.map.addLayer(wfsLayer);
+          map.addLayer(wfsLayer);
         } else if (servicio.serviceType === 'WMS') {
-          global.mapFeatureLayerObjects.push(servicio);
+          mapFeatureLayerObjects.push(servicio);
           var wmsSource = new ol.source.TileWMS({
             url: '/geoserver/wms',
             params: {
@@ -187,10 +188,10 @@
             visible: (typeof servicio.visible === 'undefined') ?
               true : servicio.visible
           });
-          global.map.addLayer(wmsLayer);
+          map.addLayer(wmsLayer);
 
         } else if (servicio.serviceType === 'WMSServer') {
-          global.mapFeatureLayerObjects.push(servicio);
+          mapFeatureLayerObjects.push(servicio);
           var wmsServerSource = new ol.source.TileWMS({
             url: servicio.url,
             params: {
@@ -209,8 +210,7 @@
             visible: (typeof servicio.visible === 'undefined') ?
               true : servicio.visible
           });
-          global.map.addLayer(wmsServerLayer);
-
+          map.addLayer(wmsServerLayer);
         }
       }
     }
@@ -220,7 +220,7 @@
     // link: http://docs.geoserver.org/stable/en/user/services/wms/reference.html
     // link: https://openlayers.org/en/latest/examples/wms-capabilities.html
     var legendDiv = $('#legendDiv');
-    var layers = global.map.getLayers().getArray();
+    var layers = map.getLayers().getArray();
     for (var i = 0; i < layers.length; i++) {
       var layer = layers[i];
       var source = layer.getSource();
@@ -284,7 +284,7 @@
     var collapsible = '<ul class="collapsible" data-collapsible="accordion">';
     var i,
       li;
-    var grupoServicios = global.grupoServicios;
+
     for (i = 0; i < grupoServicios.length; i++) {
       var grupo = grupoServicios[i];
       var active = (i === 0) ?
@@ -296,8 +296,6 @@
     }
     collapsible += '</ul>';
     toc.html(collapsible);
-
-    var mapFeatureLayerObjects = global.mapFeatureLayerObjects;
 
     for (i = 0; i < mapFeatureLayerObjects.length; i++) {
       var layer = mapFeatureLayerObjects[i];
@@ -345,7 +343,7 @@
   };
 
   changeVisibilityLayer = function(layerId) {
-    var layer = global.map.getLayer(layerId);
+    var layer = map.getLayer(layerId);
     var icon = $('[data-layer-icon="' + layerId + '"]')[0];
     //window.layer = layer;
     if (layer.getVisible()) {
@@ -360,11 +358,10 @@
   changeVisibilityGroup = function(evt, groupId, visibility) {
     //evt.preventDefault()
     evt.stopPropagation();
-    var mapFeatureLayerObjects = global.mapFeatureLayerObjects;
     for (var i = 0; i < mapFeatureLayerObjects.length; i++) {
       var layer = mapFeatureLayerObjects[i];
       if (layer.groupId === groupId) {
-        var olLayer = global.map.getLayer(layer.id);
+        var olLayer = map.getLayer(layer.id);
         var icon = $('[data-layer-icon="' + layer.id + '"]')[0];
         if (visibility) {
           olLayer.setVisible(true);
@@ -379,20 +376,20 @@
 
   // https://developers.arcgis.com/javascript/3/jssamples/fl_performance.html
   checkVisibilityAtScale = function() {
-    var mapFeatureLayerObjects = global.mapFeatureLayerObjects;
+
     for (var i = 0; i < mapFeatureLayerObjects.length; i++) {
-      var scale = global.map.getScale();
+      var scale = map.getScale();
       var layer = mapFeatureLayerObjects[i];
       var icon;
       if (scale >= layer.minScale && scale <= layer.maxScale) {
-        global.map.getLayer(layer.id).setVisibility(true);
+        map.getLayer(layer.id).setVisibility(true);
         icon = document.querySelector('[data-layer-icon="' + layer.id + '"]');
         if (icon !== null) {
           icon.innerHTML = 'visibility';
         }
 
       } else {
-        global.map.getLayer(layer.id).setVisibility(false);
+        map.getLayer(layer.id).setVisibility(false);
         icon = document.querySelector('[data-layer-icon="' + layer.id + '"]');
         if (icon !== null) {
           icon.innerHTML = 'visibility_off';
@@ -402,7 +399,7 @@
   };
 
   _getLayerById = function(id) {
-    var layers = global.map.getLayers().getArray();
+    var layers = map.getLayers().getArray();
     window.layers = layers;
     return layers.find(function(layer) {
       var source = layer.getSource();
@@ -434,7 +431,7 @@
         }
       }));
 
-    global.map.addOverlay(overlay);
+    map.addOverlay(overlay);
     /**
      * Add a click handler to hide the popup.
      * @return {boolean} Don't follow the href.
@@ -491,22 +488,45 @@
       lastFeature = feature;
     });
 
-    global.map.addInteraction(selectInteraction);
-    global.identifyInteraction = selectInteraction;
+    map.addInteraction(selectInteraction);
+    identifyInteraction = selectInteraction;
+  };
+
+  setServicios = function(arrayServicios) {
+    servicios = arrayServicios;
+  };
+
+  setGrupoServicios = function(arrayGrupoServicios) {
+    grupoServicios = arrayGrupoServicios;
   };
 
   addZoomSlider = function() {
     var zoomslider = new ol.control.ZoomSlider();
-    global.map.addControl(zoomslider);
+    map.addControl(zoomslider);
   };
+
+  getMap = function() {
+    return map;
+  };
+
+  getMapFeatureLayerObjects = function() {
+    return mapFeatureLayerObjects;
+  };
+
+  getJstsParser = function() {
+    return jstsParser;
+  };
+
+  getIdentifyInteraction = function() {
+    return identifyInteraction;
+  };
+
 
   function exposeForTests() {
     if (typeof describe !== 'undefined') {
       // for tests
       window._scopeCreateMap = {};
-      window._scopeCreateMap.global = global;
-      window._scopeCreateMap.loadData = loadData; //
-      window._scopeCreateMap.createMap = createMap; //
+      window._scopeCreateMap.createMap = createMap;
       // window._scopeCreateMap.addMapProperties = addMapProperties;//testeada en createMap
       window._scopeCreateMap.zoomToInitialExtent = zoomToInitialExtent;
       // window._scopeCreateMap.addLayers = addLayers;//testeada en createMap
@@ -520,24 +540,28 @@
       window._scopeCreateMap._getLayerById = _getLayerById;
       window._scopeCreateMap.createIdentify = createIdentify;
       window._scopeCreateMap.addZoomSlider = addZoomSlider;
+      window._scopeCreateMap.getIdentifyInteraction = getIdentifyInteraction;
+      window._scopeCreateMap.getMap = getMap;
       window._scopeCreateMap.exposeGlobals = exposeGlobals;
+      window._scopeCreateMap.setServicios = setServicios;
+      window._scopeCreateMap.setGrupoServicios = setGrupoServicios;
     }
   }
 
   exposeGlobals = function() {
     if (typeof window !== 'undefined') {
-      window.map = global.map;
-      window.mapFeatureLayerObjects = global.mapFeatureLayerObjects;
-      window.jstsParser = global.jstsParser;
+      window.getMap = getMap;
+      window.getMapFeatureLayerObjects = getMapFeatureLayerObjects;
+      window.getJstsParser = getJstsParser;
+      window.getIdentifyInteraction = getIdentifyInteraction;
       window.changeVisibilityLayer = changeVisibilityLayer;
-      window.identifyInteraction = global.identifyInteraction;
       window.changeVisibilityGroup = changeVisibilityGroup;
     }
   };
 
   if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     console.log('Load module for Node.js');
-    module.exports.map = global.map;
+    // module.exports.map = map;
   } else {
     exposeGlobals();
     exposeForTests();
