@@ -79,7 +79,7 @@ function createMap() {
             extent: startExtent,
             basemap: 'topo'
         })
-        window.map = map
+        window.getMap() = map
         navToolbar = new Navigation(map)
 
         // The URL referenced in the constructor may point to a style url JSON (as in this sample)
@@ -117,9 +117,9 @@ function createMap() {
         // map.addLayer(new ArcGISTiledMapServiceLayer('https://services7.arcgis.com/lUZlLTBKH3INlBpk/arcgis/rest/services/IRSP_V1/MapServer'))
 
         // https://developers.arcgis.com/javascript/3/jshelp/best_practices_feature_layers.html
-        // window.mapFeatureLayers = new Array()
+        // window.getMap()FeatureLayers = new Array()
         // map.on('onZoomEnd', function() {
-        //     window.mapMaxOffset = calcOffset()
+        //     window.getMap()MaxOffset = calcOffset()
         //     for (var i = 0; i < featureLayers.length; i++) {
         //         featureLayers[i].setMaxAllowableOffset(window.maxOffset)
         //     }
@@ -133,7 +133,7 @@ function createMap() {
             scalebarUnit: 'dual'
         })
 
-        window.mapFeatureLayerObjects = new Array()
+        window.getMap()FeatureLayerObjects = new Array()
         map.on('zoom-end', function() {
             checkVisibilityAtScale()
             showScale()
@@ -166,7 +166,7 @@ function createMap() {
                                 visible: layer.visible
                                 // maxAllowableOffset: calcOffset()
                             })
-                            window.mapFeatureLayerObjects.push(layer)
+                            window.getMap()FeatureLayerObjects.push(layer)
                             // featureLayer.setMaxScale(layer.maxScale)
                             // featureLayer.setMinScale(layer.minScale)
                             map.addLayer(featureLayer)
@@ -184,7 +184,7 @@ function createMap() {
 }
 
 function showScale() {
-    $('#extentpane>span').html('1:' + String(window.map.getScale()))
+    $('#extentpane>span').html('1:' + String(window.getMap().getScale()))
 }
 
 //https://geonet.esri.com/docs/DOC-8721-coded-domains-in-infotemplate
@@ -259,7 +259,7 @@ function createLeyend() {
         arrayUtils,
         Legend
     ) {
-        var layerInfo = arrayUtils.map(window.mapFeatureLayerObjects, function(layer, index) {
+        var layerInfo = arrayUtils.map(window.getMap()FeatureLayerObjects, function(layer, index) {
             return {
                 layer: map.getLayer(layer.id),
                 title: layer.name
@@ -337,8 +337,8 @@ function createTOC() {
         collapsible += '</ul>'
         toc.innerHTML = collapsible
 
-        for (var i = 0; i < window.mapFeatureLayerObjects.length; i++) {
-            var layer = window.mapFeatureLayerObjects[i]
+        for (var i = 0; i < window.getMap()FeatureLayerObjects.length; i++) {
+            var layer = window.getMap()FeatureLayerObjects[i]
             var classVisible = 'visibility'
             if (layer.visible === 'false') {
                 classVisible = 'visibility_off'
@@ -394,8 +394,8 @@ function changeVisibilityGroup(evt, groupId, visibility) {
         dom
     ) {
         evt.stopPropagation()
-        for (var i = 0; i < window.mapFeatureLayerObjects.length; i++) {
-            var layer = window.mapFeatureLayerObjects[i]
+        for (var i = 0; i < window.getMap()FeatureLayerObjects.length; i++) {
+            var layer = window.getMap()FeatureLayerObjects[i]
             if (layer.groupId === groupId) {
                 var layer = map.getLayer(layer.id)
                 var icon = query('[data-layer-icon="' + layer.id + '"]')[0]
@@ -484,9 +484,9 @@ function addToMap(evt) {
 
 // https://developers.arcgis.com/javascript/3/jssamples/fl_performance.html
 function checkVisibilityAtScale() {
-    for (var i = 0; i < window.mapFeatureLayerObjects.length; i++) {
+    for (var i = 0; i < window.getMap()FeatureLayerObjects.length; i++) {
         var scale = map.getScale()
-        var layer = window.mapFeatureLayerObjects[i]
+        var layer = window.getMap()FeatureLayerObjects[i]
         if (scale >= layer.minScale && scale <= layer.maxScale) {
             map.getLayer(layer.id).setVisibility(true)
             var icon = document.querySelector('[data-layer-icon="' + layer.id + '"]')

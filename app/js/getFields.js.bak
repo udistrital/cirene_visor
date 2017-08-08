@@ -65,7 +65,7 @@ function createMap(urlServicio, min, max) {
         //     //extent: startExtent,
         //     basemap: 'topo'
         // })
-        // window.map = map
+        // window.getMap() = map
         $('#results').empty()
 
         window.urlServicio = urlServicio

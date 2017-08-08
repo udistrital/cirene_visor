@@ -358,11 +358,11 @@
       id: 'piloto-filtrado',
       filter: filter
     };
-    window.map.removeLayer(window.map.getLayer(configLayer.id));
+    window.getMap().removeLayer(window.getMap().getLayer(configLayer.id));
 
     var geojsonFormat = new ol.format.GeoJSON();
     var wfsLoader = function(extent, resolution, projection) {
-      // var newExtent = window.map.getView().calculateExtent(window.map.getSize());
+      // var newExtent = window.getMap().getView().calculateExtent(window.getMap().getSize());
       // extent = newExtent;
       var indice = this.indice;
       var wfsSource = this;
@@ -411,11 +411,11 @@
 
   addChartDataToMap = function() {
     var layer = createLayer(true, lastCharData);
-    window.map.addLayer(layer);
+    window.getMap().addLayer(layer);
   };
 
   removeChartOfMap = function() {
-    window.map.removeLayer(window.map.getLayer('piloto-filtrado'));
+    window.getMap().removeLayer(window.getMap().getLayer('piloto-filtrado'));
   };
 
   getReportes = function() {

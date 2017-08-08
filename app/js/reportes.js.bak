@@ -111,7 +111,7 @@ function getLayerByURL(url) {
                 var layer = servicio.layers[j]
                 var newUrl = servicio.url + '/' + layer.layerId
                 if (url === newUrl) {
-                    return window.map.getLayer(layer.id)
+                    return window.getMap().getLayer(layer.id)
                 }
             }
         }
@@ -139,7 +139,7 @@ function getRedesAfectadas(listener) {
             if (servicio.layers !== undefined) {
                 for (var j = 0; j < servicio.layers.length; j++) {
                     var layer = servicio.layers[j]
-                    var featureLayer = window.map.getLayer(layer.id)
+                    var featureLayer = window.getMap().getLayer(layer.id)
                     if (featureLayer !== undefined) {
                         console.log('featureLayer.url', featureLayer.url)
                         var queryTask = new QueryTask(featureLayer.url)

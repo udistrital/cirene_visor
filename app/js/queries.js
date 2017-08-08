@@ -28,20 +28,20 @@ window.consultas = {
     this.addFeatureHighlight(feature);
   },
   addFeatureHighlight: function(feature) {
-    var featureOverlay = window.map.getLayer('highlight');
+    var featureOverlay = window.getMap().getLayer('highlight');
     var source = featureOverlay.getSource();
     var features = source.getFeatures();
     source.clear();
     source.addFeature(feature);
     var clkEvent = function(evt) {
-      window.map.un('click', clkEvent);
+      window.getMap().un('click', clkEvent);
       consultas.cleanHighlight();
     };
 
-    window.map.on('click', clkEvent);
+    window.getMap().on('click', clkEvent);
   },
   cleanHighlight: function() {
-    var featureOverlay = window.map.getLayer('highlight');
+    var featureOverlay = window.getMap().getLayer('highlight');
     featureOverlay.getSource().clear();
   }
 };

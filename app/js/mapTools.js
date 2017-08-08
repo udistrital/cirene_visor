@@ -10,11 +10,11 @@
       } else {
         geometryExtent = geometry.getExtent();
       }
-      window.map.getView().fit(geometryExtent, window.map.getSize());
+      window.getMap().getView().fit(geometryExtent, window.getMap().getSize());
     },
     changeFilter: function(element, layerId) {
       console.log('changeFilter', element, layerId);
-      var layer = window.map.getLayer(layerId);
+      var layer = window.getMap().getLayer(layerId);
       var source = layer.getSource();
       var filters = $(element).val();
       var filter = '';
@@ -192,7 +192,7 @@
       for (var i = 0; i < featuresByLayer.length; i++) {
         var layer = featuresByLayer[i];
         var layerObject = mapTools.getFeatureLayerObjectById(layer.layerId);
-        var capaVisible = window.map.getLayer(layer.layerId).getVisible();
+        var capaVisible = window.getMap().getLayer(layer.layerId).getVisible();
         if (capaVisible) {
           hayResultados = true;
           contentHTML = '';
@@ -252,8 +252,8 @@
       // OJO puede cambiar por el dpi de la pantalla, hay que probar
       // https://gis.stackexchange.com/questions/242424/how-to-get-map-units-to-find-current-scale-in-openlayers
       function mapScale(dpi) {
-        var unit = window.map.getView().getProjection().getUnits();
-        var resolution = window.map.getView().getResolution();
+        var unit = window.getMap().getView().getProjection().getUnits();
+        var resolution = window.getMap().getView().getResolution();
         var inchesPerMetre = 39.37;
 
         return resolution * ol.proj.METERS_PER_UNIT[unit] * inchesPerMetre * dpi;
@@ -265,14 +265,14 @@
       return newGeometry;
     },
     getFeatureLayerObjectById: function(id) {
-      return window.mapFeatureLayerObjects.find(function(featureLayerObject) {
+      return window.getMapFeatureLayerObjects().find(function(featureLayerObject) {
         return featureLayerObject.id === id;
       });
     },
     searchFeaturesLayerByCoordinate: function(layerId, coordinate) {
       // https://openlayers.org/en/latest/examples/jsts.html
       //console.log(layerId);
-      var layer = window.map.getLayer(layerId);
+      var layer = window.getMap().getLayer(layerId);
       var source = layer.getSource();
       var geometry = new ol.geom.Point(coordinate);
       var newGeometry = mapTools.getBufferedInMap(geometry);
@@ -282,7 +282,7 @@
     },
     searchFeaturesLayersByCoordinate: function(coordinate) {
       var featuresByLayer = [];
-      var mapFeatureLayerObjects = window.mapFeatureLayerObjects;
+      var mapFeatureLayerObjects = window.getMapFeatureLayerObjects();
       for (var i = 0; i < mapFeatureLayerObjects.length; i++) {
         var layer = mapFeatureLayerObjects[i];
         var type = layer.serviceType;
@@ -302,7 +302,7 @@
       //consultas.cleanHighlight();
       $('#map').css('cursor', 'crosshair');
       var clkEvent = function(evt) {
-        window.map.un('click', clkEvent);
+        window.getMap().un('click', clkEvent);
         $('#map').css('cursor', 'default');
         $('#boton-resultados').removeClass('disabled');
         var coordinate = evt.coordinate;
@@ -321,10 +321,10 @@
         };
         setTimeout(handler, 1000);
       };
-      window.map.on('click', clkEvent);
+      window.getMap().on('click', clkEvent);
     },
     hideOverlays: function() {
-      var overlays = window.map.getOverlays().getArray();
+      var overlays = window.getMap().getOverlays().getArray();
       for (var i = 0; i < overlays.length; i++) {
         overlays[i].setPosition(undefined);
       }
@@ -334,7 +334,7 @@
         meters :
         0;
 
-      var sourceProj = window.map.getView().getProjection();
+      var sourceProj = window.getMap().getView().getProjection();
       var transformedGeometry = (geometry.clone().transform(sourceProj, 'EPSG:3857'));
       var jstsGeom = window.jstsParser.read(transformedGeometry); //Only accept 3857
       console.log('jstsGeom', jstsGeom);
@@ -348,10 +348,10 @@
     turnOffPopup: function() {
       window.identifyInteraction.getFeatures().clear();
       this.hideOverlays();
-      window.map.removeInteraction(window.identifyInteraction);
+      window.getMap().removeInteraction(window.identifyInteraction);
     },
     turnOnPopup: function() {
-      window.map.addInteraction(window.identifyInteraction);
+      window.getMap().addInteraction(window.identifyInteraction);
     },
     cleanMap: function() {
       window.identifyInteraction.getFeatures().clear();
@@ -361,7 +361,7 @@
     cleanNavigationsInteractions: function() {
       var listOfNavigationsInteractions = mapTools.listOfNavigationsInteractions;
       for (var i = 0; i < listOfNavigationsInteractions.length; i++) {
-        window.map.removeInteraction(listOfNavigationsInteractions[i]);
+        window.getMap().removeInteraction(listOfNavigationsInteractions[i]);
       }
       mapTools.listOfNavigationsInteractions = [];
       mapTools.turnOffMeasure();
@@ -373,7 +373,7 @@
         condition: ol.events.condition.mouseOnly,
         out: false
       });
-      window.map.addInteraction(dragZoom);
+      window.getMap().addInteraction(dragZoom);
       mapTools.listOfNavigationsInteractions.push(dragZoom);
     },
     zoomOutBox: function() {
@@ -383,7 +383,7 @@
         condition: ol.events.condition.mouseOnly,
         out: true
       });
-      window.map.addInteraction(dragZoom);
+      window.getMap().addInteraction(dragZoom);
       mapTools.listOfNavigationsInteractions.push(dragZoom);
     },
     panMap: function() {
@@ -504,11 +504,11 @@
         helpTooltipElement.classList.remove('hidden');
       };
 
-      window.map.addLayer(vector);
+      window.getMap().addLayer(vector);
 
-      window.map.on('pointermove', pointerMoveHandler);
+      window.getMap().on('pointermove', pointerMoveHandler);
 
-      window.map.getViewport().addEventListener('mouseout', function() {
+      window.getMap().getViewport().addEventListener('mouseout', function() {
         helpTooltipElement.classList.add('hidden');
       });
 
@@ -524,7 +524,7 @@
         if (geodesicCheckbox.checked) {
           var coordinates = line.getCoordinates();
           length = 0;
-          var sourceProj = window.map.getView().getProjection();
+          var sourceProj = window.getMap().getView().getProjection();
           for (var i = 0, ii = coordinates.length - 1; i < ii; ++i) {
             var c1 = ol.proj.transform(coordinates[i], sourceProj, 'EPSG:4326');
             var c2 = ol.proj.transform(coordinates[i + 1], sourceProj, 'EPSG:4326');
@@ -550,7 +550,7 @@
       var formatArea = function(polygon) {
         var area;
         if (geodesicCheckbox.checked) {
-          var sourceProj = window.map.getView().getProjection();
+          var sourceProj = window.getMap().getView().getProjection();
           var geom = /** @type {ol.geom.Polygon} */
             (polygon.clone().transform(sourceProj, 'EPSG:4326'));
           var coordinates = geom.getLinearRing(0).getCoordinates();
@@ -597,7 +597,7 @@
             })
           })
         });
-        window.map.addInteraction(draw);
+        window.getMap().addInteraction(draw);
 
         /**
          * Creates a new measure tooltip
@@ -615,7 +615,7 @@
             ],
             positioning: 'bottom-center'
           });
-          window.map.addOverlay(measureTooltip);
+          window.getMap().addOverlay(measureTooltip);
           measureTooltipArray.push(measureTooltip);
         }
 
@@ -673,26 +673,26 @@
           ],
           positioning: 'center-left'
         });
-        window.map.addOverlay(helpTooltip);
+        window.getMap().addOverlay(helpTooltip);
       }
 
       /**
        * Let user change the geometry type.
        */
       typeSelect.onchange = function() {
-        window.map.removeInteraction(draw);
+        window.getMap().removeInteraction(draw);
         addInteraction();
       };
       createHelpTooltip();
       addInteraction();
 
       function eraseMeasurement() {
-        window.map.removeInteraction(draw);
-        window.map.removeLayer(vector);
+        window.getMap().removeInteraction(draw);
+        window.getMap().removeLayer(vector);
         for (var i = 0; i < measureTooltipArray.length; i++) {
-          window.map.removeOverlay(measureTooltipArray[i]);
+          window.getMap().removeOverlay(measureTooltipArray[i]);
         }
-        window.map.removeOverlay(helpTooltip);
+        window.getMap().removeOverlay(helpTooltip);
         mapTools.eraseMeasurement = null;
       }
 

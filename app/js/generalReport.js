@@ -80,7 +80,7 @@
     fieldsSelect.html('');
     fieldsSelect.append($('<option value="" selected>Seleccione</option>'));
 
-    var layer = window.map.getLayer(layerId);
+    var layer = window.getMap().getLayer(layerId);
     var source = layer.getSource();
     var config = source.config;
 
@@ -127,7 +127,7 @@
     var value = $('#row_value').val();
     var string_function = $('#select_string_function').val();
 
-    var layer = window.map.getLayer(layerId);
+    var layer = window.getMap().getLayer(layerId);
     var source = layer.getSource();
     var config = source.config;
 
@@ -295,7 +295,7 @@
     var endPromises = 0;
     var numberOfResults = 0;
 
-    var mapFeatureLayerObjects = window.mapFeatureLayerObjects;
+    var mapFeatureLayerObjects = window.getMapFeatureLayerObjects();
     for (var i = 0; i < mapFeatureLayerObjects.length; i++) {
       var layer = mapFeatureLayerObjects[i];
       var type = layer.serviceType;
@@ -303,7 +303,7 @@
       if (type === 'WFS') {
         var layerId = mapFeatureLayerObjects[i].id;
 
-        var olLayer = window.map.getLayer(layerId);
+        var olLayer = window.getMap().getLayer(layerId);
         var source = olLayer.getSource();
         var config = source.config;
 
@@ -428,15 +428,32 @@
   exposeGlobals = function() {
     window.generalReport = {
       loadInterfaces: loadInterfaces,
-      validateData: validateData
+      validateData: validateData,
+      displayMessage: displayMessage
     };
   };
 
   function exposeForTests() {
     if (typeof describe !== 'undefined') {
       // for tests
-      window._scopeGeneralRepor = {};
+      window._scopeGeneralReport = {};
       // window._scopeCreateMap.global = global;
+      window._scopeGeneralReport.loadData = loadData;
+      window._scopeGeneralReport.displayMessage = displayMessage;
+      window._scopeGeneralReport.loadInterfaces = loadInterfaces;
+      window._scopeGeneralReport.loadFields = loadFields;
+      window._scopeGeneralReport.validateData = validateData;
+      window._scopeGeneralReport.consultarFeatures = consultarFeatures;
+      window._scopeGeneralReport.generateCQL_FILTER = generateCQL_FILTER;
+      window._scopeGeneralReport.showResultFeaturesGeneralReport = showResultFeaturesGeneralReport;
+      window._scopeGeneralReport.parseGeometry = parseGeometry;
+      window._scopeGeneralReport.loadingIcon = loadingIcon;
+      window._scopeGeneralReport.loadingBar = loadingBar;
+      window._scopeGeneralReport.consultarFeaturesRapido = consultarFeaturesRapido;
+      window._scopeGeneralReport.getCoincidenceFeatures = getCoincidenceFeatures;
+      window._scopeGeneralReport.pushFeatureInQuickResults = pushFeatureInQuickResults;
+      window._scopeGeneralReport.normalize = normalize;
+      window._scopeGeneralReport.exposeGlobals = exposeGlobals;
     }
   }
 
