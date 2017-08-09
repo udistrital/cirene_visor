@@ -272,7 +272,7 @@
     //   }
     // ];
     graphPie(response);
-  }
+  };
 
   loadRESTData = function(report, cookie, parameters) {
     // Please see REST controller for more options

@@ -13,7 +13,7 @@ const gzip = require('gulp-gzip')
 var rm = require('gulp-rm')
 
 var jshint = require('gulp-jshint')
-const jshintConfig = require('./jshitn.conf.json')
+const jshintConfig = require('./jshint.conf.json')
 
 var webserverConfig = {
   host: 'localhost',
