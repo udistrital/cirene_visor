@@ -1,5 +1,6 @@
 describe("Validar generalReport.js", function() {
   it("Se prueban funciones internas.", (function() {
+    document.write('<div id="loading-report-message"></div>');
     var result = this.displayMessage('Mensaje de prueba.');
     expect(result).toBe(undefined);
 
@@ -9,7 +10,6 @@ describe("Validar generalReport.js", function() {
     var result = this.loadFields('lote');
     expect(result).toBe(undefined);
 
-    document.write('<div id="loading-report-message"></div>');
     document.write('<select id="select_layers"><option value="lote" selected></option></select>');
     document.write('<select id="select_fields"><option value="valor field" selected></option></select>');
     document.write('<select id="select_operator"><option value="equals" selected>=</option></select>');

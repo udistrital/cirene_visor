@@ -561,7 +561,7 @@
 
   if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     console.log('Load module for Node.js');
-    // module.exports.map = map;
+    // module.exports = something;
   } else {
     exposeGlobals();
     exposeForTests();

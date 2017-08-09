@@ -425,11 +425,13 @@
   })();
 
   exposeGlobals = function() {
-    window.generalReport = {
-      loadInterfaces: loadInterfaces,
-      validateData: validateData,
-      displayMessage: displayMessage
-    };
+    if (typeof window !== 'undefined') {
+      window.generalReport = {
+        loadInterfaces: loadInterfaces,
+        validateData: validateData,
+        displayMessage: displayMessage
+      };
+    }
   };
 
   function exposeForTests() {
@@ -451,11 +453,13 @@
       // window._scopeGeneralReport.getCoincidenceFeatures = getCoincidenceFeatures; // probado a través de consultarFeaturesRapido
       // window._scopeGeneralReport.pushFeatureInQuickResults = pushFeatureInQuickResults; // probado a través de consultarFeaturesRapido
       window._scopeGeneralReport.normalize = normalize;
-      window._scopeGeneralReport.exposeGlobals = exposeGlobals;
     }
   }
 
-  if (typeof window !== 'undefined') {
+  if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    console.log('Load module for Node.js');
+    // module.exports = something;
+  } else {
     exposeGlobals();
     exposeForTests();
   }

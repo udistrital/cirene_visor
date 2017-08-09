@@ -29,7 +29,9 @@ module.exports = function(config) {
       'app/js/generalReport.js',
       'app/js/reports.js',
       'app/js/init.js',
-      'test/**/*_spec.js'
+      'test/createMap_spec.js',
+      'test/generalReport_spec.js',
+      'test/mapTools_spec.js'
     ],
 
 

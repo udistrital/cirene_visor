@@ -10,6 +10,7 @@
 
   var loadJSONData = function() {};
   var loadRESTData = function() {};
+  var searchDatasetFieldsByColumn = function() {};
   var paintParameters = function() {};
   var loadFormData = function() {};
   var authenticate = function() {};
@@ -132,6 +133,13 @@
     myPie = new Chart(ctx, myPieConfig);
   };
 
+  searchDatasetFieldsByColumn = function(dataSetFields, datasetColumn) {
+    return dataSetFields.find(function(field) {
+      var columnName = field.header;
+      return columnName === datasetColumn;
+    });
+  };
+
   paintParameters = function(response, ctxParameter) {
     var container = $('#form-chart');
     //lastParameters
@@ -140,11 +148,21 @@
     var select = $('<select id="' + id + '"></select>');
     var option = $('<option value="" disable selected>Seleccione la opción</option>');
     select.append(option);
+
     var rows = response.rows;
+    var fields = response.metaData.fields;
+    // el nombre de la columna que contiene el name a poner en el option
+    var datasetColumnName = ctxParameter.parameter.datasetColumnName;
+    var columnName = searchDatasetFieldsByColumn(fields, datasetColumnName);
+    // el nombre de la columna que contiene el valor a poner en el option
+    var datasetColumnValue = ctxParameter.parameter.datasetColumnValue;
+    var columnValue = searchDatasetFieldsByColumn(fields, datasetColumnValue);
+
     for (var i = 0; i < rows.length; i++) {
       var row = rows[i];
-      var name = row.column_1;
-      var value = row.column_1;
+      console.log('row, columnName, columnValue', row, columnName, columnValue);
+      var name = row[columnName];
+      var value = row[columnValue];
       option = $('<option value="' + value + '">' + name + '</option>');
       select.append(option);
     }
@@ -155,7 +173,7 @@
     container.append(div);
 
     $(container).find('select').material_select();
-  }
+  };
 
   loadFormData = function(report, cookie) {
     var parameters = report.query.parameters;
@@ -477,24 +495,30 @@
   };
 
   exposeGlobals = function() {
-    window.reports = {
-      addChartDataToMap: addChartDataToMap,
-      removeChartOfMap: removeChartOfMap,
-      authenticate: authenticate,
-      getReports: getReports
-    };
+    if (typeof window !== 'undefined') {
+      window.reports = {
+        addChartDataToMap: addChartDataToMap,
+        removeChartOfMap: removeChartOfMap,
+        authenticate: authenticate,
+        getReports: getReports
+      };
+    }
   };
 
   function exposeForTests() {
     if (typeof describe !== 'undefined') {
       // for tests
-      window._scopeGeneralReport = {};
-      // window._scopeCreateMap.global = global;
+      window._scopeReports = {};
+      // window._scopeReports.global = global;
     }
   }
 
-  if (typeof window !== 'undefined') {
+  if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    console.log('Load module for Node.js');
+    // module.exports = something;
+  } else {
     exposeGlobals();
     exposeForTests();
   }
+
 })();
