@@ -5,6 +5,7 @@
   "type": "",
   "authUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/servlet/AdapterHTTP?Page=LoginPage&NEW_SESSION=TRUE&userId=bicirene&password=bicirene",
   "restUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/DSEspFis/data",
+  "datasetColumn": "codigo_espacio_fisico",
   "query": {
     "parameters": {
       "facultad": {
@@ -33,14 +34,35 @@
   "enable": true
 }, {
   "serviceId": 2,
-  "name": "Mapa Referencia IDECA Predios",
-  "id": "ideca",
-  "url": "http://serviciosgis.catastrobogota.gov.co/arcgis/services/Mapa_Referencia/Mapa_Referencia/MapServer/WMSServer",
-  "icon": "css/img/Ideca.jpg",
-  "layers": "11,12,13",
-  "opacity": 1,
+  "name": "2da Clasificación espacios físicos.",
+  "id": "espacios_fisicos",
   "type": "",
-  "groupId": "urbano",
-  "visible": false,
+  "authUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/servlet/AdapterHTTP?Page=LoginPage&NEW_SESSION=TRUE&userId=bicirene&password=bicirene",
+  "restUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/DSEspFis/data",
+  "query": {
+    "parameters": {
+      "facultad": {
+        "name": "Facultad",
+        "type": "dataset",
+        "datasetUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/ds_facultades/data",
+        "datasetColumnName": "facultad",
+        "datasetColumnValue": "codigo_facultad"
+      },
+      "semestre": {
+        "name": "Semestre",
+        "type": "dataset",
+        "datasetUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/ds_semestre/data",
+        "datasetColumnName": "nombre",
+        "datasetColumnValue": "id"
+      },
+      "anno": {
+        "name": "Año",
+        "type": "dataset",
+        "datasetUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/ds_anno/data",
+        "datasetColumnName": "id",
+        "datasetColumnValue": "id"
+      }
+    }
+  },
   "enable": true
 }]

@@ -1,18 +1,22 @@
 (function() {
   var reports = null;
   var chartColors = null;
-  var lastCharData = null;
-  var lastParameters = null;
+  var lastChartData = null;
+  var lastReport = null;
+  var lastCookie = null;
+  var lastSpagoBIresponse = null;
   var myPieConfig = null;
   var myPie = null;
   var addChartDataToMap = null;
   var removeChartOfMap = null;
 
   var loadJSONData = function() {};
+  var chartByCriteria = function() {};
   var loadRESTData = function() {};
   var searchDatasetFieldsByColumn = function() {};
   var paintParameters = function() {};
   var loadFormData = function() {};
+  var queryDatasetData = function() {};
   var authenticate = function() {};
   var graphPie = function() {};
   var getReports = function() {};
@@ -80,7 +84,7 @@
       data.push(numPredios);
     }
 
-    lastCharData = response;
+    lastChartData = response;
 
     if (myPieConfig !== null) {
       myPieConfig.data.datasets.splice(0, 1); //Se elimina el anterior
@@ -142,11 +146,10 @@
 
   paintParameters = function(response, ctxParameter) {
     var container = $('#form-chart');
-    //lastParameters
     var div = $('<div class="input-field col s12"></div>');
-    var id = 'form-chart' + ctxParameter.id;
+    var id = 'form-chart-' + ctxParameter.id;
     var select = $('<select id="' + id + '"></select>');
-    var option = $('<option value="" disable selected>Seleccione la opción</option>');
+    var option = $('<option value="" disabled selected>Seleccione</option>');
     select.append(option);
 
     var rows = response.rows;
@@ -160,7 +163,6 @@
 
     for (var i = 0; i < rows.length; i++) {
       var row = rows[i];
-      console.log('row, columnName, columnValue', row, columnName, columnValue);
       var name = row[columnName];
       var value = row[columnValue];
       option = $('<option value="' + value + '">' + name + '</option>');
@@ -176,9 +178,13 @@
   };
 
   loadFormData = function(report, cookie) {
-    var parameters = report.query.parameters;
-    lastParameters = parameters;
+    var container = $('#form-chart');
+    container.html(''); // Clean container
 
+    lastReport = report;
+    lastCookie = cookie;
+
+    var parameters = report.query.parameters;
     for (var iParameter in parameters) {
       if (parameters.hasOwnProperty(iParameter)) {
         console.log('loadFormData iParameter', iParameter);
@@ -207,18 +213,75 @@
     }
   };
 
-  loadRESTData = function(report, cookie) {
+  chartByCriteria = function() {
+    var category = $('#category-field').val();
+    if (category === null || category === '') {
+      generalReport.displayMessage('Seleccione una categoría.');
+      return;
+    }
+    //mostarEnTabla(result);
+    var report = lastReport;
+    var spagoBIresponse = lastSpagoBIresponse;
+    var fields = spagoBIresponse.metaData.fields;
+    var rows = spagoBIresponse.rows;
+    var elements = {};
+    var labels = {};
+    for (var i = 0; i < rows.length; i++) {
+      var row = rows[i];
+      var datasetColumnName = report.datasetColumn;
+      var columnName = searchDatasetFieldsByColumn(fields, datasetColumnName);
+      console.log('columnName', columnName, 'category', category, 'datasetColumnName', datasetColumnName);
+      var columnValue = row[columnName]; // codigo_espacio_fisico
+      var categoryValue = generalReport.normalize(row[category]); // codigo_facultad
+      var categoryName = row[category]; // facultad
+      labels[categoryValue] = categoryName;
+      if (typeof elements[categoryValue] === 'undefined') {
+        elements[categoryValue] = [];
+      }
+      elements[categoryValue].push(columnValue);
+    }
+
+    console.log('loadRESTData elements', elements);
+
+    var response = [];
+
+    for (var key in elements) {
+      if (elements.hasOwnProperty(key)) {
+        response.push({
+          'nombre': key,
+          'alias': labels[key],
+          'predios': elements[key]
+        });
+      }
+    }
+
+    console.log('loadRESTData elements', response);
+    // var response = [
+    //   {
+    //     'nombre': 'femenino',
+    //     'alias': 'Género Femenino',
+    //     'predios': ['034234', '234234', '334234', '734234']
+    //   }, {
+    //     'nombre': 'masculino',
+    //     'alias': 'Género Masculino',
+    //     'predios': ['034334', '22234', '334774', '730000']
+    //   }, {
+    //     'nombre': 'desconocido',
+    //     'alias': 'No Disponible',
+    //     'predios': ['0332224', '2232323', '3334723', '7333300']
+    //   }
+    // ];
+    graphPie(response);
+  }
+
+  loadRESTData = function(report, cookie, parameters) {
     // Please see REST controller for more options
     // https://github.com/SpagoBILabs/SpagoBI/blob/SpagoBI-5.1/SpagoBIProject/src/it/eng/spagobi/api/DataSetResource.java
 
     var url = report.restUrl;
     console.log('loadRESTData url', url);
 
-    var parameters = {
-      facultad: 33,
-      semestre: 1,
-      anno: 2015
-    };
+    parameters = (typeof parameters !== 'undefined' && parameters !== '') ? parameters : {};
     parameters = window.escape(JSON.stringify(parameters));
     url = url + '?parameters=' + parameters;
 
@@ -236,67 +299,63 @@
       method: 'GET',
       dataType: 'json'
     }).done(function(spagoBIresponse) {
-      console.log('second success');
-      //mostarEnTabla(result);
+      console.log('second success', spagoBIresponse);
+      lastSpagoBIresponse = spagoBIresponse;
+      if (typeof spagoBIresponse.errors !== 'undefined') {
+        generalReport.displayMessage('Error: ' + window.JSON.stringify(spagoBIresponse));
+        return;
+      }
+      var container = $('#criteria-chart');
+
+      var div = $('<div class="input-field col s12"></div>');
+      var select = $('<select id="category-field" onchange="reports.chartByCriteria();"></select>');
+      var option = $('<option value="" disabled selected>Seleccione</option>');
+      select.append(option);
+
       var fields = spagoBIresponse.metaData.fields;
-      // for (var i = 0; i < fields.length; i++) {
-      //   var field = fields[i];
-      //   var fieldName = (typeof field.header != 'undefined') ? field.header : field;
-      // }
-      var rows = spagoBIresponse.rows;
-      var elements = {};
-      var labels = {};
-      for (var i = 0; i < rows.length; i++) {
-        var row = rows[i];
-        var columnValue = row.column_25; // codigo_espacio_fisico
-        // console.log('columnValue', columnValue, row);
-        // var categoryValue = row.column_2; // codigo_facultad
-        // var categoryName = row.column_3; // facultad
-        var categoryValue = row.column_10; // codigo_facultad
-        var categoryName = row.column_10; // facultad
-        labels[categoryValue] = categoryName;
-        if (typeof elements[categoryValue] === 'undefined') {
-          elements[categoryValue] = [];
+      for (var i = 0; i < fields.length; i++) {
+        var field = fields[i];
+        console.log('loadRESTData', field);
+        var fieldValue = field.dataIndex;
+        if (typeof field.header === 'undefined'){ // solo intersan campos validos
+          continue;
         }
-        elements[categoryValue].push(columnValue);
+        var fieldName = field.header;
+        option = $('<option value="' + fieldValue + '">' + fieldName + '</option>');
+        select.append(option);
       }
+      var label = $('<label>Categoría</label>');
+      div.append(select);
+      div.append(label);
+      container.append(div);
 
-      console.log('loadRESTData elements', elements);
+      $(container).find('select').material_select();
 
-      var response = [];
-
-      for (var key in elements) {
-        if (elements.hasOwnProperty(key)) {
-          response.push({
-            'nombre': key,
-            'alias': labels[key],
-            'predios': elements[key]
-          });
-        }
-      }
-
-      console.log('loadRESTData elements', response);
-      // var response = [
-      //   {
-      //     'nombre': 'femenino',
-      //     'alias': 'Género Femenino',
-      //     'predios': ['034234', '234234', '334234', '734234']
-      //   }, {
-      //     'nombre': 'masculino',
-      //     'alias': 'Género Masculino',
-      //     'predios': ['034334', '22234', '334774', '730000']
-      //   }, {
-      //     'nombre': 'desconocido',
-      //     'alias': 'No Disponible',
-      //     'predios': ['0332224', '2232323', '3334723', '7333300']
-      //   }
-      // ];
-      graphPie(response);
     }).fail(function(e) {
-      console.log('error', e);
+      console.log('loadRESTData error', e);
     }).always(function() {
-      console.log('complete');
+      console.log('loadRESTData complete');
     });
+  };
+
+  queryDatasetData = function() {
+    console.log('queryDatasetData', lastReport);
+    var parameters = {};
+    var lastParameters = lastReport.query.parameters;
+    for (var iParameter in lastParameters) {
+      if (lastParameters.hasOwnProperty(iParameter)) {
+        //var parameter = lastParameters[iParameter];
+        var id = 'form-chart-' + iParameter;
+        parameters[iParameter] = $('#' + id).val();
+        if (parameters[iParameter] === null || parameters[iParameter] === '') {
+          generalReport.displayMessage('Todos los campos son requeridos.');
+          return;
+        }
+      }
+    }
+    console.log('queryDatasetData parameters', parameters);
+
+    loadRESTData(lastReport, lastCookie, parameters);
   };
 
   authenticate = function(report) {
@@ -330,9 +389,9 @@
 
 
   //poligono styles
-  function styleFunction(feature, lastCharData) {
+  function styleFunction(feature, lastChartData) {
     var codPredial = feature.get('Código').toString();
-    var grupoDatos = lastCharData.find(function(element) {
+    var grupoDatos = lastChartData.find(function(element) {
       return element.predios.indexOf(codPredial) > -1;
     });
 
@@ -425,7 +484,7 @@
     return styles[feature.getGeometry().getType()];
   }
 
-  function createLayer(filter, lastCharData) {
+  function createLayer(filter, lastChartData) {
     var configLayer = {
       id: 'piloto-filtrado',
       filter: filter
@@ -474,7 +533,7 @@
     var serviceLayer = new ol.layer.Vector({
       source: serviceSource,
       style: function(feature) {
-        return styleFunction(feature, lastCharData);
+        return styleFunction(feature, lastChartData);
       }
     });
 
@@ -482,7 +541,7 @@
   }
 
   addChartDataToMap = function() {
-    var layer = createLayer(true, lastCharData);
+    var layer = createLayer(true, lastChartData);
     window.getMap().addLayer(layer);
   };
 
@@ -500,7 +559,9 @@
         addChartDataToMap: addChartDataToMap,
         removeChartOfMap: removeChartOfMap,
         authenticate: authenticate,
-        getReports: getReports
+        getReports: getReports,
+        queryDatasetData: queryDatasetData,
+        chartByCriteria: chartByCriteria
       };
     }
   };

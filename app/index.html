@@ -289,7 +289,7 @@
               <div class="card-content">
                 <div id="contenido-charts">
                   <div id="select-chart">
-                    <select onchange="reports.autenticar();">
+                    <select onchange="reports.authenticate(reports.getReports()[0]);">
                       <option value="" selected="selected" disabled="disabled">Seleccione una gráfica.</option>
                       <option value="">Reportes de Ocupación de las Aulas y Laboratorios de la Universidad (En desarrollo)</option>
                       <option value="">Reportes de asignación de los espacios de acuerdo a la Dependencia (En desarrollo)</option>
@@ -303,6 +303,23 @@
                   <div id="form-chart">
                   </div>
                   <!-- end #form-chart -->
+                  <div class="input-field col s12">
+                    <button type="button" class="btn waves-effect waves-light" type="submit" onclick="reports.queryDatasetData();">
+                      Consultar
+                      <i class="material-icons right">send</i>
+                    </button>
+                  </div>
+                  <!-- end .input-field .col .s12 -->
+                  <div class="input-field col s12">
+                    <div id="criteria-chart">
+                    </div>
+                    <!-- end #criteria-chart -->
+                    <!-- <button type="button" class="btn waves-effect waves-light" type="submit" onclick="reports.queryDatasetData();">
+                      Graficar
+                      <i class="material-icons right">send</i>
+                    </button> -->
+                  </div>
+                  <!-- end .input-field .col .s12 -->
                   <div id="canvas-holder" style="width:100%">
                     <canvas id="chart-area" />
                   </div>

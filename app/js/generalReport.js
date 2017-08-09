@@ -429,7 +429,8 @@
       window.generalReport = {
         loadInterfaces: loadInterfaces,
         validateData: validateData,
-        displayMessage: displayMessage
+        displayMessage: displayMessage,
+        normalize: normalize
       };
     }
   };
