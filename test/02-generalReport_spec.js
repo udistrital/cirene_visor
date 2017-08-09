@@ -3,14 +3,6 @@ describe("Validar generalReport.js", function() {
     var result = this.displayMessage('Mensaje de prueba.');
     expect(result).toBe(undefined);
 
-
-  }).bind(window._scopeGeneralReport));
-
-  it("Se prueban funciones globales de window.", (function() {
-
-    var result = this.displayMessage;
-    expect(result === window.generalReport.displayMessage).toBe(true);
-
     var result = this.loadInterfaces(window.getMap());
     expect(result).toBe(undefined);
 
@@ -93,6 +85,19 @@ describe("Validar generalReport.js", function() {
     expect(result).toBe('Tecnologica');
     var result = this.normalize('Ungüento');
     expect(result).toBe('Unguento');
+
+  }).bind(window._scopeGeneralReport));
+
+  it("Se prueban funciones globales de window.", (function() {
+
+    var result = this.loadInterfaces;
+    expect(result === window.generalReport.loadInterfaces).toBe(true);
+
+    var result = this.validateData;
+    expect(result === window.generalReport.validateData).toBe(true);
+
+    var result = this.displayMessage;
+    expect(result === window.generalReport.displayMessage).toBe(true);
 
   }).bind(window._scopeGeneralReport));
 
