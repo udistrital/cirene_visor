@@ -1,6 +1,5 @@
 (function() {
 
-  var loadData = function() {};
   var displayMessage = function() {};
   var loadInterfaces = function() {};
   var loadFields = function() {};
@@ -107,7 +106,7 @@
     });
   };
 
-  validateData = function(evt) {
+  validateData = function() {
     if ($('#select_layers').val() === '') {
       displayMessage('Por favor seleccione una capa.');
     } else if ($('#custom_cql_filter').val() !== '') {
@@ -142,7 +141,7 @@
     var url = config.url + '&srsname=EPSG:3857&CQL_FILTER=' + cql_filter;
 
     $.getJSON(url, function(response) {
-      console.log('response', response);
+      console.log('consultarFeatures response', response);
       showResultFeaturesGeneralReport(response);
     }).fail(function(jqxhr, textStatus, error) {
       loadingIcon(false, 'Terminado...');
@@ -438,7 +437,6 @@
       // for tests
       window._scopeGeneralReport = {};
       // window._scopeCreateMap.global = global;
-      window._scopeGeneralReport.loadData = loadData;
       window._scopeGeneralReport.displayMessage = displayMessage;
       window._scopeGeneralReport.loadInterfaces = loadInterfaces;
       window._scopeGeneralReport.loadFields = loadFields;
@@ -450,8 +448,8 @@
       window._scopeGeneralReport.loadingIcon = loadingIcon;
       window._scopeGeneralReport.loadingBar = loadingBar;
       window._scopeGeneralReport.consultarFeaturesRapido = consultarFeaturesRapido;
-      window._scopeGeneralReport.getCoincidenceFeatures = getCoincidenceFeatures;
-      window._scopeGeneralReport.pushFeatureInQuickResults = pushFeatureInQuickResults;
+      // window._scopeGeneralReport.getCoincidenceFeatures = getCoincidenceFeatures; // probado a través de consultarFeaturesRapido
+      // window._scopeGeneralReport.pushFeatureInQuickResults = pushFeatureInQuickResults; // probado a través de consultarFeaturesRapido
       window._scopeGeneralReport.normalize = normalize;
       window._scopeGeneralReport.exposeGlobals = exposeGlobals;
     }
