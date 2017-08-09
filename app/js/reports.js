@@ -137,7 +137,7 @@
     return dataSetFields.find(function(field) {
       var columnName = field.header;
       return columnName === datasetColumn;
-    });
+    }).dataIndex;
   };
 
   paintParameters = function(response, ctxParameter) {
