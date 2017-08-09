@@ -10,23 +10,23 @@
       "facultad": {
         "name": "Facultad",
         "type": "dataset",
-        "datasetUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/carrera/data",
-        "datasetName": "CRA_NOMBRE",
-        "datasetValue": "CRA_COD"
+        "datasetUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/ds_facultades/data",
+        "datasetName": "facultad",
+        "datasetValue": "codigo_facultad"
       },
       "semestre": {
         "name": "Semestre",
         "type": "dataset",
-        "datasetUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/carrera/data",
-        "datasetName": "CRA_NOMBRE",
-        "datasetValue": "CRA_COD"
+        "datasetUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/ds_semestre/data",
+        "datasetName": "nombre",
+        "datasetValue": "id"
       },
       "anno": {
         "name": "Año",
         "type": "dataset",
-        "datasetUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/carrera/data",
-        "datasetName": "CRA_NOMBRE",
-        "datasetValue": "CRA_COD"
+        "datasetUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/ds_anno/data",
+        "datasetName": "id",
+        "datasetValue": "id"
       }
     }
   },

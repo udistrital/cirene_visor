@@ -1,35 +1,36 @@
 (function() {
-  var reportes = null;
+  var reports = null;
   var chartColors = null;
-  var randomScalingFactor = null;
   var lastCharData = null;
+  var lastParameters = null;
   var myPieConfig = null;
   var myPie = null;
   var addChartDataToMap = null;
   var removeChartOfMap = null;
 
-  var loadData = function() {};
-  var cargarDatos = function() {};
-  var autenticar = function() {};
-  var graficarPie = function() {};
-  var getReportes = function() {};
+  var loadJSONData = function() {};
+  var loadRESTData = function() {};
+  var paintParameters = function() {};
+  var loadFormData = function() {};
+  var authenticate = function() {};
+  var graphPie = function() {};
+  var getReports = function() {};
   var exposeGlobals = function() {};
 
-
   $(function() {
-    console.log("Ready reports!");
-    loadData();
+    console.log("Ready reports.js!");
+    loadJSONData();
   });
 
-  loadData = function() {
-    var reportesPromise = $.get('conf/reportes.json');
+  loadJSONData = function() {
+    var reportsPromise = $.get('conf/reportes.json');
 
-    $.when(reportesPromise).done(function(results) {
+    $.when(reportsPromise).done(function(results) {
       // do something
-      console.log('results reportes', results);
-      reportes = results;
+      console.log('results reports', results);
+      reports = results;
 
-      autenticar(reportes[0]); // OJO temporal
+      authenticate(reports[0]); // OJO temporal
     });
   };
 
@@ -47,12 +48,7 @@
     magenta: 'rgb(255,0,255)'
   };
 
-
-  randomScalingFactor = function() {
-    return Math.round(Math.random() * 100);
-  };
-
-  graficarPie = function(response) {
+  graphPie = function(response) {
     //var url = require('file-loader!./pie.json');
     // var url = 'https://ide.proadmintierra.info/odk/' + value;
     // console.log(url);
@@ -136,12 +132,69 @@
     myPie = new Chart(ctx, myPieConfig);
   };
 
-  cargarDatos = function(report, cookie) {
+  paintParameters = function(response, ctxParameter) {
+    var container = $('#form-chart');
+    //lastParameters
+    var div = $('<div class="input-field col s12"></div>');
+    var id = 'form-chart' + ctxParameter.id;
+    var select = $('<select id="' + id + '"></select>');
+    var option = $('<option value="" disable selected>Seleccione la opción</option>');
+    select.append(option);
+    var rows = response.rows;
+    for (var i = 0; i < rows.length; i++) {
+      var row = rows[i];
+      var name = row.column_1;
+      var value = row.column_1;
+      option = $('<option value="' + value + '">' + name + '</option>');
+      select.append(option);
+    }
+    var selectName = ctxParameter.parameter.name;
+    var label = $('<label>' + selectName + '</label>');
+    div.append(select);
+    div.append(label);
+    container.append(div);
+
+    $(container).find('select').material_select();
+  }
+
+  loadFormData = function(report, cookie) {
+    var parameters = report.query.parameters;
+    lastParameters = parameters;
+
+    for (var iParameter in parameters) {
+      if (parameters.hasOwnProperty(iParameter)) {
+        console.log('loadFormData iParameter', iParameter);
+        var parameter = parameters[iParameter];
+        var url = parameter.datasetUrl;
+        var headers = 'Cookie:' + cookie;
+        url = '/proxy?headers=' + window.escape(headers) + '&url=' + window.escape(url);
+        $.ajax({
+          url: url,
+          method: 'GET',
+          dataType: 'json'
+        }).done((function(response) {
+          var ctxParameter = this;
+          console.log('loadFormData done', response, ctxParameter);
+          paintParameters(response, ctxParameter);
+        }).bind({
+          id: iParameter,
+          parameter: parameter
+        })).fail(function(e) {
+          console.log('loadFormData error', e);
+        }).always(function() {
+          console.log('loadFormData complete');
+        });
+
+      }
+    }
+  };
+
+  loadRESTData = function(report, cookie) {
     // Please see REST controller for more options
     // https://github.com/SpagoBILabs/SpagoBI/blob/SpagoBI-5.1/SpagoBIProject/src/it/eng/spagobi/api/DataSetResource.java
 
     var url = report.restUrl;
-    console.log('cargarDatos url', url);
+    console.log('loadRESTData url', url);
 
     var parameters = {
       facultad: 33,
@@ -190,7 +243,7 @@
         elements[categoryValue].push(columnValue);
       }
 
-      console.log('cargarDatos elements', elements);
+      console.log('loadRESTData elements', elements);
 
       var response = [];
 
@@ -204,7 +257,7 @@
         }
       }
 
-      console.log('cargarDatos elements', response);
+      console.log('loadRESTData elements', response);
       // var response = [
       //   {
       //     'nombre': 'femenino',
@@ -220,7 +273,7 @@
       //     'predios': ['0332224', '2232323', '3334723', '7333300']
       //   }
       // ];
-      graficarPie(response);
+      graphPie(response);
     }).fail(function(e) {
       console.log('error', e);
     }).always(function() {
@@ -228,12 +281,12 @@
     });
   };
 
-  autenticar = function(report) {
+  authenticate = function(report) {
     var _dc = new Date().getTime();
     var url = report.authUrl;
     //url = 'http://sig.udistrital.edu.co/proxy?url=' + escape(url);
     url = '/proxy?url=' + window.escape(url) + '&renameheaders';
-    console.log('autenticar url', url);
+    console.log('authenticate url', url);
 
     $.ajax({
       type: 'GET',
@@ -245,7 +298,8 @@
         //console.log('success', output, status, xhr);
         console.log('coookie', xhr.getResponseHeader('_Set-Cookie'));
         var setCookie = xhr.getResponseHeader('_Set-Cookie');
-        cargarDatos(report, setCookie);
+        loadFormData(report, setCookie);
+        // loadRESTData(report, setCookie);
       },
       error: function(err) {
         console.log('error', err);
@@ -418,20 +472,29 @@
     window.getMap().removeLayer(window.getMap().getLayer('piloto-filtrado'));
   };
 
-  getReportes = function() {
-    return reportes;
+  getReports = function() {
+    return reports;
   };
 
   exposeGlobals = function() {
     window.reports = {
       addChartDataToMap: addChartDataToMap,
       removeChartOfMap: removeChartOfMap,
-      autenticar: autenticar,
-      getReportes: getReportes
+      authenticate: authenticate,
+      getReports: getReports
     };
   };
 
+  function exposeForTests() {
+    if (typeof describe !== 'undefined') {
+      // for tests
+      window._scopeGeneralReport = {};
+      // window._scopeCreateMap.global = global;
+    }
+  }
+
   if (typeof window !== 'undefined') {
     exposeGlobals();
+    exposeForTests();
   }
 })();
