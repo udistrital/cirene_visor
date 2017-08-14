@@ -312,7 +312,7 @@
         // evt.stopPropagation();
         // evt.preventDefault();
         var handler = function() {
-          if (window.identifyInteraction.getMap() === null) {
+          if (window.getIdentifyInteraction().getMap() === null) {
             mapTools.turnOnPopup();
           } else {
             mapTools.turnOffPopup();
@@ -346,15 +346,15 @@
       return bufferedGeometry.transform('EPSG:3857', sourceProj);
     },
     turnOffPopup: function() {
-      window.identifyInteraction.getFeatures().clear();
+      window.getIdentifyInteraction().getFeatures().clear();
       this.hideOverlays();
-      window.getMap().removeInteraction(window.identifyInteraction);
+      window.getMap().removeInteraction(window.getIdentifyInteraction());
     },
     turnOnPopup: function() {
-      window.getMap().addInteraction(window.identifyInteraction);
+      window.getMap().addInteraction(window.getIdentifyInteraction());
     },
     cleanMap: function() {
-      window.identifyInteraction.getFeatures().clear();
+      window.getIdentifyInteraction().getFeatures().clear();
       this.hideOverlays();
       consultas.cleanHighlight();
     },

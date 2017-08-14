@@ -27,6 +27,9 @@
     loadJSONData();
   });
 
+  /**
+   * Llama los reportes de un archivo JSON.
+   */
   loadJSONData = function() {
     var reportsPromise = $.get('conf/reportes.json');
 
@@ -39,6 +42,9 @@
     });
   };
 
+  /**
+   * Contiene la lista de Colores
+   */
   chartColors = {
     red: 'rgb(255, 99, 132)',
     orange: 'rgb(255, 159, 64)',
@@ -53,6 +59,26 @@
     magenta: 'rgb(255,0,255)'
   };
 
+  /**
+   * Llama los reportes de un archivo JSON.
+   * @constructor
+   * @param {array} response - Un arreglo de items a graficar
+   var response = [
+     {
+       'nombre': 'femenino',
+       'alias': 'Género Femenino',
+       'predios': ['034234', '234234', '334234', '734234']
+     }, {
+       'nombre': 'masculino',
+       'alias': 'Género Masculino',
+       'predios': ['034334', '22234', '334774', '730000']
+     }, {
+       'nombre': 'desconocido',
+       'alias': 'No Disponible',
+       'predios': ['0332224', '2232323', '3334723', '7333300']
+     }
+   ];
+   */
   graphPie = function(response) {
     //var url = require('file-loader!./pie.json');
     // var url = 'https://ide.proadmintierra.info/odk/' + value;
@@ -205,8 +231,6 @@
           parameter: parameter
         })).fail(function(e) {
           console.log('loadFormData error', e);
-        }).always(function() {
-          console.log('loadFormData complete');
         });
 
       }
@@ -230,7 +254,7 @@
       var row = rows[i];
       var datasetColumnName = report.datasetColumn;
       var columnName = searchDatasetFieldsByColumn(fields, datasetColumnName);
-      console.log('columnName', columnName, 'category', category, 'datasetColumnName', datasetColumnName);
+      //console.log('columnName', columnName, 'category', category, 'datasetColumnName', datasetColumnName);
       var columnValue = row[columnName]; // codigo_espacio_fisico
       var categoryValue = generalReport.normalize(row[category]); // codigo_facultad
       var categoryName = row[category]; // facultad
@@ -241,7 +265,7 @@
       elements[categoryValue].push(columnValue);
     }
 
-    console.log('loadRESTData elements', elements);
+    console.log('chartByCriteria elements', elements);
 
     var response = [];
 
@@ -255,7 +279,7 @@
       }
     }
 
-    console.log('loadRESTData elements', response);
+    console.log('chartByCriteria response', response);
     // var response = [
     //   {
     //     'nombre': 'femenino',
@@ -299,7 +323,7 @@
       method: 'GET',
       dataType: 'json'
     }).done(function(spagoBIresponse) {
-      console.log('second success', spagoBIresponse);
+      console.log('loadRESTData spagoBIresponse', spagoBIresponse);
       lastSpagoBIresponse = spagoBIresponse;
       if (typeof spagoBIresponse.errors !== 'undefined') {
         generalReport.displayMessage('Error: ' + window.JSON.stringify(spagoBIresponse));
@@ -315,7 +339,6 @@
       var fields = spagoBIresponse.metaData.fields;
       for (var i = 0; i < fields.length; i++) {
         var field = fields[i];
-        console.log('loadRESTData', field);
         var fieldValue = field.dataIndex;
         if (typeof field.header === 'undefined'){ // solo intersan campos validos
           continue;
@@ -333,8 +356,6 @@
 
     }).fail(function(e) {
       console.log('loadRESTData error', e);
-    }).always(function() {
-      console.log('loadRESTData complete');
     });
   };
 
@@ -381,8 +402,6 @@
       error: function(err) {
         console.log('error', err);
       }
-    }).always(function() {
-      console.log('complete');
     });
 
   };
