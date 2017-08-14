@@ -336,13 +336,13 @@
 
       var sourceProj = window.getMap().getView().getProjection();
       var transformedGeometry = (geometry.clone().transform(sourceProj, 'EPSG:3857'));
-      var jstsGeom = window.jstsParser.read(transformedGeometry); //Only accept 3857
+      var jstsGeom = window.getJstsParser().read(transformedGeometry); //Only accept 3857
       console.log('jstsGeom', jstsGeom);
       // create a buffer of 1 meters around each line
       var buffered = jstsGeom.buffer(meters);
 
       // convert back from JSTS and replace the geometry on the feature
-      var bufferedGeometry = window.jstsParser.write(buffered);
+      var bufferedGeometry = window.getJstsParser().write(buffered);
       return bufferedGeometry.transform('EPSG:3857', sourceProj);
     },
     turnOffPopup: function() {
