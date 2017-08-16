@@ -9,12 +9,14 @@
   var myPie = null;
   var addChartDataToMap = null;
   var removeChartOfMap = null;
+  var REPORTLAYERID = '_reportsLayer';
 
   var loadSelectReports = function() {};
   var loadJSONData = function() {};
   var chartByCriteria = function() {};
   var loadingIcon = function() {};
   var addListCriteria = function() {};
+  var addMapFilter = function() {};
   var loadRESTData = function() {};
   var searchDatasetFieldsByColumn = function() {};
   var paintParameters = function() {};
@@ -371,7 +373,7 @@
     select.append(option);
     var listCriteria = report.listCriteria;
     var fields = spagoBIresponse.metaData.fields;
-    if (typeof report.listCriteria !== 'undefined' && typeof report.listCriteria.length !== 'undefined') {
+    if (typeof listCriteria !== 'undefined' && listCriteria !== '' && typeof listCriteria.length !== 'undefined') {
       for (var i = 0; i < listCriteria.length; i++) {
         var criteria = listCriteria[i];
         var datasetColumnName = criteria.field;
@@ -399,6 +401,29 @@
     container.append(div);
 
     $(container).find('select').material_select();
+  };
+
+  addMapFilter = function(report) {
+    var container = $('#chart-map-filters');
+    container.html('');
+
+    var filters = report.filters;
+    if (typeof filters !== 'undefined' && filters !== '' && typeof filters.length !== 'undefined') {
+      var select = $('<select onchange="mapTools.changeFilter(this, \'' + REPORTLAYERID + '\')"></select>');
+      var option = $('<option value="" disabled selected>Seleccione un filtro</option>');
+      select.append(option);
+
+      for (var j = 0; j < filters.length; j++) {
+        var filter = filters[j];
+        option = $('<option value="' + filter.filter + '">' + filter.name + '</option>');
+        select.append(option);
+      }
+
+      var label = $('<label>Seleccione el Filtro para el Mapa</label>');
+      container.append(select);
+      container.append(label);
+      $(container).find('select').material_select();
+    }
   };
 
   loadRESTData = function(report, cookie, parameters) {
@@ -439,6 +464,7 @@
         return;
       }
       addListCriteria(report, spagoBIresponse);
+      addMapFilter(report);
       loadingIcon(false, 'Terminado...');
     }).fail(function(e) {
       console.log('loadRESTData error', e);
@@ -597,7 +623,7 @@
 
   function createLayer(filter, lastChartData) {
     var configLayer = {
-      id: 'piloto-filtrado',
+      id: REPORTLAYERID,
       filter: filter
     };
     window.getMap().removeLayer(window.getMap().getLayer(configLayer.id));
@@ -653,11 +679,16 @@
 
   addChartDataToMap = function() {
     var layer = createLayer(true, lastChartData);
+    layer.source = {
+      config: {
+        filters: lastReport.filters
+      }
+    }
     window.getMap().addLayer(layer);
   };
 
   removeChartOfMap = function() {
-    window.getMap().removeLayer(window.getMap().getLayer('piloto-filtrado'));
+    window.getMap().removeLayer(window.getMap().getLayer(REPORTLAYERID));
   };
 
   getReports = function() {
