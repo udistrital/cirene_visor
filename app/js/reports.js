@@ -7,26 +7,29 @@
   var lastSpagoBIresponse = null;
   var myPieConfig = null;
   var myPie = null;
-  var addChartDataToMap = null;
-  var removeChartOfMap = null;
   var REPORTLAYERID = '_reportsLayer';
 
   var loadSelectReports = function() {};
+  var graphPie = function() {};
   var loadJSONData = function() {};
+  var searchDatasetFieldsByColumn = function() {};
+  var paintParameters = function() {};
   var chartByCriteria = function() {};
   var loadingIcon = function() {};
   var addListCriteria = function() {};
   var addMapFilter = function() {};
   var loadRESTData = function() {};
-  var searchDatasetFieldsByColumn = function() {};
-  var paintParameters = function() {};
   var loadFormData = function() {};
   var queryDatasetData = function() {};
   var authenticate = function() {};
   var changeSelectChart = function() {};
-  var graphPie = function() {};
+  var styleFunction = function() {};
+  var createLayer = function() {};
+  var addChartDataToMap = function() {};
+  var removeChartOfMap = function() {};
   var getReports = function() {};
   var getReportById = function() {};
+  var openSpagobiLinkReport = function() {};
   var exposeGlobals = function() {};
 
   $(function() {
@@ -527,7 +530,7 @@
   };
 
   //poligono styles
-  function styleFunction(feature, lastChartData) {
+  styleFunction = function(feature, lastChartData) {
     var codPredial = feature.get('Código').toString();
     var grupoDatos = lastChartData.find(function(element) {
       return element.predios.indexOf(codPredial) > -1;
@@ -621,7 +624,7 @@
     return styles[feature.getGeometry().getType()];
   }
 
-  function createLayer(filter, lastChartData) {
+  createLayer = function(filter, lastChartData) {
     var configLayer = {
       id: REPORTLAYERID,
       filter: filter
@@ -675,7 +678,7 @@
     });
 
     return serviceLayer;
-  }
+  };
 
   addChartDataToMap = function() {
     var layer = createLayer(true, lastChartData);
@@ -701,6 +704,51 @@
     });
   };
 
+  openSpagobiLinkReport = function() {
+    Sbi.sdk.services.setBaseUrl({
+      protocol: 'https',
+      host: 'intelligentia.udistrital.edu.co',
+      port: '8443',
+      contextPath: 'SpagoBI',
+      controllerPath: 'servlet/AdapterHTTP'
+    });
+
+    Sbi.sdk.api.authenticate({
+      params: {
+        user: 'bicirene',
+        password: 'bicirene'
+      },
+      callback: {
+        fn: function(result, args, success) {
+          if (success === true) {
+            exec();
+          } else {
+            alert('ERROR: Usuario o Clave incorrecta.');
+          }
+        }
+        //, scope: this
+        //, args: {arg1: 'A', arg2: 'B', ...}
+      }
+    });
+
+    var exec = function() {
+      var url = Sbi.sdk.api.getDocumentUrl({
+        documentLabel: 'RteEspFis',
+        executionRole: '/spagobi/user/bicirene',
+        displayToolbar: false,
+        displaySliders: false,
+        height: '500px',
+        width: '800px',
+        iframe: {
+          style: 'border: 0px;'
+        },
+        useExtUI: true
+      });
+      console.log('url', url);
+      window.open(url, "_blank");
+    };
+  }
+
   exposeGlobals = function() {
     if (typeof window !== 'undefined') {
       window.reports = {
@@ -709,7 +757,8 @@
         changeSelectChart: changeSelectChart,
         getReports: getReports,
         queryDatasetData: queryDatasetData,
-        chartByCriteria: chartByCriteria
+        chartByCriteria: chartByCriteria,
+        openSpagobiLinkReport: openSpagobiLinkReport
       };
     }
   };
