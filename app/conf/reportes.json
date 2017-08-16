@@ -31,6 +31,34 @@
       }
     }
   },
+  "listCriteria": [{
+    "name": "Edificio",
+    "field": "edificio"
+  }, {
+    "name": "Proyecto Curricular",
+    "field": "proyecto"
+  }, {
+    "name": "Tipo Espacio",
+    "field": "tipo_espacio"
+  }, {
+    "name": "Subtipo Espacio",
+    "field": "subtipo_espacio"
+  }, {
+    "name": "Uso Principal",
+    "field": "uso_principal"
+  }, {
+    "name": "Dependencia Encargada",
+    "field": "dependencia_encargada"
+  }, {
+    "name": "Día",
+    "field": "dia"
+  }, {
+    "name": "Capacidad Máxima Asignada",
+    "field": "capacidad_maxima_asignada"
+  }, {
+    "name": "Hora",
+    "field": "hora"
+  }],
   "enable": true
 }, {
   "serviceId": 2,

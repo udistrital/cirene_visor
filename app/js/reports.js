@@ -13,12 +13,14 @@
   var loadJSONData = function() {};
   var chartByCriteria = function() {};
   var loadingIcon = function() {};
+  var addListCriteria = function() {};
   var loadRESTData = function() {};
   var searchDatasetFieldsByColumn = function() {};
   var paintParameters = function() {};
   var loadFormData = function() {};
   var queryDatasetData = function() {};
   var authenticate = function() {};
+  var changeSelectChart = function() {};
   var graphPie = function() {};
   var getReports = function() {};
   var exposeGlobals = function() {};
@@ -39,7 +41,7 @@
       console.log('results reports', results);
       reports = results;
 
-      authenticate(reports[0]); // OJO temporal
+      //authenticate(reports[0]); // OJO temporal
     });
   };
 
@@ -103,20 +105,29 @@
       chartColors.brown
     ];
 
+    var newColorList = [];
+
+    var j = 0;
     for (var i = 0; i < response.length; i++) {
-      response[i].color = colorlist[i];
+      newColorList.push(colorlist[j]);
+      j = (j >= colorlist.length) ?
+        0 :
+        j + 1;
+      // Se agrega color para ponerlo luego en la geometria del mapa
+      response[i].color = colorlist[j];
       var alias = response[i].alias;
       var numPredios = response[i].predios.length;
       labels.push(alias);
       data.push(numPredios);
     }
+    console.log('color', newColorList, data, labels);
 
     lastChartData = response;
 
     if (myPieConfig !== null) {
       myPieConfig.data.datasets.splice(0, 1); //Se elimina el anterior
       var newDataset = {
-        backgroundColor: colorlist,
+        backgroundColor: newColorList,
         data: data,
         label: 'Gráfica'
       };
@@ -132,7 +143,7 @@
       data: {
         datasets: [{
           data: data,
-          backgroundColor: colorlist,
+          backgroundColor: newColorList,
           label: 'Gráfica'
         }],
         labels: labels
@@ -172,8 +183,10 @@
   };
 
   paintParameters = function(response, ctxParameter) {
-    var container = $('#form-chart');
-    var div = $('<div class="input-field col s12"></div>');
+    var indice = ctxParameter.indice;
+    // Se obtiene el contenedor en la posicion esperada para poner el select
+    var container = $('#form-chart div:nth-child(' + (indice + 1) + ')');
+    //var div = $('<div class="input-field col s12"></div>');//ya deberia existir
     var id = 'form-chart-' + ctxParameter.id;
     var select = $('<select id="' + id + '"></select>');
     var option = $('<option value="" disabled selected>Seleccione</option>');
@@ -197,14 +210,13 @@
     }
     var selectName = ctxParameter.parameter.name;
     var label = $('<label>' + selectName + '</label>');
-    div.append(select);
-    div.append(label);
-    container.append(div);
-
+    container.append(select);
+    container.append(label);
     $(container).find('select').material_select();
   };
 
   loadFormData = function(report, cookie) {
+    loadingIcon(true, 'Consultando...');
     var container = $('#form-chart');
     container.html(''); // Clean container
 
@@ -212,7 +224,11 @@
     lastCookie = cookie;
 
     var parameters = report.query.parameters;
+    var indice = 0;
     for (var iParameter in parameters) {
+      // Se crean los contenedores en espera de los resultados;
+      var div = $('<div class="input-field col s12"></div>');
+      container.append(div);
       if (parameters.hasOwnProperty(iParameter)) {
         console.log('loadFormData iParameter', iParameter);
         var parameter = parameters[iParameter];
@@ -227,13 +243,16 @@
           var ctxParameter = this;
           console.log('loadFormData done', response, ctxParameter);
           paintParameters(response, ctxParameter);
+          loadingIcon(false, 'Terminado...');
         }).bind({
           id: iParameter,
+          indice: indice,
           parameter: parameter
         })).fail(function(e) {
           console.log('loadFormData error', e);
+          loadingIcon(false, 'Error...');
         });
-
+        indice += 1;
       }
     }
   };
@@ -249,17 +268,19 @@
     var spagoBIresponse = lastSpagoBIresponse;
     var fields = spagoBIresponse.metaData.fields;
     var rows = spagoBIresponse.rows;
-    if (rows.length === 0){
-      generalReport.displayMessage('No hay resultados para la consulta.');
+    if (rows.length === 0) {
+      generalReport.displayMessage('No hay resultados para graficar.');
     }
     var elements = {};
     var labels = {};
     for (var i = 0; i < rows.length; i++) {
       var row = rows[i];
       var datasetColumnName = report.datasetColumn;
+      // busca el column_# correspondiente a ese nombre de columna
       var columnName = searchDatasetFieldsByColumn(fields, datasetColumnName);
       //console.log('columnName', columnName, 'category', category, 'datasetColumnName', datasetColumnName);
       var columnValue = row[columnName]; // codigo_espacio_fisico
+      // console.log('row[category]', row[category], row, category);
       var categoryValue = generalReport.normalize(row[category]); // codigo_facultad
       var categoryName = row[category]; // facultad
       labels[categoryValue] = categoryName;
@@ -313,15 +334,64 @@
     }, 200);
   };
 
+  addListCriteria = function(report, spagoBIresponse) {
+    var container = $('#criteria-chart');
+    container.html('');
+
+    if (spagoBIresponse.results === 0) {
+      generalReport.displayMessage('No hay resultados para esta consulta.');
+    }
+
+    var div = $('<div class="input-field col s12"></div>');
+    var select = $('<select id="category-field" onchange="reports.chartByCriteria();"></select>');
+    var option = $('<option value="" disabled selected>Seleccione</option>');
+    select.append(option);
+    var listCriteria = report.listCriteria;
+    var fields = spagoBIresponse.metaData.fields;
+    if (typeof report.listCriteria !== 'undefined' && typeof report.listCriteria.length !== 'undefined') {
+      for (var i = 0; i < listCriteria.length; i++) {
+        var criteria = listCriteria[i];
+        var datasetColumnName = criteria.field;
+        var fieldValue = searchDatasetFieldsByColumn(fields, datasetColumnName);
+        var fieldName = criteria.name;
+        option = $('<option value="' + fieldValue + '">' + fieldName + '</option>');
+        select.append(option);
+      }
+    } else {
+      var fields = spagoBIresponse.metaData.fields;
+      for (var i = 0; i < fields.length; i++) {
+        var field = fields[i];
+        var fieldValue = field.dataIndex;
+        if (typeof field.header === 'undefined') { // solo intersan campos validos
+          continue;
+        }
+        var fieldName = field.header;
+        option = $('<option value="' + fieldValue + '">' + fieldName + '</option>');
+        select.append(option);
+      }
+    }
+    var label = $('<label>Categoría</label>');
+    div.append(select);
+    div.append(label);
+    container.append(div);
+
+    $(container).find('select').material_select();
+  };
+
   loadRESTData = function(report, cookie, parameters) {
     // Please see REST controller for more options
     // https://github.com/SpagoBILabs/SpagoBI/blob/SpagoBI-5.1/SpagoBIProject/src/it/eng/spagobi/api/DataSetResource.java
+
+    var container = $('#criteria-chart');
+    container.html('');
+
     loadingIcon(true, 'Consultando...');
 
     var url = report.restUrl;
     console.log('loadRESTData url', url);
 
-    parameters = (typeof parameters !== 'undefined' && parameters !== '') ? parameters : {};
+    parameters = (typeof parameters !== 'undefined' && parameters !== '') ?
+      parameters : {};
     parameters = window.escape(JSON.stringify(parameters));
     url = url + '?parameters=' + parameters;
 
@@ -345,31 +415,7 @@
         generalReport.displayMessage('Error: ' + window.JSON.stringify(spagoBIresponse));
         return;
       }
-      var container = $('#criteria-chart');
-      container.html('');
-
-      var div = $('<div class="input-field col s12"></div>');
-      var select = $('<select id="category-field" onchange="reports.chartByCriteria();"></select>');
-      var option = $('<option value="" disabled selected>Seleccione</option>');
-      select.append(option);
-
-      var fields = spagoBIresponse.metaData.fields;
-      for (var i = 0; i < fields.length; i++) {
-        var field = fields[i];
-        var fieldValue = field.dataIndex;
-        if (typeof field.header === 'undefined'){ // solo intersan campos validos
-          continue;
-        }
-        var fieldName = field.header;
-        option = $('<option value="' + fieldValue + '">' + fieldName + '</option>');
-        select.append(option);
-      }
-      var label = $('<label>Categoría</label>');
-      div.append(select);
-      div.append(label);
-      container.append(div);
-
-      $(container).find('select').material_select();
+      addListCriteria(report, spagoBIresponse);
       loadingIcon(false, 'Terminado...');
     }).fail(function(e) {
       console.log('loadRESTData error', e);
@@ -424,6 +470,9 @@
 
   };
 
+  changeSelectChart = function() {
+    authenticate(getReports()[0]);
+  };
 
   //poligono styles
   function styleFunction(feature, lastChartData) {
@@ -515,9 +564,8 @@
         })
       })
     };
-
-    console.log('hi', feature.getGeometry().getType(), styles[feature.getGeometry().getType()]);
-
+    console.log('grupoDatos',grupoDatos, colorFill, colorStroke);
+    console.log('styleFunction', feature.getGeometry().getType(), styles[feature.getGeometry().getType()]);
     return styles[feature.getGeometry().getType()];
   }
 
@@ -595,7 +643,7 @@
       window.reports = {
         addChartDataToMap: addChartDataToMap,
         removeChartOfMap: removeChartOfMap,
-        authenticate: authenticate,
+        changeSelectChart: changeSelectChart,
         getReports: getReports,
         queryDatasetData: queryDatasetData,
         chartByCriteria: chartByCriteria
