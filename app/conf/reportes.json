@@ -1,6 +1,6 @@
 [{
   "serviceId": 1,
-  "name": "Clasificación espacios físicos.",
+  "name": "Reportes de Ocupación de las Aulas y Laboratorios de la Universidad.",
   "id": "espacios_fisicos",
   "type": "",
   "authUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/servlet/AdapterHTTP?Page=LoginPage&NEW_SESSION=TRUE&userId=bicirene&password=bicirene",
@@ -62,35 +62,47 @@
   "enable": true
 }, {
   "serviceId": 2,
-  "name": "2da Clasificación espacios físicos.",
+  "name": "Reportes de asignación de los espacios de acuerdo a la Dependencia(En desarrollo)",
+  "id": "espacios_fisicos2",
+  "type": "",
+  "authUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/servlet/AdapterHTTP?Page=LoginPage&NEW_SESSION=TRUE&userId=bicirene&password=bicirene",
+  "restUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/DSEspFis/data",
+  "query": {},
+  "enable": false
+}, {
+  "serviceId": 3,
+  "name": "Reporte Histórico Recursos Invertidos por Sede(En desarrollo)",
+  "id": "espacios_fisicos3",
+  "type": "",
+  "authUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/servlet/AdapterHTTP?Page=LoginPage&NEW_SESSION=TRUE&userId=bicirene&password=bicirene",
+  "restUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/DSEspFis/data",
+  "query": {},
+  "enable": false
+}, {
+  "serviceId": 4,
+  "name": "Perfiles de Ocupación de las sedes según franjas horarias(En desarrollo)",
+  "id": "espacios_fisicos4",
+  "type": "",
+  "authUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/servlet/AdapterHTTP?Page=LoginPage&NEW_SESSION=TRUE&userId=bicirene&password=bicirene",
+  "restUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/DSEspFis/data",
+  "query": {},
+  "enable": false
+}, {
+  "serviceId": 5,
+  "name": "Lugar de procedencia de los Estudiantes(Localidad, sector catastral, CHIP predial)(En desarrollo)",
   "id": "espacios_fisicos",
   "type": "",
   "authUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/servlet/AdapterHTTP?Page=LoginPage&NEW_SESSION=TRUE&userId=bicirene&password=bicirene",
   "restUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/DSEspFis/data",
-  "query": {
-    "parameters": {
-      "facultad": {
-        "name": "Facultad",
-        "type": "dataset",
-        "datasetUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/ds_facultades/data",
-        "datasetColumnName": "facultad",
-        "datasetColumnValue": "codigo_facultad"
-      },
-      "semestre": {
-        "name": "Semestre",
-        "type": "dataset",
-        "datasetUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/ds_semestre/data",
-        "datasetColumnName": "nombre",
-        "datasetColumnValue": "id"
-      },
-      "anno": {
-        "name": "Año",
-        "type": "dataset",
-        "datasetUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/ds_anno/data",
-        "datasetColumnName": "id",
-        "datasetColumnValue": "id"
-      }
-    }
-  },
-  "enable": true
+  "query": {},
+  "enable": false
+}, {
+  "serviceId": 6,
+  "name": "Localidad de procedencia de los docentes(En desarrollo)",
+  "id": "espacios_fisicos6",
+  "type": "",
+  "authUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/servlet/AdapterHTTP?Page=LoginPage&NEW_SESSION=TRUE&userId=bicirene&password=bicirene",
+  "restUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/DSEspFis/data",
+  "query": {},
+  "enable": false
 }]

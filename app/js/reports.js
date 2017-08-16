@@ -10,6 +10,7 @@
   var addChartDataToMap = null;
   var removeChartOfMap = null;
 
+  var loadSelectReports = function() {};
   var loadJSONData = function() {};
   var chartByCriteria = function() {};
   var loadingIcon = function() {};
@@ -23,12 +24,34 @@
   var changeSelectChart = function() {};
   var graphPie = function() {};
   var getReports = function() {};
+  var getReportById = function() {};
   var exposeGlobals = function() {};
 
   $(function() {
     console.log("Ready reports.js!");
     loadJSONData();
   });
+
+  loadSelectReports = function(reports) {
+    var container = $('#select-chart');
+    var select = $('<select id="select-chart-select" onchange="reports.changeSelectChart(event);"></select>');
+    var option = $('<option value="" disabled selected>Seleccione una gráfica.</option>');
+    select.append(option);
+
+    var rows = reports;
+    for (var i = 0; i < rows.length; i++) {
+      var row = rows[i];
+      if (typeof row.enable !== 'undefined' && row.enable !== '' && row.enable !== false) {
+        var name = row.name;
+        var value = row.id;
+        option = $('<option value="' + value + '">' + name + '</option>');
+        select.append(option);
+      }
+    }
+
+    container.append(select);
+    $(container).find('select').material_select();
+  };
 
   /**
    * Llama los reportes de un archivo JSON.
@@ -40,7 +63,7 @@
       // do something
       console.log('results reports', results);
       reports = results;
-
+      loadSelectReports(reports);
       //authenticate(reports[0]); // OJO temporal
     });
   };
@@ -444,7 +467,7 @@
   };
 
   authenticate = function(report) {
-    var _dc = new Date().getTime();
+    loadingIcon(true, 'Consultando...');
     var url = report.authUrl;
     //url = 'http://sig.udistrital.edu.co/proxy?url=' + escape(url);
     url = '/proxy?url=' + window.escape(url) + '&renameheaders';
@@ -462,16 +485,19 @@
         var setCookie = xhr.getResponseHeader('_Set-Cookie');
         loadFormData(report, setCookie);
         // loadRESTData(report, setCookie);
+        loadingIcon(false, 'Terminado...');
       },
       error: function(err) {
         console.log('error', err);
+        loadingIcon(false, 'Error...');
       }
     });
 
   };
 
   changeSelectChart = function() {
-    authenticate(getReports()[0]);
+    var reportId = $('#select-chart-select').val();
+    authenticate(getReportById(reportId));
   };
 
   //poligono styles
@@ -564,7 +590,7 @@
         })
       })
     };
-    console.log('grupoDatos',grupoDatos, colorFill, colorStroke);
+    console.log('grupoDatos', grupoDatos, colorFill, colorStroke);
     console.log('styleFunction', feature.getGeometry().getType(), styles[feature.getGeometry().getType()]);
     return styles[feature.getGeometry().getType()];
   }
@@ -636,6 +662,12 @@
 
   getReports = function() {
     return reports;
+  };
+
+  getReportById = function(idReport) {
+    return reports.find(function(report) {
+      return report.id === idReport;
+    });
   };
 
   exposeGlobals = function() {
