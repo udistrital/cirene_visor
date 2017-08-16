@@ -12,6 +12,7 @@
 
   var loadJSONData = function() {};
   var chartByCriteria = function() {};
+  var loadingIcon = function() {};
   var loadRESTData = function() {};
   var searchDatasetFieldsByColumn = function() {};
   var paintParameters = function() {};
@@ -248,6 +249,9 @@
     var spagoBIresponse = lastSpagoBIresponse;
     var fields = spagoBIresponse.metaData.fields;
     var rows = spagoBIresponse.rows;
+    if (rows.length === 0){
+      generalReport.displayMessage('No hay resultados para la consulta.');
+    }
     var elements = {};
     var labels = {};
     for (var i = 0; i < rows.length; i++) {
@@ -298,9 +302,21 @@
     graphPie(response);
   };
 
+  loadingIcon = function(activate, message) {
+    document.getElementById('loading-reports-message').innerHTML = message;
+    setTimeout(function() {
+      if (activate) {
+        document.getElementById('loading-reports').style.display = 'block';
+      } else {
+        document.getElementById('loading-reports').style.display = 'none';
+      }
+    }, 200);
+  };
+
   loadRESTData = function(report, cookie, parameters) {
     // Please see REST controller for more options
     // https://github.com/SpagoBILabs/SpagoBI/blob/SpagoBI-5.1/SpagoBIProject/src/it/eng/spagobi/api/DataSetResource.java
+    loadingIcon(true, 'Consultando...');
 
     var url = report.restUrl;
     console.log('loadRESTData url', url);
@@ -330,6 +346,7 @@
         return;
       }
       var container = $('#criteria-chart');
+      container.html('');
 
       var div = $('<div class="input-field col s12"></div>');
       var select = $('<select id="category-field" onchange="reports.chartByCriteria();"></select>');
@@ -353,9 +370,10 @@
       container.append(div);
 
       $(container).find('select').material_select();
-
+      loadingIcon(false, 'Terminado...');
     }).fail(function(e) {
       console.log('loadRESTData error', e);
+      loadingIcon(false, 'Error...');
     });
   };
 
