@@ -40,7 +40,7 @@
   loadSelectReports = function(reports) {
     var container = $('#select-chart');
     var select = $('<select id="select-chart-select" onchange="reports.changeSelectChart(event);"></select>');
-    var option = $('<option value="" disabled selected>Seleccione una gráfica.</option>');
+    var option = $('<option value="" disabled selected>Seleccione un reporte.</option>');
     select.append(option);
 
     var rows = reports;
@@ -138,17 +138,18 @@
     var j = 0;
     for (var i = 0; i < response.length; i++) {
       newColorList.push(colorlist[j]);
+      // Se agrega color para ponerlo luego en la geometria del mapa
+      response[i].color = colorlist[j];
+      // Si se desborda se repiten los colores de nuevo.
       j = (j >= colorlist.length) ?
         0 :
         j + 1;
-      // Se agrega color para ponerlo luego en la geometria del mapa
-      response[i].color = colorlist[j];
       var alias = response[i].alias;
       var numPredios = response[i].predios.length;
       labels.push(alias);
       data.push(numPredios);
     }
-    console.log('color', newColorList, data, labels);
+    console.log('graphPie color', newColorList, data, labels, response);
 
     lastChartData = response;
 
@@ -477,6 +478,11 @@
 
   queryDatasetData = function() {
     console.log('queryDatasetData', lastReport);
+    if (lastReport === null) {
+      generalReport.displayMessage('Seleccione un reporte.');
+      return;
+    }
+
     var parameters = {};
     var lastParameters = lastReport.query.parameters;
     for (var iParameter in lastParameters) {
@@ -624,19 +630,21 @@
     return styles[feature.getGeometry().getType()];
   }
 
-  createLayer = function(filter, lastChartData) {
+  createLayer = function(filter, lastChartData, lastReport) {
+    console.log('createLayer lastChartData', lastChartData);
     var configLayer = {
       id: REPORTLAYERID,
-      filter: filter
+      filter: filter,
+      filters: lastReport.filters
     };
+    // Se quita antes de poner una nueva
     window.getMap().removeLayer(window.getMap().getLayer(configLayer.id));
 
     var geojsonFormat = new ol.format.GeoJSON();
     var wfsLoader = function(extent, resolution, projection) {
+      var wfsSource = this;
       // var newExtent = window.getMap().getView().calculateExtent(window.getMap().getSize());
       // extent = newExtent;
-      var indice = this.indice;
-      var wfsSource = this;
       var url = '/geoserver/SIGUD/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=SIGUD:vista_espacios&outputFormat=application%2Fjson' + //'/geoserver/parqueaderos/ows?service=WFS&' +
         //'version=1.0.0&request=GetFeature&typename=parqueaderos:isla&' +
         //'outputFormat=application%2Fjson' +
@@ -681,12 +689,7 @@
   };
 
   addChartDataToMap = function() {
-    var layer = createLayer(true, lastChartData);
-    layer.source = {
-      config: {
-        filters: lastReport.filters
-      }
-    }
+    var layer = createLayer(true, lastChartData, lastReport);
     window.getMap().addLayer(layer);
   };
 
@@ -705,6 +708,11 @@
   };
 
   openSpagobiLinkReport = function() {
+    if (lastReport === null) {
+      generalReport.displayMessage('Seleccione un reporte.');
+      return;
+    }
+
     var documentData = lastReport.documentData;
     Sbi.sdk.services.setBaseUrl(documentData.baseURL);
 
