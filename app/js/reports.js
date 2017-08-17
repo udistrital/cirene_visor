@@ -705,18 +705,13 @@
   };
 
   openSpagobiLinkReport = function() {
-    Sbi.sdk.services.setBaseUrl({
-      protocol: 'https',
-      host: 'intelligentia.udistrital.edu.co',
-      port: '8443',
-      contextPath: 'SpagoBI',
-      controllerPath: 'servlet/AdapterHTTP'
-    });
+    var documentData = lastReport.documentData;
+    Sbi.sdk.services.setBaseUrl(documentData.baseURL);
 
     Sbi.sdk.api.authenticate({
       params: {
-        user: 'bicirene',
-        password: 'bicirene'
+        user: documentData.user,
+        password: documentData.password
       },
       callback: {
         fn: function(result, args, success) {
@@ -733,8 +728,8 @@
 
     var exec = function() {
       var url = Sbi.sdk.api.getDocumentUrl({
-        documentLabel: 'RteEspFis',
-        executionRole: '/spagobi/user/bicirene',
+        documentLabel: documentData.documentLabel,
+        executionRole: documentData.executionRole,
         displayToolbar: false,
         displaySliders: false,
         height: '500px',

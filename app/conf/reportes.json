@@ -3,6 +3,19 @@
   "name": "Reportes de Ocupación de las Aulas y Laboratorios de la Universidad.",
   "id": "espacios_fisicos",
   "type": "",
+  "documentData": {
+    "baseURL": {
+      "protocol": "https",
+      "host": "intelligentia.udistrital.edu.co",
+      "port": "8443",
+      "contextPath": "SpagoBI",
+      "controllerPath": "servlet/AdapterHTTP"
+    },
+    "user": "bicirene",
+    "password": "bicirene",
+    "documentLabel": "RteEspFis",
+    "executionRole": "/spagobi/user/bicirene"
+  },
   "authUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/servlet/AdapterHTTP?Page=LoginPage&NEW_SESSION=TRUE&userId=bicirene&password=bicirene",
   "restUrl": "https://intelligentia.udistrital.edu.co:8443/SpagoBI/restful-services/1.0/datasets/DSEspFis/data",
   "datasetColumn": "codigo_espacio_fisico",
