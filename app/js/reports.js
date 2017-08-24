@@ -1,3 +1,14 @@
+/**
+ * @module reports
+ */
+
+/**
+* Se maneja todos los métodos para realizar los reportes desde SpagoBI
+* @function
+* @author juusechec
+* @name reports
+* @description establece los métodos de reports
+*/
 (function() {
   var reports = null;
   var chartColors = null;
@@ -37,6 +48,12 @@
     loadJSONData();
   });
 
+  /**
+   * Carga .............
+   * @param {object} - privacy gown
+   * @param {object} - security
+   * @returns {survival}
+   */
   loadSelectReports = function(reports) {
     var container = $('#select-chart');
     var select = $('<select id="select-chart-select" onchange="reports.changeSelectChart(event);"></select>');
@@ -60,6 +77,9 @@
 
   /**
    * Llama los reportes de un archivo JSON.
+   * @param {object} - privacy gown
+   * @param {object} - security
+   * @returns {survival}
    */
   loadJSONData = function() {
     var reportsPromise = $.get('conf/reportes.json');

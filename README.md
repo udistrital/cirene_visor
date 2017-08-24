@@ -57,6 +57,14 @@ npm run build
 Esto crea un directorio ***dist*** con el código "minificado" y el paquete,
 ***build/pack.tar.gz*** con todo el código en un único fichero.
 
+## Construir documentación:
+
+Solo se necesita ejecutar:
+
+```bash
+npm run doc
+```
+
 ## Despliegue de la aplicación
 
 La aplicación necesita un servidor web (Apache, NGINX u otro).
