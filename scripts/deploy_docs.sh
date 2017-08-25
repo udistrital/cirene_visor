@@ -6,6 +6,7 @@
 # rationale: Se genera token desde http://github.com/settings/tokens con
 # permisos de accesos a repositorios públicos.
 # /usr/lib64/ruby/gems/2.1.0/gems/travis-1.8.8/bin/travis encrypt GH_TOKEN="secretvalue_github_token"
+# link: https://docs.travis-ci.com/user/environment-variables/
 add_repo() {
   git init
   git checkout -b gh-pages
@@ -16,7 +17,7 @@ add_repo() {
 add_files() {
   rm -rf *
   cp -r ../docs/* .
-  git commit --all --message "Travis build: $TRAVIS_BUILD_NUMBER"
+  git commit --all --message "Travis build: $TRAVIS_BUILD_NUMBER, Commit: $TRAVIS_COMMIT"
 }
 
 upload_files() {
