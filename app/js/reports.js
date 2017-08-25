@@ -835,9 +835,6 @@
   /**
    * Método GET para la variable 'reports'.
    * @function
-   * @param {object} response - ............
-   * @param {object} ctxParameter - .............
-   * @returns {null}
    */
   getReports = function() {
     return reports;
