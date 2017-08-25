@@ -4,13 +4,14 @@
 # link: https://gist.github.com/willprice/e07efd73fb7f13f917ea
 
 add_repo() {
-  cd docs
   git init
   git checkout -b gh-pages
   git remote add origin git@github.com:udistrital/cirene_pruebas.git
+  git pull origin master
 }
 
 add_files() {
+  cp ../docs/* .
   git add .
   git commit --message "Travis build: $TRAVIS_BUILD_NUMBER"
 }
@@ -21,6 +22,8 @@ upload_files() {
   git push --quiet --set-upstream origin-pages gh-pages
 }
 
+pushd newdocs
 add_repo
 add_files
 upload_files
+popd
