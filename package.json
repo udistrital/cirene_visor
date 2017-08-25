@@ -14,7 +14,8 @@
     "test:dist": "karma start karma_dist.conf.js --log-level debug --single-run",
     "build:test": "npm run build && npm run test:dist",
     "start:dist": "gulp webserver:dist",
-    "jshint": "gulp jshint"
+    "jshint": "gulp jshint",
+    "jsdoc": "jsdoc app/js -d docs"
   },
   "repository": {
     "type": "git",
@@ -38,6 +39,7 @@
     "gulp-tar": "^2.0.0",
     "gulp-webserver": "^0.9.1",
     "jasmine-core": "^2.7.0",
+    "jsdoc": "^3.5.4",
     "jshint": "^2.9.5",
     "karma": "^1.7.0",
     "karma-chrome-launcher": "^2.2.0",

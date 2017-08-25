@@ -1,6 +1,6 @@
 /**
  * @module reports
- * @author juusechec
+ * @author [juusechec]{@link https://github.com/juusechec}
  * @name reports
  * @description Establece los atributos y métodos del módulo reports.
  */

@@ -3,3 +3,9 @@ node_js:
   - "7"
 script:
   - npm test
+  - npm run jsdoc
+after_success:
+  - scripts/deploy_docs.sh
+env:
+  global:
+    secure: LF2BI/qBODRdxqDwG5jZIGad5hZCXcIzd8saIuGiAPPaXKc7ZnoSPYo/hJ4WT0O48O/kkLH8LP+ZH7sW1Q0vYoSKObkzRgNP6LrLhGXw/KBr6k1+MnSiJD1gmi55cLp4lIhwT2GKVBbSxcJ/cSHNu7HTdx4fleGZG8ehuix1Rav8go2a6i/jK9HZr6AjZ3GoxCX2ksfpvPA3QxvjoPp1f9KO/1Vh+5PC4lR+3N893MO78Djoc1YbK1eVTXUvIk9dubpnkSXKhw/2/PLqjlwQfccXDu7Hd1cibF80KmNMFqkvZtZxouyBPGlnbKY0qmQPjclsrFPiDtMK6dF/paLUpLogU6SOqXJGOJ5oCqTEqeKX/yLfUipfnzEBlUFVm41FAZb5//sVxm17402J/4PNazcg02HWu/nJos9ZattUQ4XkzG5LfSxPpieOIatHvviuXU7ZWXb5ExjobjIbN1+ie7wdvczuT8CMAX1SQgit6i8C2Fp4TyLT9zHh1FZ4SxFfN5C9LZ6d4/oymBrRNi+nPfuwJmEcl7o58GqMpMNbOP+X+NpvlHd5xB5XTTxL3hedcxi1qfXQDcD6CmzpBpyRPgkNfyVqc5XmHjRxht/83PIX34Ftr8wqMOE+WVqEY1tQrd9wi33tsrL9TVYiV+LySuCf+iYx14D3SAJJaeFdIuM=
