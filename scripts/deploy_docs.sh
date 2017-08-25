@@ -7,7 +7,7 @@ echo ${GH_TOKEN}
 echo $TRAVIS_BUILD_NUMBER
 
 add_repo() {
-  cd jsdoc
+  cd docs
   git init
   git checkout -b gh-pages
   git remote add origin git@github.com:udistrital/cirene_pruebas.git
