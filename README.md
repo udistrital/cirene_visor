@@ -1,4 +1,4 @@
-[![Build Status Travis CI](https://travis-ci.org/udistrital/cirene_pruebas.svg?branch=master)](https://travis-ci.org/udistrital/cirene_pruebas)
+[![Build Status Travis CI](https://travis-ci.org/udistrital/cirene_visor.svg?branch=master)](https://travis-ci.org/udistrital/cirene_visor)
 
 [![Build Status Drone CD](https://drone.udistritaloas.edu.co/api/badges/cirene/cirene_visor/status.svg)](https://drone.udistritaloas.edu.co/cirene/cirene_visor)
 
@@ -62,8 +62,10 @@ Esto crea un directorio ***dist*** con el código "minificado" y el paquete,
 Solo se necesita ejecutar:
 
 ```bash
-npm run doc
+npm run jsdoc
 ```
+
+Esta queda publicada en: https://udistrital.github.io/cirene_visor
 
 ## Despliegue de la aplicación
 
