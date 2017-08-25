@@ -22,8 +22,10 @@
     "mapTools": true,
     "generalReport": true,
     "Chart": true,
-    "Color": true
+    "Color": true,
+    "Sbi": true
   },
   "evil" : true,
-  "loopfunc" : true
+  "loopfunc" : true,
+  "shadow": true
 }

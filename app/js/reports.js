@@ -257,7 +257,7 @@
     var fields = response.metaData.fields;
     // el nombre de la columna que contiene el name a poner en el option
     var datasetColumnName = ctxParameter.parameter.datasetColumnName;
-    var columnName = searcheldsByColumn(fields, datasetColumnName);
+    var columnName = searchDatasetFieldsByColumn(fields, datasetColumnName);
     // el nombre de la columna que contiene el valor a poner en el option
     var datasetColumnValue = ctxParameter.parameter.datasetColumnValue;
     var columnValue = searchDatasetFieldsByColumn(fields, datasetColumnValue);
@@ -440,7 +440,6 @@
         select.append(option);
       }
     } else {
-      var fields = spagoBIresponse.metaData.fields;
       for (var i = 0; i < fields.length; i++) {
         var field = fields[i];
         var fieldValue = field.dataIndex;
@@ -743,7 +742,7 @@
     console.log('grupoDatos', grupoDatos, colorFill, colorStroke);
     console.log('styleFunction', feature.getGeometry().getType(), styles[feature.getGeometry().getType()]);
     return styles[feature.getGeometry().getType()];
-  }
+  };
 
   /**
    * Crea un layer de tipo ol.layer.Vector con el que se configuran filtro o
@@ -873,24 +872,6 @@
     var documentData = lastReport.documentData;
     Sbi.sdk.services.setBaseUrl(documentData.baseURL);
 
-    Sbi.sdk.api.authenticate({
-      params: {
-        user: documentData.user,
-        password: documentData.password
-      },
-      callback: {
-        fn: function(result, args, success) {
-          if (success === true) {
-            exec();
-          } else {
-            alert('ERROR: Usuario o Clave incorrecta.');
-          }
-        }
-        //, scope: this
-        //, args: {arg1: 'A', arg2: 'B', ...}
-      }
-    });
-
     var exec = function() {
       var url = Sbi.sdk.api.getDocumentUrl({
         documentLabel: documentData.documentLabel,
@@ -907,7 +888,25 @@
       console.log('url', url);
       window.open(url, "_blank");
     };
-  }
+
+    Sbi.sdk.api.authenticate({
+      params: {
+        user: documentData.user,
+        password: documentData.password
+      },
+      callback: {
+        fn: function(result, args, success) {
+          if (success === true) {
+            exec();
+          } else {
+            window.alert('ERROR: Usuario o Clave incorrecta.');
+          }
+        }
+        //, scope: this
+        //, args: {arg1: 'A', arg2: 'B', ...}
+      }
+    });
+  };
 
   /**
    * Expone los métodos necesarios como parte de la variable 'reports'
