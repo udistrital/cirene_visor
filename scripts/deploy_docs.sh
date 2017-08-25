@@ -22,6 +22,7 @@ upload_files() {
   git push --quiet --set-upstream origin-pages gh-pages
 }
 
+mkdir newdocs
 pushd newdocs
 add_repo
 add_files
