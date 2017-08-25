@@ -12,8 +12,7 @@ add_repo() {
 
 add_files() {
   cp -r ../docs/* .
-  git add .
-  git commit --message "Travis build: $TRAVIS_BUILD_NUMBER"
+  git commit --all --message "Travis build: $TRAVIS_BUILD_NUMBER"
 }
 
 # /usr/lib64/ruby/gems/2.1.0/gems/travis-1.8.8/bin/travis encrypt SOMEVAR="secretvalue"
