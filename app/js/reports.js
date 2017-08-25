@@ -1,14 +1,9 @@
 /**
  * @module reports
+ * @author juusechec
+ * @name reports
+ * @description Establece los atributos y métodos del módulo reports.
  */
-
-/**
-* Se maneja todos los métodos para realizar los reportes desde SpagoBI
-* @function
-* @author juusechec
-* @name reports
-* @description establece los métodos de reports
-*/
 (function() {
   var reports = null;
   var chartColors = null;
@@ -19,6 +14,7 @@
   var myPieConfig = null;
   var myPie = null;
   var REPORTLAYERID = '_reportsLayer';
+  var FEATUREID = 'Código';
 
   var loadSelectReports = function() {};
   var graphPie = function() {};
@@ -43,16 +39,15 @@
   var openSpagobiLinkReport = function() {};
   var exposeGlobals = function() {};
 
+  // Se carga al inicio para traer del JSON la configuración de los reportes
   $(function() {
     console.log("Ready reports.js!");
     loadJSONData();
   });
 
   /**
-   * Carga .............
-   * @param {object} - privacy gown
-   * @param {object} - security
-   * @returns {survival}
+   * Carga desde el objeto reports el select para cargar reportes.
+   * @function
    */
   loadSelectReports = function(reports) {
     var container = $('#select-chart');
@@ -77,9 +72,7 @@
 
   /**
    * Llama los reportes de un archivo JSON.
-   * @param {object} - privacy gown
-   * @param {object} - security
-   * @returns {survival}
+   * @function
    */
   loadJSONData = function() {
     var reportsPromise = $.get('conf/reportes.json');
@@ -94,7 +87,8 @@
   };
 
   /**
-   * Contiene la lista de Colores
+   * Contiene la lista de Colores en formato rgb como en CSS.
+   * @object
    */
   chartColors = {
     red: 'rgb(255, 99, 132)',
@@ -112,21 +106,21 @@
 
   /**
    * Llama los reportes de un archivo JSON.
-   * @constructor
-   * @param {array} response - Un arreglo de items a graficar
+   * @function
+   * @param {array} response - Un arreglo de items a graficar. Ex:
    var response = [
      {
        'nombre': 'femenino',
        'alias': 'Género Femenino',
-       'predios': ['034234', '234234', '334234', '734234']
+       'idsFeatures': ['034234', '234234', '334234', '734234']
      }, {
        'nombre': 'masculino',
        'alias': 'Género Masculino',
-       'predios': ['034334', '22234', '334774', '730000']
+       'idsFeatures': ['034334', '22234', '334774', '730000']
      }, {
        'nombre': 'desconocido',
        'alias': 'No Disponible',
-       'predios': ['0332224', '2232323', '3334723', '7333300']
+       'idsFeatures': ['0332224', '2232323', '3334723', '7333300']
      }
    ];
    */
@@ -165,9 +159,9 @@
         0 :
         j + 1;
       var alias = response[i].alias;
-      var numPredios = response[i].predios.length;
+      var numFeatures = response[i].idsFeatures.length;
       labels.push(alias);
-      data.push(numPredios);
+      data.push(numFeatures);
     }
     console.log('graphPie color', newColorList, data, labels, response);
 
@@ -224,6 +218,15 @@
     myPie = new Chart(ctx, myPieConfig);
   };
 
+  /**
+   * Retorna el nombre de la pseudo-columna column# que maneja el objeto
+   * spagoBIresponse.
+   * @function
+   * @param {array} dataSetFields - Del tipo responseSpagoBI.metaData.fields
+   * @param {string} datasetColumn - Nombre del header columna que retorna
+   * spagobi, es el nombre real, por ejemplo "facultad", "tipo", "etc."
+   * @returns {string} columnName nombre de la pseudo-columna "columna#"
+   */
   searchDatasetFieldsByColumn = function(dataSetFields, datasetColumn) {
     return dataSetFields.find(function(field) {
       var columnName = field.header;
@@ -231,6 +234,15 @@
     }).dataIndex;
   };
 
+  /**
+   * Dibuja los parámetros se selección para consultar el reporte en spagoBI.
+   * Esto está diseñado para ser llamado por medio de un for e inyectar el
+   * contexto CTX como un parámetro.
+   * @function
+   * @param {object} response - Respuesta de dataset SpagoBI
+   * @param {object} ctxParameter - Un objeto de reportes[].query.parameters.{}
+   * traido desde el JSON reportes.json
+   */
   paintParameters = function(response, ctxParameter) {
     var indice = ctxParameter.indice;
     // Se obtiene el contenedor en la posicion esperada para poner el select
@@ -245,7 +257,7 @@
     var fields = response.metaData.fields;
     // el nombre de la columna que contiene el name a poner en el option
     var datasetColumnName = ctxParameter.parameter.datasetColumnName;
-    var columnName = searchDatasetFieldsByColumn(fields, datasetColumnName);
+    var columnName = searcheldsByColumn(fields, datasetColumnName);
     // el nombre de la columna que contiene el valor a poner en el option
     var datasetColumnValue = ctxParameter.parameter.datasetColumnValue;
     var columnValue = searchDatasetFieldsByColumn(fields, datasetColumnValue);
@@ -264,6 +276,16 @@
     $(container).find('select').material_select();
   };
 
+  /**
+   * Consulta los parámetros que son DataSets en SpagoBI (servicios web) a través
+   * de un proxy hecho en GO, este proxy reescribe la cabecera Cookie que lleva
+   * la autenticación y retorna la información del servicio.
+   * @function
+   * @param {object} report - Del tipo reportes[] con este se accede a la
+   * configuración del reporte traida de reportes.json
+   * @param {string} cookie - Es el valor de la cabecer cookie,
+   * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie}
+   */
   loadFormData = function(report, cookie) {
     loadingIcon(true, 'Consultando...');
     var container = $('#form-chart');
@@ -306,6 +328,11 @@
     }
   };
 
+  /**
+   * Recoge el valor del input #category-field y con esto realiza una gráfica
+   * con los valores que tiene ese campo en el reporte de SpagoBI.
+   * @function
+   */
   chartByCriteria = function() {
     var category = $('#category-field').val();
     if (category === null || category === '') {
@@ -348,30 +375,25 @@
         response.push({
           'nombre': key,
           'alias': labels[key],
-          'predios': elements[key]
+          'features': elements[key]
         });
       }
     }
 
     console.log('chartByCriteria response', response);
-    // var response = [
-    //   {
-    //     'nombre': 'femenino',
-    //     'alias': 'Género Femenino',
-    //     'predios': ['034234', '234234', '334234', '734234']
-    //   }, {
-    //     'nombre': 'masculino',
-    //     'alias': 'Género Masculino',
-    //     'predios': ['034334', '22234', '334774', '730000']
-    //   }, {
-    //     'nombre': 'desconocido',
-    //     'alias': 'No Disponible',
-    //     'predios': ['0332224', '2232323', '3334723', '7333300']
-    //   }
-    // ];
     graphPie(response);
   };
 
+  /**
+   * Activa o desactiva el componente que muestra un gif de cargando, el gif
+   * sirve para indicar al usuario si está realizando o no algun proceso o
+   * consulta.
+   * @function
+   * @param {boolean} activate - Indica si debe activarse(true) o desactivarse
+   * (false) el indicador.
+   * @param {string} message - Es el mensaje que se muestra junto al gif, ejemplos
+   * de este pueden ser "Cargando...", "Buscando...", etc.
+   */
   loadingIcon = function(activate, message) {
     document.getElementById('loading-reports-message').innerHTML = message;
     setTimeout(function() {
@@ -383,6 +405,17 @@
     }, 200);
   };
 
+  /**
+   * Agrega los criterios o campos para analizar, especificados en reportes.json
+   * en el objeto reportes[].listCriteria, por ejemplo, hacer el PIE con Todos
+   * los distintos valores del "Tipo de Espacio". Estos criterios se agregan a
+   * un html select para ser seleccionados y automáticamente generar una gráfica.
+   * @function
+   * @param {object} report - De tipo reportes[] que viene de reportes.json, con
+   * este debería ser el objeto del reporte actual.
+   * @param {object} spagoBIresponse - La respuesta de la petición ajax a la URL
+   * al servicio REST del DataSet asociado al reporte en SpagoBI.
+   */
   addListCriteria = function(report, spagoBIresponse) {
     var container = $('#criteria-chart');
     container.html('');
@@ -427,6 +460,15 @@
     $(container).find('select').material_select();
   };
 
+  /**
+   * Se agrega un html select con los valores de filtros en reportes[].filters
+   * del archivo reportes.json, estos filtros se usan para filtrar los elementos
+   * puestos en el mapa (después de poner la gráfica), como puntos, líneas o
+   * polígonos.
+   * @function
+   * @param {object} report - El objeto de reporte actual el reportes[] de
+   * reportes.json
+   */
   addMapFilter = function(report) {
     var container = $('#chart-map-filters');
     container.html('');
@@ -450,6 +492,22 @@
     }
   };
 
+  /**
+   * Recoge el reporte actual para extraer la URL, a esto le poner las
+   * cabeceras, cookies para acceder al recurso y le agrega los parámetros con
+   * el que se obtienen los datos del reportes en forma de DataSet (via REST).
+   * @function
+   * @param {object} report - Reporte actual de reportes.json
+   * @param {string} cookie - Valor de la cabecera Cookie con los accesos al
+   * recurso.
+   * @param {object} parameters - Los parámetros con los que se filtra, por
+   * ejemplo:
+   var parameters = {
+     facultad: 33,
+     semestre: 1,
+     anno: 2015
+   }
+   */
   loadRESTData = function(report, cookie, parameters) {
     // Please see REST controller for more options
     // https://github.com/SpagoBILabs/SpagoBI/blob/SpagoBI-5.1/SpagoBIProject/src/it/eng/spagobi/api/DataSetResource.java
@@ -496,6 +554,13 @@
     });
   };
 
+  /**
+   * Cuando se selecciona un reporte, los datos de este quedan en la variable
+   * lastReport, de ahí se lee el último reporte, luego se mira que los
+   * parámetros seleccionados estén todos diligenciados, luego va y consulta
+   * el servicio REST asociado al DataSet de SpagoBI del Reporte elegido.
+   * @function
+   */
   queryDatasetData = function() {
     console.log('queryDatasetData', lastReport);
     if (lastReport === null) {
@@ -521,6 +586,14 @@
     loadRESTData(lastReport, lastCookie, parameters);
   };
 
+  /**
+   * Con el reporte, busca la url de autenticación, se autentica con las
+   * credenciales, se obtiene las cabeceras de la petición que permiten la
+   * autenticación y se cargan los datos del formulario con esa Cookie que
+   * permite el acceso.
+   * @function
+   * @param {object} report - El reporte actual de reportes.json
+   */
   authenticate = function(report) {
     loadingIcon(true, 'Consultando...');
     var url = report.authUrl;
@@ -550,16 +623,38 @@
 
   };
 
+  /**
+   * Captura el valor del reporte seleccionado actualmente y ejecuta otra
+   * función con la que se autentica para proceseguir con la carga de elementos
+   * para el formulario.
+   * @function
+   */
   changeSelectChart = function() {
     var reportId = $('#select-chart-select').val();
     authenticate(getReportById(reportId));
   };
 
-  //poligono styles
+  /**
+   * Función que devuelve los estilos usados para la capa del mapa, estos los
+   * obtiene analizando el color del criterio seleccionado y se lo agrega a los
+   * elementos del mapa que coincidan con el código del espacio físico.
+   * @function
+   * @param {object} feature - La geometría de tipo punto, línea o polígono
+   * (etc.) a la que se desea asignarle algún color teniendo en cuenta los
+   * colores usados en la gráfica.
+   * @param {array} lastChartData - los datos de la última gráfica, por
+   * ejemplo:
+   var lastChartData = {
+     color: 'rgb(255,255,255)',
+     idFeatures : [123, 456, 789]
+   };
+   * @returns {object} style - De tipo ol.style.Style según el tipo de geometría
+   * que ingrese.
+   */
   styleFunction = function(feature, lastChartData) {
-    var codPredial = feature.get('Código').toString();
+    var codIdFeature = feature.get(FEATUREID).toString();
     var grupoDatos = lastChartData.find(function(element) {
-      return element.predios.indexOf(codPredial) > -1;
+      return element.idsFeatures.indexOf(codIdFeature) > -1;
     });
 
     if (typeof grupoDatos === 'undefined') {
@@ -650,6 +745,18 @@
     return styles[feature.getGeometry().getType()];
   }
 
+  /**
+   * Crea un layer de tipo ol.layer.Vector con el que se configuran filtro o
+   * filtros que permiten mostrar los datos mostrados en la gráfica de forma
+   * gráfica y correspondiente con la capa espacios físicos.
+   * @function
+   * @param {boolean} filter - Si la capa está filtrada (true) o no (false).
+   * @param {object} lastChartData - Los últimos datos de la gráfica.
+   * @param {object} lastReport - Los últimos datos del reporte de reportes.json
+   * @returns {object} serviceLayer - De tipo ol.layer.Vector, es la capa que
+   * filtra y colorea los datos de el GeoJSON de Geoserver correspondiente a
+   * espacios físicos.
+   */
   createLayer = function(filter, lastChartData, lastReport) {
     console.log('createLayer lastChartData', lastChartData);
     var configLayer = {
@@ -708,25 +815,58 @@
     return serviceLayer;
   };
 
+  /**
+   * Agrega una copia de la capa espacios físicos al mapa.
+   * @function
+   */
   addChartDataToMap = function() {
     var layer = createLayer(true, lastChartData, lastReport);
     window.getMap().addLayer(layer);
   };
 
+  /**
+   * Remueve la capa copia de espacios físicos del mapa.
+   * @function
+   */
   removeChartOfMap = function() {
     window.getMap().removeLayer(window.getMap().getLayer(REPORTLAYERID));
   };
 
+  /**
+   * Método GET para la variable 'reports'.
+   * @function
+   * @param {object} response - ............
+   * @param {object} ctxParameter - .............
+   * @returns {null}
+   */
   getReports = function() {
     return reports;
   };
 
+  /**
+   * Obtiene un reporte del objeto resultante de leer reportes.json, estos están
+   * identificados por un 'id' con el que se busca y se retorna únicamente ese
+   * elemento
+   * @function
+   * @param {string} idReport - Parámetro id con el que se identifica el reporte
+   * en el archivo reportes.json
+   * @returns {object} report - Reporte identificado con parámetro idReport
+   */
   getReportById = function(idReport) {
     return reports.find(function(report) {
       return report.id === idReport;
     });
   };
 
+  /**
+   * Abre el link del reporte SpagoBI en una pestaña independiente. Este reporte
+   * tiene la interfaz de SpagoBI. Se autentica y se obtiene el link usando el
+   * SDK de Javascript (Javascript SpagoBI API).
+   * {@link http://spagobi.readthedocs.io/en/latest/user/JS/README/index.html}
+   * Se obtiene los parámetros base de la configuración en
+   * reportes[].documentData del archivo reportes.json
+   * @function
+   */
   openSpagobiLinkReport = function() {
     if (lastReport === null) {
       generalReport.displayMessage('Seleccione un reporte.');
@@ -772,6 +912,12 @@
     };
   }
 
+  /**
+   * Expone los métodos necesarios como parte de la variable 'reports'
+   * para ser utilizada en cualquier parte fuera de este contexto y en contexto
+   * window.
+   * @function
+   */
   exposeGlobals = function() {
     if (typeof window !== 'undefined') {
       window.reports = {
@@ -786,6 +932,12 @@
     }
   };
 
+  /**
+   * Expone los métodos necesarios como parte de la variable '_scopeReports'
+   * para ser utilizada en los tests con karma+jasmine en phantomjs para
+   * hacerlos headless. Vea el archivo tests/reports_spec.js
+   * @function
+   */
   function exposeForTests() {
     if (typeof describe !== 'undefined') {
       // for tests
@@ -794,6 +946,7 @@
     }
   }
 
+  // Está proyectado por si se quire trabajar en NodeJS, necesita ajustes.
   if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     console.log('Load module for Node.js');
     // module.exports = something;
