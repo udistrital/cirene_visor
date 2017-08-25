@@ -11,6 +11,7 @@ add_repo() {
 }
 
 add_files() {
+  rm -rf *
   cp -r ../docs/* .
   git commit --all --message "Travis build: $TRAVIS_BUILD_NUMBER"
 }
