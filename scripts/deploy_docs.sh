@@ -3,9 +3,6 @@
 # rationale:
 # link: https://gist.github.com/willprice/e07efd73fb7f13f917ea
 
-echo ${GH_TOKEN}
-echo $TRAVIS_BUILD_NUMBER
-
 add_repo() {
   cd docs
   git init
@@ -20,7 +17,7 @@ add_files() {
 
 # /usr/lib64/ruby/gems/2.1.0/gems/travis-1.8.8/bin/travis encrypt SOMEVAR="secretvalue"
 upload_files() {
-  git remote add origin-pages https://${GH_TOKEN}@github.com/MVSE-outreach/resources.git > /dev/null 2>&1
+  git remote add origin-pages https://${GH_TOKEN}@github.com/udistrital/cirene_pruebas.git > /dev/null 2>&1
   git push --quiet --set-upstream origin-pages gh-pages
 }
 
