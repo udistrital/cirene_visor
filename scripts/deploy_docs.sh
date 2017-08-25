@@ -1,7 +1,10 @@
 #!/bin/bash -eux
 
-# rationale: 
+# rationale:
 # link: https://gist.github.com/willprice/e07efd73fb7f13f917ea
+
+echo ${GH_TOKEN}
+echo $TRAVIS_BUILD_NUMBER
 
 add_repo() {
   cd jsdoc
