@@ -500,3 +500,21 @@ ul.btnHorizontal>li {
 
 
 /* end general report */
+
+
+/* begin powered by */
+#poweredby {
+  position: absolute;
+  right: 10px;
+  bottom: 20px;
+  width: auto;
+  height: 50px;
+  background-color: transparent;
+}
+
+#poweredby img {
+  background-size: 100% 100%;
+  height: 50px;
+}
+
+/* end powered by */
