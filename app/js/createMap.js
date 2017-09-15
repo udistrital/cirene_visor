@@ -293,9 +293,9 @@
 
       li = $('<li></li>');
 
-      var aOff =  $('<a href="#!" data-group-icon="'+ grupo.id+'" click="changeVisibilityGroup(event, \'' + grupo.id + '\', false)"><i class="material-icons btnEyeGroup">visibility_off</i></a>');
+      var aOff =  $('<a href="#!" data-group-layer-off="'+ grupo.id+'" onclick="changeVisibilityGroup(event, \'' + grupo.id + '\', false)"><i class="material-icons btnEyeGroup">visibility_off</i></a>');
 
-      var aOn = $('<a href="#!" onclick="changeVisibilityGroup(event, \'' + grupo.id + '\', true)"><i class="material-icons btnEyeGroup">visibility</i></a>');
+      var aOn = $('<a href="#!" data-group-layer-on="'+ grupo.id+'" onclick="changeVisibilityGroup(event, \'' + grupo.id + '\', true)"><i class="material-icons btnEyeGroup">visibility</i></a>');
 
       var divHeader = $('<div class="collapsible-header ' + active + '"><i class="material-icons">layers</i>' + grupo.name +'</div>');
       divHeader.append(aOff);
