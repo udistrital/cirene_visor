@@ -281,21 +281,33 @@
 
   createTOC = function() {
     var toc = $('#toc-div');
-    var collapsible = '<ul class="collapsible" data-collapsible="accordion">';
+    var collapsible = $('<ul class="collapsible" data-collapsible="accordion"></ul>');
     var i,
       li;
-
+    console.log('jkjdlsf grupoServicios', grupoServicios);
     for (i = 0; i < grupoServicios.length; i++) {
       var grupo = grupoServicios[i];
       var active = (i === 0) ?
         'active' :
         '';
-      li = '<li> ' +
-        '     <div class="collapsible-header ' + active + '">\n' + '        <i class="material-icons">layers</i>\n' + '        ' + grupo.name + '\n' + '        <a href="#!" onclick="changeVisibilityGroup(event, \'' + grupo.id + '\', false)">\n' + '            <i class="material-icons btnEyeGroup">visibility_off</i>\n' + '        </a>\n' + '        <a href="#!" onclick="changeVisibilityGroup(event, \'' + grupo.id + '\', true)">\n' + '            <i class="material-icons btnEyeGroup">visibility</i>\n' + '        </a>\n' + '        </div>\n' + '    <div class="collapsible-body"><ul class="collection" data-group="' + grupo.id + '"></ul></div>\n' + '</li>\n';
-      collapsible += li;
+
+      li = $('<li></li>');
+
+      var aOff =  $('<a href="#!" data-group-icon="'+ grupo.id+'" click="changeVisibilityGroup(event, \'' + grupo.id + '\', false)"><i class="material-icons btnEyeGroup">visibility_off</i></a>');
+
+      var aOn = $('<a href="#!" onclick="changeVisibilityGroup(event, \'' + grupo.id + '\', true)"><i class="material-icons btnEyeGroup">visibility</i></a>');
+
+      var divHeader = $('<div class="collapsible-header ' + active + '"><i class="material-icons">layers</i>' + grupo.name +'</div>');
+      divHeader.append(aOff);
+      divHeader.append(aOn);
+
+      var divBody = $('<div class="collapsible-body"><ul class="collection" data-group="' + grupo.id + '"></ul></div>');
+
+      li.append(divHeader);
+      li.append(divBody);
+      collapsible.append(li);
     }
-    collapsible += '</ul>';
-    toc.html(collapsible);
+    toc.append(collapsible);
 
     for (i = 0; i < mapFeatureLayerObjects.length; i++) {
       var layer = mapFeatureLayerObjects[i];
@@ -309,7 +321,7 @@
       var layerMaxScale = (typeof(layer.maxScale) === 'undefined') ?
         'Inf' :
         layer.maxScale;
-      var filters = '';
+      var divFilters = $('<div class="input-field col s12"></div>');
       var filterClass = '';
       var selectParams = '';
       if (typeof(layer.select) !== 'undefined' && layer.select !== '') {
@@ -317,28 +329,34 @@
       }
       if (typeof(layer.filters) !== 'undefined' && layer.filters !== '') {
         filterClass = ' toc-layer-filters';
-        filters += '<div class="input-field col s12">\n' + '  <select onchange="mapTools.changeFilter(this, \'' + layer.id + '\')" ' + selectParams + '>\n' + '    <option value="" disabled selected>Seleccione un filtro</option>\n';
+        var select = $('<select onchange="mapTools.changeFilter(this, \'' + layer.id + '\')" ' + selectParams + '><option value="" disabled selected>Seleccione un filtro</option></select>');
 
         for (var j = 0; j < layer.filters.length; j++) {
           var filter = layer.filters[j];
-          filters += '<option value="' + filter.filter + '">' + filter.name + '</option>\n';
+          var option = $('<option value="' + filter.filter + '">' + filter.name + '</option>');
+          select.append(option);
         }
 
-        filters += '  </select>\n' +
-          // '  <label>Seleccione el Filtro</label>\n' +
-          '</div>\n';
+        divFilters.append(select);
       }
 
-      li = '<li class="collection-item avatar' + filterClass + '">\n' + '    <img src="' + imageUrl + '" alt="" class="circle">\n' + '    <span class="title" style="padding-right: 22px; display: block;">' + layer.name + '</span>\n' +
-        //'    <p>Desde escala 1:' + layerMaxScale + '</p>\n' +
-        '    <a href="#!" onclick="changeVisibilityLayer(\'' + layer.id + '\')" class="secondary-content">\n' + '        <i class="material-icons btnEye" data-layer-icon="' + layer.id + '">' + classVisible + '</i>\n' + '    </a>\n' + filters + '</li>\n';
-      var group = $('[data-group="' + layer.groupId + '"]')[0];
-      group.innerHTML += li;
+      li = $('<li class="collection-item avatar' + filterClass + '"></li>');
+
+      var img = $('<img src="' + imageUrl + '" alt="" class="circle" />');
+      var span = $('<span class="title" style="padding-right: 22px; display: block;">' + layer.name + '</span>');
+      var a = $('<a href="#!" onclick="changeVisibilityLayer(\'' + layer.id + '\')" class="secondary-content"><i class="material-icons btnEye" data-layer-icon="' + layer.id + '">' + classVisible + '</i></a>')
+
+      li.append(img);
+      li.append(span);
+      li.append(a);
+      li.append(divFilters);
+      var group = $('[data-group="' + layer.groupId + '"]');
+      group.append(li);
     }
 
     // Se cargan las cosas necesarias
-    $('.collapsible').collapsible();
-    $(toc).find('select').material_select();
+    toc.find('.collapsible').collapsible();
+    toc.find('select').material_select();
     //checkVisibilityAtScale();
   };
 
