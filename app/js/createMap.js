@@ -478,7 +478,7 @@
           if (['geometry'].indexOf(property) === -1) { // Si no esta en la lista
             if (/.*\.(JPG|JPEG|PNG)$/.test((properties[property] + '').toUpperCase())) { // Si termina en .JPG o .PNG es una imagen
               span = $('<span><b>' + property + ':</b><br/><img src="' + properties[property] + '" style="width:200px; height:200px;"/><span/><br/>');
-            } else {
+            } else if (properties[property] + '' !== 'null'){
               span = $('<span><b>' + property + ':</b> ' + properties[property] + '</span><br/>');
             }
             featureHTML.append(span);
