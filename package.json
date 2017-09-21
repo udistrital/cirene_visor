@@ -12,7 +12,7 @@
     "build": "npm run clean && npm run dist && npm run pack",
     "test": "karma start karma.conf.js --log-level debug --single-run && npm run jshint",
     "test:dist": "karma start karma_dist.conf.js --log-level debug --single-run",
-    "test:functional": "python3 test/functiona/*.py",
+    "test:functional": "python3 test/functional/*.py",
     "build:test": "npm run build && npm run test:dist",
     "start:dist": "gulp webserver:dist",
     "jshint": "gulp jshint",

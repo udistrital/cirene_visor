@@ -1,13 +1,17 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 import time
 
 success = True
-wd = WebDriver()
+#wd = webdriver.PhantomJS()
+#driver.set_window_size(1120, 550)
+
+wd = webdriver.Firefox()
+
 wd.implicitly_wait(60)
 wd.get("http://localhost:3000/")
 print("Esperando a que cargue...")
