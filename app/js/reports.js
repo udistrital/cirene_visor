@@ -375,7 +375,7 @@
         response.push({
           'nombre': key,
           'alias': labels[key],
-          'features': elements[key]
+          'idsFeatures': elements[key]
         });
       }
     }

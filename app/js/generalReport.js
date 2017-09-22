@@ -340,7 +340,7 @@
           var properties = feature.properties;
           for (var property in properties) {
             if (properties.hasOwnProperty(property)) {
-              if (['geometry'].indexOf(property) === -1) { // Si no es geometry
+              if (['geometry'].indexOf(property) === -1 ) { // Si no es geometry
                 // convierte los valores numericos a string para comparar
                 var valor = properties[property] + '';
                 // console.log('valor queryValue', valor, queryValue);
@@ -378,9 +378,12 @@
         for (var property in properties) {
           if (properties.hasOwnProperty(property)) {
             if (['geometry'].indexOf(property) === -1) { //Si no esta
-              var propertySpan = $('<span><b>' + property + ':</b> ' + properties[property] + '</span>');
-              containerHTML.append(propertySpan);
-              containerHTML.append($('<br/>'));
+              console.log((properties[property] + '').toUpperCase());
+              if ((properties[property] + '').toUpperCase() !== 'NULL') {
+                var propertySpan = $('<span><b>' + property + ':</b> ' + properties[property] + '</span>');
+                containerHTML.append(propertySpan);
+                containerHTML.append($('<br/>'));
+              }
             }
           }
         }

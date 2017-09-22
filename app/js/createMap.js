@@ -344,7 +344,7 @@
 
       var img = $('<img src="' + imageUrl + '" alt="" class="circle" />');
       var span = $('<span class="title" style="padding-right: 22px; display: block;">' + layer.name + '</span>');
-      var a = $('<a href="#!" onclick="changeVisibilityLayer(\'' + layer.id + '\')" class="secondary-content"><i class="material-icons btnEye" data-layer-icon="' + layer.id + '">' + classVisible + '</i></a>')
+      var a = $('<a href="#!" onclick="changeVisibilityLayer(\'' + layer.id + '\')" class="secondary-content"><i class="material-icons btnEye" data-layer-icon="' + layer.id + '">' + classVisible + '</i></a>');
 
       li.append(img);
       li.append(span);
@@ -478,7 +478,7 @@
           if (['geometry'].indexOf(property) === -1) { // Si no esta en la lista
             if (/.*\.(JPG|JPEG|PNG)$/.test((properties[property] + '').toUpperCase())) { // Si termina en .JPG o .PNG es una imagen
               span = $('<span><b>' + property + ':</b><br/><img src="' + properties[property] + '" style="width:200px; height:200px;"/><span/><br/>');
-            } else if (properties[property] + '' !== 'null'){
+            } else if ((properties[property] + '').toUpperCase() !== 'NULL'){ // Si el campo no es null
               span = $('<span><b>' + property + ':</b> ' + properties[property] + '</span><br/>');
             }
             featureHTML.append(span);
