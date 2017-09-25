@@ -4,7 +4,7 @@ node_js:
 python:
   - "3.4"
 install:
-  - sudo pip install selenium
+  - sudo pip3 install selenium
 addons:
   firefox: "49.0"
 script:
