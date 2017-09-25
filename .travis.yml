@@ -1,6 +1,10 @@
-language: node_js
+language: node_js python
 node_js:
   - "7"
+python:
+  - "3.4"
+install:
+  - pip install selenium
 addons:
   firefox: "49.0"
 script:
