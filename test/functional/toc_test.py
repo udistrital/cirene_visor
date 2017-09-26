@@ -13,16 +13,17 @@ def is_alert_present(wd):
 
 class toc_test(unittest.TestCase):
     def setUp(self):
-        self.ci = os.getenv('OAS_EXTERNAL_ENV')
-        if os.getenv('OAS_EXTERNAL_ENV') == None:
-            # begin firefox config
-            self.wd = webdriver.Firefox()
-            # end firefox config
-        else:
-            # begin phantom config
-            self.wd = webdriver.PhantomJS()
-            self.wd.set_window_size(1120, 550)
-            # end phantom config
+        #self.ci = os.getenv('OAS_EXTERNAL_ENV')
+        #if os.getenv('OAS_EXTERNAL_ENV') == None:
+        #    # begin firefox config
+        #    self.wd = webdriver.Firefox()
+        #    # end firefox config
+        #else:
+        #    # begin phantom config
+        #    self.wd = webdriver.PhantomJS()
+        #    self.wd.set_window_size(1120, 550)
+        #    # end phantom config
+        self.wd = webdriver.Firefox() # ensure firefox
         self.wd.implicitly_wait(60)
 
 
