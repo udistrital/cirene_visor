@@ -8,6 +8,14 @@ build:
       - npm test
     when:
       branch: develop
+  pruebas_funcionales:
+    image: selenium/node-firefox
+    debug: true
+    commands:
+      - echo functional testing
+      - env python test/functional/*.py
+    when:
+      branch: develop
   construccion:
     image: node:7.10.1
     commands:
