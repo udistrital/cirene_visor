@@ -13,7 +13,7 @@ build:
     debug: true
     commands:
       - echo functional testing
-      - env python test/functional/*.py
+      - env python3 test/functional/*.py
     when:
       branch: develop
   construccion:

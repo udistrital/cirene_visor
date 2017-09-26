@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+from pyvirtualdisplay import Display
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 import time, unittest, os
@@ -13,17 +14,19 @@ def is_alert_present(wd):
 
 class toc_test(unittest.TestCase):
     def setUp(self):
-        #self.ci = os.getenv('OAS_EXTERNAL_ENV')
-        #if os.getenv('OAS_EXTERNAL_ENV') == None:
-        #    # begin firefox config
-        #    self.wd = webdriver.Firefox()
-        #    # end firefox config
-        #else:
-        #    # begin phantom config
-        #    self.wd = webdriver.PhantomJS()
-        #    self.wd.set_window_size(1120, 550)
-        #    # end phantom config
-        self.wd = webdriver.Firefox() # ensure firefox
+        self.ci = os.getenv('OAS_EXTERNAL_ENV')
+        if os.getenv('OAS_EXTERNAL_ENV') == None:
+            # begin firefox config
+            self.wd = webdriver.Firefox()
+            # end firefox config
+        else:
+            display = Display(visible=0, size=(800, 600))
+            display.start()
+            # begin phantom config
+            #self.wd = webdriver.PhantomJS()
+            #self.wd.set_window_size(1120, 550)
+            # end phantom config
+            self.wd = webdriver.Firefox() # ensure firefox
         self.wd.implicitly_wait(60)
 
 
@@ -233,6 +236,7 @@ class toc_test(unittest.TestCase):
 
     def tearDown(self):
         self.wd.close()
+        display.stop()
 
 if __name__ == '__main__':
     unittest.main()

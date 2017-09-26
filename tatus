@@ -1,0 +1,63 @@
+[1mdiff --git a/.drone.yml b/.drone.yml[m
+[1mindex e3d2400..4ebda86 100644[m
+[1m--- a/.drone.yml[m
+[1m+++ b/.drone.yml[m
+[36m@@ -13,7 +13,7 @@[m [mbuild:[m
+     debug: true[m
+     commands:[m
+       - echo functional testing[m
+[31m-      - env python test/functional/*.py[m
+[32m+[m[32m      - env python3 test/functional/*.py[m
+     when:[m
+       branch: develop[m
+   construccion:[m
+[1mdiff --git a/test/functional/toc_test.py b/test/functional/toc_test.py[m
+[1mindex ac7724c..7ad3ad0 100755[m
+[1m--- a/test/functional/toc_test.py[m
+[1m+++ b/test/functional/toc_test.py[m
+[36m@@ -1,5 +1,6 @@[m
+ #!/usr/bin/python3[m
+ # -*- coding: utf-8 -*-[m
+[32m+[m[32mfrom pyvirtualdisplay import Display[m
+ from selenium import webdriver[m
+ from selenium.webdriver.common.action_chains import ActionChains[m
+ import time, unittest, os[m
+[36m@@ -13,17 +14,19 @@[m [mdef is_alert_present(wd):[m
+ [m
+ class toc_test(unittest.TestCase):[m
+     def setUp(self):[m
+[31m-        #self.ci = os.getenv('OAS_EXTERNAL_ENV')[m
+[31m-        #if os.getenv('OAS_EXTERNAL_ENV') == None:[m
+[31m-        #    # begin firefox config[m
+[31m-        #    self.wd = webdriver.Firefox()[m
+[31m-        #    # end firefox config[m
+[31m-        #else:[m
+[31m-        #    # begin phantom config[m
+[31m-        #    self.wd = webdriver.PhantomJS()[m
+[31m-        #    self.wd.set_window_size(1120, 550)[m
+[31m-        #    # end phantom config[m
+[31m-        self.wd = webdriver.Firefox() # ensure firefox[m
+[32m+[m[32m        self.ci = os.getenv('OAS_EXTERNAL_ENV')[m
+[32m+[m[32m        if os.getenv('OAS_EXTERNAL_ENV') == None:[m
+[32m+[m[32m            # begin firefox config[m
+[32m+[m[32m            self.wd = webdriver.Firefox()[m
+[32m+[m[32m            # end firefox config[m
+[32m+[m[32m        else:[m
+[32m+[m[32m            display = Display(visible=0, size=(800, 600))[m
+[32m+[m[32m            display.start()[m
+[32m+[m[32m            # begin phantom config[m
+[32m+[m[32m            #self.wd = webdriver.PhantomJS()[m
+[32m+[m[32m            #self.wd.set_window_size(1120, 550)[m
+[32m+[m[32m            # end phantom config[m
+[32m+[m[32m            self.wd = webdriver.Firefox() # ensure firefox[m
+         self.wd.implicitly_wait(60)[m
+ [m
+ [m
+[36m@@ -233,6 +236,7 @@[m [mclass toc_test(unittest.TestCase):[m
+ [m
+     def tearDown(self):[m
+         self.wd.close()[m
+[32m+[m[32m        display.stop()[m
+ [m
+ if __name__ == '__main__':[m
+     unittest.main()[m
