@@ -1,12 +1,13 @@
+dist: trusty
+sudo: required
 language: node_js python
-node_js:
-  - "7"
-python:
-  - "3.4"
 install:
   - sudo python3.4 -m pip install selenium
 addons:
   firefox: "49.0"
+  apt:
+    packages:
+     - pip3
 script:
   - npm test
   - "export DISPLAY=:99.0"
