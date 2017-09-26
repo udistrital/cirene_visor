@@ -15,7 +15,7 @@ install:
   - pip install selenium
 
 addons:
-  firefox: "49.0"
+  firefox: "55.0.3"
 
 script:
   - npm install
