@@ -9,7 +9,7 @@ build:
     when:
       branch: develop
   pruebas_funcionales:
-    image: selenium/node-firefox
+    image: pimuzzo/selenium-python-xvfb
     debug: true
     commands:
       - echo functional testing
