@@ -6,7 +6,7 @@ language: python
 python:
   - "3.4"
 install:
-  - sudo python3.4 -m pip install selenium
+  - sudo pip install selenium
 addons:
   firefox: "49.0"
 script:
