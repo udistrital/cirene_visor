@@ -9,7 +9,7 @@ build:
     when:
       branch: develop
   pruebas_funcionales:
-    image: pimuzzo/selenium-python-xvfb
+    image: weihan/webdriver-python
     debug: true
     commands:
       - echo functional testing
