@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-from pyvirtualdisplay import Display
+#from pyvirtualdisplay import Display
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 import time, unittest, os
@@ -20,8 +20,8 @@ class toc_test(unittest.TestCase):
             self.wd = webdriver.Firefox()
             # end firefox config
         else:
-            display = Display(visible=0, size=(800, 600))
-            display.start()
+            # display = Display(visible=0, size=(800, 600))
+            # display.start()
             # begin phantom config
             #self.wd = webdriver.PhantomJS()
             #self.wd.set_window_size(1120, 550)
