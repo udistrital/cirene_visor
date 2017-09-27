@@ -3,5 +3,8 @@ version: '3.3'
 services:
   selenium_test:
     build: .
+    ports:
+      - 5900:5999
+      - 4444:4444
     volumes:
       - .:/app

@@ -21,13 +21,16 @@ class toc_test(unittest.TestCase):
         if os.getenv('OAS_EXTERNAL_ENV') == None:
             self.wd = webdriver.Firefox()
         else:
-            # https://stackoverflow.com/questions/26070834/how-to-fix-selenium-webdriverexception-the-browser-appears-to-have-exited-befor
-            from pyvirtualdisplay import Display
-            self.display = Display(visible=0, size=(1024, 768))
-            self.display.start()
-            self.wd = webdriver.Firefox()
+            # from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
+            # binary = FirefoxBinary('/usr/bin/firefox', log_file=sys.stdout)
+            # binary.add_command_line_options('-headless')
+            # self.wd = webdriver.Firefox(firefox_binary=binary)
             #self.wd = webdriver.PhantomJS()
             #self.wd.set_window_size(1120, 550)
+            self.wd = webdriver.Remote(desired_capabilities={
+                "browserName": "firefox",
+                "platform": "LINUX",
+            })
         self.wd.implicitly_wait(60)
 
     def open_sedes(self):
@@ -86,22 +89,15 @@ class toc_test(unittest.TestCase):
         # conmuta la capa sede punto de la predeterminada a la contraria (on-off/off-on)
         iElement = wd.find_element_by_css_selector(
             "#toc-div i[data-layer-icon='sede_punto']")
-        print(iElement.text)
         iElement.click()
-        print(iElement.text)
         time.sleep(1)
-        print(iElement.text)
         if iElement.text != "visibility":
             success = False
             print("No esta visible sede_punto")
-        print(iElement.text)
         iElement.click()
-        print(iElement.text)
         time.sleep(1)
-        print(iElement.text)
         if iElement.text != "visibility_off":
             success = False
-            print("No esta invisible sede_punto")
         # conmuta la capa zonas exteriores de la predeterminada a la contraria (on-off/off-on)
         iElement = wd.find_element_by_css_selector(
             "#toc-div i[data-layer-icon='zonas_exteriores']")
@@ -269,8 +265,6 @@ class toc_test(unittest.TestCase):
 
     def tearDown(self):
         self.wd.close()
-        if os.getenv('OAS_EXTERNAL_ENV') != None:
-            self.display.stop()
 
 
 if __name__ == '__main__':
