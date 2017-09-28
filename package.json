@@ -13,6 +13,7 @@
     "test": "karma start karma.conf.js --log-level debug --single-run && npm run jshint",
     "test:dist": "karma start karma_dist.conf.js --log-level debug --single-run",
     "test:functional": "env python test/functional/*.py",
+    "test:functional:docker": "docker-compose run --rm selenium bash /data/scripts/docker_travis_tests.sh",
     "build:test": "npm run build && npm run test:dist",
     "start:dist": "gulp webserver:dist",
     "jshint": "gulp jshint",

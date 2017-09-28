@@ -40,19 +40,25 @@ npm start
 
 ## Hacer pruebas:
 
-Solo se necesita ejecutar:
+Solo se necesita ejecutar.
 
+Unitarias:
 ```bash
 npm test
-docker-compose pull
-docker-compose -f docker-compose.yml run --rm selenium bash /data/scripts/docker_tests.sh
 ```
 
-Para pruebas funcionales adicionalmente se puede ver.
+Funcionales:
+```bash
+docker-compose pull
+docker-compose run --rm selenium bash /data/scripts/docker_tests.sh
+```
+
+Para pruebas funcionales adicionalmente se puede ver por VNC.
 ```bash
 docker-compose up -d
+vinagre localhost:5900 & # pass 'secret'
 docker-compose exec selenium bash -c "DISPLAY=:99 python3 /data/test/functional/*.py"
-vinagre localhost:5900 # pass 'secret'
+docker-compose kill
 ```
 
 ## Construir artefactos de la aplicación:

@@ -13,7 +13,7 @@ build:
     debug: true
     commands:
       - echo functional testing
-      - bash scripts/docker_tests.sh
+      - bash scripts/drone_tests.sh
     when:
       branch: develop
   construccion:
