@@ -2,14 +2,11 @@ language: node_js
 node_js:
   - "7"
 
-install:
-  - pip install selenium
-
 script:
   - npm install
   - npm test
   - npm run jsdoc
-  - docker-compose exec selenium python3 /app/test/functional/toc_test.py
+  - docker-compose run selenium python3 /app/test/functional/toc_test.py
 
 after_success:
   - scripts/deploy_docs.sh
