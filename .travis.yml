@@ -6,7 +6,7 @@ script:
   - npm install
   - npm test
   - npm run jsdoc
-  - docker-compose run selenium python3 /app/test/functional/toc_test.py
+  - docker-compose -f docker-compose.yml run selenium python3 /app/test/functional/toc_test.py
 
 after_success:
   - scripts/deploy_docs.sh

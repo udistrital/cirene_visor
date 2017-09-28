@@ -9,15 +9,11 @@ build:
     when:
       branch: develop
   pruebas_funcionales:
-    image: weihan/webdriver-python
+    image: juusechec/firefox-headless-selenium-python
     debug: true
     commands:
       - echo functional testing
-      - wget https://github.com/mozilla/geckodriver/releases/download/v0.19.0/geckodriver-v0.19.0-linux64.tar.gz
-      - mkdir geckodriver
-      - tar -xzf geckodriver-*-linux64.tar.gz -C geckodriver
-      - export PATH=$PATH:$PWD/geckodriver
-      - env python test/functional/*.py
+      - python3 /app/test/functional/toc_test.py
     when:
       branch: develop
   construccion:
