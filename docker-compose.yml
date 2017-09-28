@@ -1,8 +1,8 @@
 version: '3.3'
 
 services:
-  selenium_test:
-    build: .
+  selenium:
+    image: juusechec/firefox-headless-selenium-python
     ports:
       - 5900:5999
       - 4444:4444
