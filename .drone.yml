@@ -13,7 +13,7 @@ build:
     debug: true
     commands:
       - echo functional testing
-      - python3 /app/test/functional/toc_test.py
+      - python3 test/functional/*.py
     when:
       branch: develop
   construccion:
