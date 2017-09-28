@@ -44,6 +44,8 @@ Solo se necesita ejecutar:
 
 ```bash
 npm test
+docker-compose pull
+docker-compose -f docker-compose.yml run --rm selenium bash /data/scripts/docker_tests.sh
 ```
 
 ## Construir artefactos de la aplicación:

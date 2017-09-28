@@ -13,7 +13,7 @@ build:
     debug: true
     commands:
       - echo functional testing
-      - python3 test/functional/*.py
+      - bash scripts/docker_tests.sh
     when:
       branch: develop
   construccion:
