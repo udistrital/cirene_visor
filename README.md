@@ -48,6 +48,13 @@ docker-compose pull
 docker-compose -f docker-compose.yml run --rm selenium bash /data/scripts/docker_tests.sh
 ```
 
+Para pruebas funcionales adicionalmente se puede ver.
+```bash
+docker-compose up -d
+docker-compose exec selenium bash -c "DISPLAY=:99 python3 /data/test/functional/*.py"
+vinagre localhost:5900 # pass 'secret'
+```
+
 ## Construir artefactos de la aplicación:
 
 Solo se necesita ejecutar:

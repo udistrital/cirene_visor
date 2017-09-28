@@ -2,7 +2,7 @@ version: '3'
 
 services:
   selenium:
-    image: juusechec/firefox-headless-selenium-python
+    image: juusechec/firefox-headless-selenium-python:v0.0.6
     ports:
       - 5900:5999
       - 4444:4444
