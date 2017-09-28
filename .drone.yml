@@ -9,7 +9,7 @@ build:
     when:
       branch: develop
   pruebas_funcionales:
-    image: juusechec/firefox-headless-selenium-python
+    image: juusechec/firefox-headless-selenium-python:v0.0.6
     debug: true
     commands:
       - echo functional testing
